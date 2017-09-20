@@ -29,8 +29,11 @@
 		</div>
 		<div id='Slide2' style=" z-index: 1; background-color: rgba(255,255,255,0.4); position: relative;">
 			<div id='slide2cover' style="z-index: 1; position: absolute;"></div>
-			<div id='slide2caption' style="z-index: 1; position: relative;">Quantum Realism</div>
-			<div id='slide2subcaption' style="z-index: 1; position: relative;">An example from Brain Greene's "The Fabric of the Cosmo".</div>
+			<div id='slide2caption' style="z-index: 1; position: relative;"> Imagine that Agent Scully, long overdue for a vacation, retreats to her family's estate in Provence.</div>
+		</div>
+		<div id='Slide3' style=" z-index: 1; background-color: rgba(255,255,255,0.4); position: relative;">
+			<div id='slide3cover' style="z-index: 1; position: absolute;"></div>
+			<div id='slide3caption' style="z-index: 1; position: relative;">  Before she's had time to unpack, the phone rings. It's Agent Mulder calling from America.</div>
 		</div>
 
 		
@@ -63,6 +66,10 @@
 		var coverblack = document.getElementById("cover");
 		var title = document.getElementById("MainTitle");
 		var titletagline = document.getElementById("MainTitleTagline");
+		var slide2 = document.getElementById("Slide2");
+		var slide2text = document.getElementById("slide2caption");
+		var slide3 = document.getElementById("Slide3");
+		var slide3text = document.getElementById("slide3caption");
 		
 
 
@@ -86,10 +93,15 @@
 		divCustom(titletagline,canvaswidth,0,'Calibri','center',0,0,mainFontSize/2,0,0,((canvasheight /10)),0,'rgba(0,0,0,1)');
 		divCustom(slide1,canvaswidth,canvasheight);
 		divCustom(coverblack,canvaswidth,canvasheight);
+		divCustom(slide2text,canvaswidth,0,'Calibri','center',0,0,mainFontSize/2,0,0,((canvasheight /2)),0,'rgba(0,0,0,1)');
+		divCustom(slide2,canvaswidth,canvasheight);
+		divCustom(slide3text,canvaswidth,0,'Calibri','center',0,0,mainFontSize/2,0,0,((canvasheight /2)),0,'rgba(0,0,0,1)');
+		divCustom(slide3,canvaswidth,canvasheight);
+
 		
 
 
-		allSlides = [slide1];
+		allSlides = [slide1,slide2,slide3];
 		theircontent = [[title,titletagline]];
 
 		function setShadows() {
@@ -166,7 +178,7 @@
 
 		transitionlengths = canvasheight/3;
 
-		theircontent = [[title,titletagline]];
+		theircontent = [[title,titletagline],[slide2text],[slide3text]];
 
 		
 
