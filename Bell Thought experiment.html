@@ -32,8 +32,7 @@
 			<div id='slide2caption' style="z-index: 1; position: relative;"> Imagine that Agent Scully, long overdue for a vacation, retreats to her family's estate in Provence.</div>
 		</div>
 		<div id='Slide3' style=" z-index: 1; background-color: rgba(255,255,255,0.4); position: relative;">
-			<div id='slide3cover' style="z-index: 1; position: absolute;"></div>
-			<div id='slide3caption' style="z-index: 1; position: relative;">  Before she's had time to unpack, the phone rings. It's Agent Mulder calling from America.</div>
+			
 		</div>
 
 		
@@ -69,7 +68,6 @@
 		var slide2 = document.getElementById("Slide2");
 		var slide2text = document.getElementById("slide2caption");
 		var slide3 = document.getElementById("Slide3");
-		var slide3text = document.getElementById("slide3caption");
 		
 
 
@@ -95,7 +93,6 @@
 		divCustom(coverblack,canvaswidth,canvasheight);
 		divCustom(slide2text,canvaswidth,0,'Calibri','center',0,0,mainFontSize/2,0,0,((canvasheight /2)),0,'rgba(0,0,0,1)');
 		divCustom(slide2,canvaswidth,canvasheight);
-		divCustom(slide3text,canvaswidth,0,'Calibri','center',0,0,mainFontSize/2,0,0,((canvasheight /2)),0,'rgba(0,0,0,1)');
 		divCustom(slide3,canvaswidth,canvasheight);
 
 		
@@ -178,7 +175,7 @@
 
 		transitionlengths = canvasheight/3;
 
-		theircontent = [[title,titletagline],[slide2text],[slide3text]];
+		theircontent = [[title,titletagline],[slide2text],[]];
 
 		
 
@@ -432,6 +429,176 @@
 		// if (detectmob()) {
 		// 	document.body.innerHTML = 'Mobile Detected';
 		// } 
+
+		boxsizes = [30,30];
+		edgegap = 2;
+
+		function drawBox(configuration, type, coordinates, number) {
+			if (type == '3 doors') {
+				var box = document.createElement('box');
+				box.style.background = 'rgba(123, 0, 239,1)';
+				box.style.height = boxsizes[1];
+				box.style.width = boxsizes[0];
+				box.style.zIndex = 2;
+				box.style.position = 'absolute';
+				box.style.left = coordinates[0];
+				box.id = 'box' + number;
+				box.style.top = coordinates[1];
+				box.style.boxShadow = '1px 1px 9px rgba(0,0,0,0.3)';
+				boxbound = [coordinates[0],coordinates[1],boxsizes[0],boxsizes[1]]
+				document.getElementById('Slide3').appendChild(box);
+				var boxname = document.createElement('boxname');
+				boxname.style.height = boxsizes[1]/4;
+				boxname.style.width = boxsizes[0];
+				boxname.style.zIndex = 0;
+				boxname.style.position = 'absolute';
+				boxname.style.left = coordinates[0];
+				boxname.id = 'boxname' + number;
+				boxname.innerHTML = number;
+				boxname.style.textAlign = 'center';
+				boxname.style.fontSize = Math.min(canvasheight,canvaswidth)/45;
+				boxname.style.fontFamily = 'Calibri';
+				boxname.style.top = coordinates[1] + boxsizes[1] + edgegap;
+				document.getElementById('Slide3').appendChild(boxname);
+				var side1 = document.createElement('side1');
+				side1.style.backgroundColor = 'rgba(255,255,255,0.3)';
+				side1.style.height = boxsizes[1];
+				side1.style.width = boxsizes[0] / 4;
+				side1.style.position = 'absolute';
+				side1.style.left = coordinates[0] + boxsizes[0] + edgegap;
+				side1.style.top = coordinates[1];
+				side1.style.boxShadow = 'inset 1px 1px 9px rgba(0,0,0,0.3)';
+				side1bound = [coordinates[0] + boxsizes[0] + edgegap,coordinates[1],boxsizes[0]/4,boxsizes[1]]
+				side1.id = 'side1-' + number;
+				document.getElementById('Slide3').appendChild(side1);
+				var side2 = document.createElement('side2');
+				side2.style.backgroundColor = 'rgba(255,255,255,0.3)';
+				side2.style.height = boxsizes[1] / 4;
+				side2.style.width = boxsizes[0];
+				side2.style.position = 'absolute';
+				side2.style.left = coordinates[0];
+				side2.style.top = coordinates[1] - edgegap - boxsizes[1]/4;
+				side2.style.boxShadow = 'inset 1px 1px 9px rgba(0,0,0,0.3)';
+				side2bound = [coordinates[0],coordinates[1] - edgegap - boxsizes[1]/4,boxsizes[0],boxsizes[1]/4]
+				side2.id = 'side2-' + number;
+				document.getElementById('Slide3').appendChild(side2);
+				var side3 = document.createElement('side3');
+				side3.style.backgroundColor = 'rgba(255,255,255,0.3)';
+				side3.style.height = boxsizes[1];
+				side3.style.width = boxsizes[0] / 4;
+				side3.style.position = 'absolute';
+				side3.style.left = coordinates[0] - edgegap - boxsizes[0]/4;
+				side3.style.top = coordinates[1];
+				side3.style.boxShadow = 'inset 1px 1px 9px rgba(0,0,0,0.3)';
+				side3bound = [coordinates[0] - edgegap - boxsizes[0]/4,coordinates[1],boxsizes[0]/4,boxsizes[1]]
+				side3.id = 'side3-' + number;
+				document.getElementById('Slide3').appendChild(side3);
+				var sphere = document.createElement('sphere');
+				sphere.style.background = 'rgba(255,255,255,1)';
+				sphere.style.height = boxsizes[1]/3;
+				sphere.style.width = boxsizes[0]/3;
+				sphere.style.zIndex = 1;
+				sphere.style.position = 'absolute';
+				sphere.style.left = coordinates[0] + boxsizes[0]/2 - boxsizes[0]/6;
+				sphere.id = 'sphere' + number;
+				sphere.style.top = coordinates[1] + boxsizes[1]/2 - boxsizes[0]/6;
+				sphere.style.boxShadow = '1px 1px 9px rgba(0,0,0,0.3)';
+				document.getElementById('Slide3').appendChild(sphere);
+				sphere.style.borderRadius = '50%';
+
+				returningboxvalues = [boxbound,side1bound,side2bound,side3bound];
+			}
+			if (type == 'one button') {
+				var box = document.createElement('box');
+				box.style.background = 'rgba(123, 0, 239,1)';
+				box.style.zIndex = 2;
+				box.style.height = boxsizes[1];
+				box.style.width = boxsizes[0];
+				box.style.position = 'absolute';
+				box.style.left = coordinates[0];
+				box.style.top = coordinates[1];
+				box.style.boxShadow = '1px 1px 9px rgba(0,0,0,0.3)';
+				boxbound = [coordinates[0],coordinates[1],boxsizes[0],boxsizes[1]]
+				box.id = 'box' + number;
+				document.getElementById('Slide3').appendChild(box);
+				var boxname = document.createElement('boxname');
+				boxname.style.height = boxsizes[1]/4;
+				boxname.style.width = boxsizes[0];
+				boxname.style.zIndex = 0;
+				boxname.style.position = 'absolute';
+				boxname.style.left = coordinates[0];
+				boxname.id = 'boxname' + number;
+				boxname.innerHTML = number;
+				boxname.style.textAlign = 'center';
+				boxname.style.fontSize = Math.min(canvasheight,canvaswidth)/45;
+				boxname.style.fontFamily = 'Calibri';
+				boxname.style.top = coordinates[1] + boxsizes[1] + edgegap;
+				document.getElementById('Slide3').appendChild(boxname);
+				var sphere = document.createElement('sphere');
+				sphere.style.background = 'rgba(255,255,255,1)';
+				sphere.style.height = boxsizes[1]/3;
+				sphere.style.width = boxsizes[0]/3;
+				sphere.style.zIndex = 1;
+				sphere.style.position = 'absolute';
+				sphere.style.left = coordinates[0] + boxsizes[0]/2 - boxsizes[0]/6;
+				sphere.id = 'sphere' + number;
+				sphere.style.top = coordinates[1] + boxsizes[1]/2 - boxsizes[0]/6;
+				sphere.style.boxShadow = '1px 1px 9px rgba(0,0,0,0.3)';
+				document.getElementById('Slide3').appendChild(sphere);
+				sphere.style.borderRadius = '50%';
+
+				returningboxvalues = [boxbound,side1bound];
+			}
+
+			return returningboxvalues;
+
+
+		}
+
+
+		drawBox([1,0,1],'3 doors',[canvaswidth/3,canvasheight/2],1);
+
+		
+		revealType = 'random';
+
+		function openbox(event) {
+			sidenumber = event.target.id.split('-')[1];
+			document.getElementById('box' + sidenumber).style.transform = 'translateY(' + 100 + 'px)';
+			document.getElementById('box' + sidenumber).style.opacity = 0;
+			if (revealType == 'random') {
+				colorchoices = ['rgba(255, 132, 10, 0.64)','rgba(0, 140, 255, 0.64)']
+				choicemade = colorchoices[parseInt(Math.random()*(colorchoices.length))];
+				document.getElementById('sphere' + sidenumber).style.backgroundColor = choicemade;
+				event.target.style.backgroundColor = choicemade;
+
+			}
+			for (k = 1; k < 4; k++) {
+				document.getElementById('side' + k + '-' + sidenumber).removeEventListener('click',openbox);
+				document.getElementById('side' + k + '-' + sidenumber).style.cursor = 'default';
+			}
+			document.getElementById('side1-' + sidenumber).removeEventListener('click',openbox);
+			document.getElementById('side2-' + sidenumber).removeEventListener('click',openbox);
+			
+			document.getElementById('side2-' + sidenumber).style.cursor = 'default';
+			document.getElementById('side3-' + sidenumber).style.cursor = 'default';
+
+
+		}
+
+
+		for (k = 1; k < 2; k++) {
+			document.getElementById('box' + k).style.transition = 'transform 2s, opacity 2s 1s';
+			for (m = 1; m < 4; m++) {
+				console.log(m);
+				document.getElementById('side' + m + '-' + k).addEventListener('click',openbox);
+				document.getElementById('side' + m + '-' + k).style.cursor = 'pointer';
+			}
+		}
+		
+
+		
+
+		
 
 
 
