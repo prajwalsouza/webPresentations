@@ -17,12 +17,32 @@
 				<text x="50%" y="50%" fill="black" font-family="Sans Serif" font-size="140%" text-anchor="middle">So, about my projects...</text>
 			</svg>
 		</div>
+		<div id='slide5' height="100%" width="100%" style="background-color: rgba(0,0,0,1);">
+			<svg id='slide5textdetails' height="100%" width="100%" >
+				<text x="50%" y="35%" fill="white" font-family="Sans Serif" font-size="220%" text-anchor="middle">
+					Chaos Game
+				</text>
+				<text x="50%" y="45%" fill="white" font-family="Sans Serif" font-size="115%" text-anchor="middle">
+					<tspan x="50%" dy="0%">It's a set of random steps taken on a canvas, based on certain rules. </tspan>
+					<tspan x="50%" dy="4%">But, one ends up with interesting patterns after many steps.
+					</tspan> 
+					<tspan x="50%" dy="4%">Patterns? Fractals.</tspan>
+				</text>
+				<a href="https://prajwalsouza.github.io/Experiments/Chaos%20Fractals.html">
+					<text x="50%" y="63%" fill="orange" font-family="Sans Serif" font-size="120%" text-anchor="middle">
+						view
+					</text>
+				</a>
+			</svg>
+		</div>
 
 
 		<script type="text/javascript">
 
+		projectsIntro = document.getElementById('projectsIntro')
+
+
 		function drawRectangle(divId,xcor,ycor, wdh, hgt, strokecolor) {
-			
 			var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 			rectElement.setAttribute('width',wdh);
 			rectElement.setAttribute('height',hgt);
@@ -50,6 +70,25 @@
 		}
 
 		drawRectangles()
+
+		function reactprojectsIntro(event) {
+			var bRect = projectsIntro.getBoundingClientRect();
+			posX = event.clientX - bRect.left;
+			posY = event.clientY - bRect.top;
+
+			colorchoices = ['rgba(255, 132, 10, 0.64)','rgba(255, 222, 10, 0.64)']
+			strokecolorchoice = colorchoices[parseInt(Math.random()*(colorchoices.length))];
+
+			sizeDeviation = 2;
+			sizeBaseW = 2;
+			sizeBaseH = (window.innerWidth/window.innerHeight)*sizeBaseW;
+			sizew = Math.random()*sizeDeviation + sizeBaseW;
+			sizeh = Math.random()*sizeDeviation + sizeBaseH;
+
+			drawRectangle(projectsIntro, posX, posY, sizew + '%', sizeh + '%', strokecolorchoice)
+		}
+
+		projectsIntro.addEventListener('click', reactprojectsIntro);
 		
 			
 		</script>
