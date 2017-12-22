@@ -1,22 +1,58 @@
 <html>
 	<head>
-		<title> Project SVG </title>
+		<title> Prajwal DSouza </title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	</head>
-	<body>
+	<body style='margin:0px;'>
 		
-		<div height="100%" width="100%">
+		<div id='maintitle' height="100%" width="100%" style="background-image: url(Images/maintitleimage.jpg); background-size: cover" >
+			<div id='maincover' height="100%" width="100%" style="background-color: rgba(0,0,0,0.4);" >
 			<svg height="100%" width="100%" >
-				<circle cx="50%" cy="50%" r="20%" fill="orange" />
-				<text x="50%" y="50%" fill="white" font-family="Sans Serif" font-size="200%" text-anchor="middle">Learning SVG</text>
+				<text x="50%" y="50%" fill="white" font-family="Sans Serif" font-size="250%" text-anchor="middle">prajwalsouza.github.io</text>
+			</svg>
+			</div>
+		</div>
+		<div id='aboutProjects' height="100%" width="100%">
+			<svg id='projectsIntro' height="100%" width="100%" >
+				<text x="50%" y="50%" fill="black" font-family="Sans Serif" font-size="140%" text-anchor="middle">So, about my projects...</text>
 			</svg>
 		</div>
-		<div height="100%" width="100%">
-			<svg height="100%" width="100%" >
-				<circle cx="50%" cy="50%" r="20%" fill="orange" />
-				<text x="50%" y="50%" fill="white" font-family="Sans Serif" font-size="200%" text-anchor="middle">Next Slide</text>
-			</svg>
-		</div>
+
+
+		<script type="text/javascript">
+
+		function drawRectangle(divId,xcor,ycor, wdh, hgt, strokecolor) {
+			
+			var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+			rectElement.setAttribute('width',wdh);
+			rectElement.setAttribute('height',hgt);
+			rectElement.setAttribute('x',xcor);
+			rectElement.setAttribute('y',ycor);
+			rectElement.style.stroke = strokecolor
+			rectElement.style.strokeWidth = '0.1%';
+			rectElement.style.fill = 'None';
+			divId.appendChild(rectElement);
+		}
+
+		function drawRectangles() {
+			colorchoices = ['rgba(255, 132, 10, 0.64)','rgba(255, 222, 10, 0.64)']
+			for (i=0; i < 30; i++) {
+				strokecolorchoice = colorchoices[parseInt(Math.random()*(colorchoices.length))];
+				sizeDeviation = 2;
+				sizeBaseW = 2;
+				sizeBaseH = (window.innerWidth/window.innerHeight)*sizeBaseW;
+				sizew = Math.random()*sizeDeviation + sizeBaseW;
+				sizeh = Math.random()*sizeDeviation + sizeBaseH;
+				posX = Math.random()*100;
+				posY = Math.random()*100;
+				drawRectangle(projectsIntro, posX + '%', posY + '%', sizew + '%', sizeh + '%', strokecolorchoice)
+			}
+		}
+
+		drawRectangles()
+		
+			
+		</script>
 
 
 	</body>
