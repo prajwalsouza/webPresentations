@@ -1,0 +1,132 @@
+<html>
+	<head>
+		<title> Prajwal DSouza </title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<style type="text/css">
+			* {
+				transition: opacity 0.5s, visibility 1s;
+			}
+		</style>
+	</head>
+	<body style='margin:0px;width:100%; height: 400%;'>
+		<div id='displayDiv' height="100%" width="100%" style="background-size: cover; z-index:1; position: fixed; left:0px; top:0px;right:0px;bottom: 0px;" >
+			<svg id='introduction' height="100%" width="100%">
+				<text id='introtext' x="50%" y="50%" fill="black" font-family="Calibri" style='font-size:35px;font-size: 3.4vw;' text-anchor="middle">
+					A Neural Network Demo
+				</text>
+			</svg>
+		</div>
+
+
+	</body>
+
+	<script type="text/javascript">
+
+		displaySvg = document.getElementById('introduction')
+
+		function classDirect(vec) {
+			vec = JSON.stringify(vec)
+			if (vec == JSON.stringify([0,1,0,1,1,1,0,1,0])) {
+				return 'Plus'
+			}
+			else if (vec == JSON.stringify([0,0,0,1,1,1,0,0,0])) {
+				return 'Minus'
+			}
+			else if (vec == JSON.stringify([1,0,1,0,1,0,1,0,1])) {
+				return 'Cross'
+			}
+			else {
+				return 'something else'
+			}
+		}
+
+		imagevectordict = {}
+		imagevector = [0,1,0,1,1,1,0,1,0]
+
+		function statechange(event) {
+			statevalue = imagevector[event.target.id[4]]
+			if (statevalue == 0) {
+				imagevector[event.target.id[4]] = 1
+				event.target.style.fill = 'rgba(0,0,0,0.4)'
+			}
+			else {
+				imagevector[event.target.id[4]] = 0
+				event.target.style.fill = 'rgba(255,140,0,0.4)'
+			}
+			document.getElementById('classdisplay').innerHTML = classDirect(imagevector)
+		}
+		
+		function slide1() {
+			boxwidth = window.innerHeight/20;
+			boxheight = window.innerHeight/20;
+			boxgap = window.innerHeight/80;
+
+			document.getElementById('introtext').style.opacity = 0;
+			document.getElementById('introtext').style.visibility = 'hidden';
+
+			for(i = 0; i < 3; i++) {
+				for(j = 0; j < 3; j++) {
+					var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+					rectElement.setAttribute('height',boxheight);
+					rectElement.setAttribute('width', boxwidth);
+					val = (j*1) + (i*3)
+					rectElement.setAttribute('id', 'box ' + val);
+					rectElement.setAttribute('x', (j*(boxwidth+boxgap)) + window.innerWidth/4);
+					rectElement.setAttribute('y', (i*(boxheight+boxgap)) + window.innerHeight/3);
+					// rectElement.style.visibility = 'visible';
+					rectElement.style.opacity = 1;
+					if (imagevector[val] == 0) {
+						rectElement.style.fill = 'rgba(255,140,0,0.4)'
+					}
+					else {
+						rectElement.style.fill = 'rgba(0,0,0,0.4)'
+					}
+					
+					rectElement.style.strokeWidth = '0';
+					displaySvg.appendChild(rectElement);
+					rectElement.addEventListener('mouseover', statechange)
+				}
+			}
+
+			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+			textElement.setAttribute('x', '70%');
+			textElement.setAttribute('y', '45%');
+			textElement.setAttribute('id', 'classdisplay');
+			textElement.setAttribute('font-family', 'Calibri');
+			textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+			textElement.innerHTML = classDirect(imagevector)
+			displaySvg.appendChild(textElement);
+
+			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+			textElement.setAttribute('x', '70%');
+			textElement.setAttribute('y', '40%');
+			textElement.setAttribute('id', 'classdisplaytext');
+			textElement.setAttribute('font-family', 'Calibri');
+			textElement.setAttribute('fill', 'rgba(0,140,255,1)');
+			textElement.setAttribute('style', 'font-size:15px;font-size: 2vw;');
+			textElement.innerHTML = 'Class Type'
+			displaySvg.appendChild(textElement);
+
+		}
+
+		transitpoints = 10
+		transitlength = window.innerHeight*4/10;
+		currentpoint = 0;
+
+		function timeline(event) {
+			scrValue = window.scrollY
+			if (currentpoint == 0 && scrValue > transitlength) {
+				slide1()
+				currentpoint = 1
+			} 
+			else if(currentpoint == 1 && scrValue <= transitlength) {
+
+			}
+		}
+
+		window.addEventListener('scroll', timeline)
+
+		// slide1()
+
+	</script>
+<html>
