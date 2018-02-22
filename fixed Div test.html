@@ -4,7 +4,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<style type="text/css">
 			* {
-				transition: opacity 0.5s, visibility 1s;
+				transition: opacity 1s, visibility 1s;
 			}
 		</style>
 	</head>
@@ -55,14 +55,20 @@
 			}
 			document.getElementById('classdisplay').innerHTML = classDirect(imagevector)
 		}
-		
+
+		slide0Elements = [document.getElementById('introtext')]
+
+
+		// Slide 1
+
+		slide1Elements = []
+		slide1EventElements = []
+
 		function slide1() {
 			boxwidth = window.innerHeight/20;
 			boxheight = window.innerHeight/20;
 			boxgap = window.innerHeight/80;
 
-			document.getElementById('introtext').style.opacity = 0;
-			document.getElementById('introtext').style.visibility = 'hidden';
 
 			for(i = 0; i < 3; i++) {
 				for(j = 0; j < 3; j++) {
@@ -84,49 +90,115 @@
 					
 					rectElement.style.strokeWidth = '0';
 					displaySvg.appendChild(rectElement);
+					slide1Elements.push(rectElement)
+					slide1EventElements.push(rectElement)
 					rectElement.addEventListener('mouseover', statechange)
 				}
 			}
 
 			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-			textElement.setAttribute('x', '70%');
+			textElement.setAttribute('x', '60%');
 			textElement.setAttribute('y', '45%');
+			textElement.setAttribute('text-anchor', 'middle');
 			textElement.setAttribute('id', 'classdisplay');
 			textElement.setAttribute('font-family', 'Calibri');
 			textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
 			textElement.innerHTML = classDirect(imagevector)
 			displaySvg.appendChild(textElement);
+			slide1Elements.push(textElement)
 
 			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-			textElement.setAttribute('x', '70%');
+			textElement.setAttribute('x', '60%');
 			textElement.setAttribute('y', '40%');
+			textElement.setAttribute('text-anchor', 'middle');
 			textElement.setAttribute('id', 'classdisplaytext');
 			textElement.setAttribute('font-family', 'Calibri');
 			textElement.setAttribute('fill', 'rgba(0,140,255,1)');
 			textElement.setAttribute('style', 'font-size:15px;font-size: 2vw;');
 			textElement.innerHTML = 'Class Type'
 			displaySvg.appendChild(textElement);
+			slide1Elements.push(textElement)
+
+			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+			textElement.setAttribute('x', '50%');
+			textElement.setAttribute('y', '80%');
+			textElement.setAttribute('text-anchor', 'middle');
+			textElement.setAttribute('id', 'instructionaboutclass');
+			textElement.setAttribute('font-family', 'Calibri');
+			textElement.setAttribute('fill', 'rgba(0,0,0,1)');
+			textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+			textElement.innerHTML = 'In this demo, we hope to identify three patterns formed on the grid. Plus, Cross and Minus.'
+			displaySvg.appendChild(textElement);
+			slide1Elements.push(textElement)
 
 		}
 
-		transitpoints = 10
-		transitlength = window.innerHeight*4/10;
-		currentpoint = 0;
+		slide1()
+		
+		function setOpacities(slideElements, value) {
+			for (i=0; i<slideElements.length; i++) {
+				slideElements[i].style.opacity = value;
+			}
+		}
+
+		function setVisibilities(slideElements, value) {
+			for (i=0; i<slideElements.length; i++) {
+				slideElements[i].style.opacity = value;
+			}
+		}
+
+		function setEventStatus(slideElements, value, type, func) {
+			if(value == 'switch-on') {
+				for (i=0; i<slideElements.length; i++) {
+					slideElements[i].addEventListener(type, func)
+				}
+			}
+			else if(value == 'switch-off') {
+				for (i=0; i<slideElements.length; i++) {
+					slideElements[i].removeEventListener(type, func)
+				}
+			}
+				
+		}
+
+		setOpacities(slide1Elements, 0)
+		setEventStatus(slide1EventElements, 'switch-off', 'mouseover', statechange)
+
+		// Slide 2
+
+		function slide2() {
+			
+		}
+
+
+
+
+		slidesnumber = 4
+		transitpoints = 25
+		transitlength = window.innerHeight*(slidesnumber - 1)/transitpoints;
+		currentpoint = 0
 
 		function timeline(event) {
 			scrValue = window.scrollY
-			if (currentpoint == 0 && scrValue > transitlength) {
-				slide1()
+			transitpoint = parseInt(scrValue/transitlength)
+			console.log(transitpoint)
+			if (currentpoint == 0 && transitpoint == 1) {
 				currentpoint = 1
+				setOpacities(slide1Elements, 1)
+				setOpacities(slide0Elements, 0)
+				setEventStatus(slide1EventElements, 'switch-on', 'mouseover', statechange)
 			} 
-			else if(currentpoint == 1 && scrValue <= transitlength) {
-
+			else if(currentpoint == 1 && transitpoint == 0) {
+				setOpacities(slide1Elements, 0)
+				setOpacities(slide0Elements, 1)
+				setEventStatus(slide1EventElements, 'switch-off', 'mouseover', statechange)
+				currentpoint = 0
 			}
 		}
 
 		window.addEventListener('scroll', timeline)
 
-		// slide1()
+
 
 	</script>
 <html>
