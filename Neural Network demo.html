@@ -1,0 +1,371 @@
+<html>
+	<head>
+		<title> Prajwal DSouza </title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<style type="text/css">
+			* {
+				transition: opacity 1s, visibility 1s, x 1s, y 1s;
+			}
+		</style>
+		<!-- <script src="snap.svg-min.js" type="text/javascript"></script> -->
+	</head>
+	<body style='margin:0px;width:100%; height: 400%;'>
+		<div id='displayDiv' height="100%" width="100%" style="background-size: cover; z-index:1; position: fixed; left:0px; top:0px;right:0px;bottom: 0px;" >
+			<svg id='introduction' height="100%" width="100%">
+				<text id='introtext' x="50%" y="50%" fill="black" font-family="Calibri" style='font-size:35px;font-size: 3.4vw;' text-anchor="middle">
+					A Neural Network Demo
+				</text>
+			</svg>
+		</div>
+
+
+	</body>
+
+	<script type="text/javascript">
+
+		displaySvg = document.getElementById('introduction')
+
+		function classDirect(vec) {
+			vec = JSON.stringify(vec)
+			if (vec == JSON.stringify([0,1,0,1,1,1,0,1,0])) {
+				return 'Plus'
+			}
+			else if (vec == JSON.stringify([0,0,0,1,1,1,0,0,0])) {
+				return 'Minus'
+			}
+			else if (vec == JSON.stringify([1,0,1,0,1,0,1,0,1])) {
+				return 'Cross'
+			}
+			else {
+				return 'something else'
+			}
+		}
+
+		imagevectordict = {}
+		imagevector = [0,1,0,1,1,1,0,1,0]
+
+		function statechange(event) {
+			statevalue = imagevector[event.target.id[4]]
+			if (statevalue == 0) {
+				imagevector[event.target.id[4]] = 1
+				event.target.style.fill = 'rgba(0,0,0,0.4)'
+				document.getElementById('box value ' + event.target.id[4]).innerHTML = 1
+			}
+			else {
+				imagevector[event.target.id[4]] = 0
+				event.target.style.fill = 'rgba(0,140,255,0.4)'
+				document.getElementById('box value ' + event.target.id[4]).innerHTML = 0
+			}
+			document.getElementById('classdisplay').innerHTML = classDirect(imagevector)
+		}
+
+		slide0Elements = [document.getElementById('introtext')]
+
+
+		// Slide 1
+
+		slide1Elements = []
+		slide1EventElements = []
+		boxElements = []
+		elementPositions = []
+
+		function slide1() {
+			boxwidth = window.innerHeight/20;
+			boxheight = window.innerHeight/20;
+			boxgap = window.innerHeight/80;
+
+
+			for(i = 0; i < 3; i++) {
+				for(j = 0; j < 3; j++) {
+					var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+					rectElement.setAttribute('height',boxheight);
+					rectElement.setAttribute('width', boxwidth);
+					val = (j*1) + (i*3)
+					rectElement.setAttribute('id', 'box ' + val);
+					rectElement.setAttribute('x', (j*(boxwidth+boxgap)) + window.innerWidth/4);
+					rectElement.setAttribute('y', (i*(boxheight+boxgap)) + window.innerHeight/3);
+					rectElement.style.opacity = 1;
+					if (imagevector[val] == 0) {
+						rectElement.style.fill = 'rgba(0,140,255,0.4)'
+					}
+					else {
+						rectElement.style.fill = 'rgba(0,0,0,0.4)'
+					}
+					
+					rectElement.style.strokeWidth = '0';
+					displaySvg.appendChild(rectElement);
+					slide1Elements.push(rectElement)
+					slide1EventElements.push(rectElement)
+					boxElements.push(rectElement)
+					rectElement.addEventListener('mouseover', statechange)
+				}
+			}
+
+			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+			textElement.setAttribute('x', '60%');
+			textElement.setAttribute('y', '45%');
+			textElement.setAttribute('text-anchor', 'middle');
+			textElement.setAttribute('id', 'classdisplay');
+			textElement.setAttribute('font-family', 'Calibri');
+			textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+			textElement.innerHTML = classDirect(imagevector)
+			displaySvg.appendChild(textElement);
+			slide1Elements.push(textElement)
+
+			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+			textElement.setAttribute('x', '60%');
+			textElement.setAttribute('y', '40%');
+			textElement.setAttribute('text-anchor', 'middle');
+			textElement.setAttribute('id', 'classdisplaytext');
+			textElement.setAttribute('font-family', 'Calibri');
+			textElement.setAttribute('fill', 'rgba(0,140,255,1)');
+			textElement.setAttribute('style', 'font-size:15px;font-size: 2vw;');
+			textElement.innerHTML = 'Class Type'
+			displaySvg.appendChild(textElement);
+			slide1Elements.push(textElement)
+
+			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+			textElement.setAttribute('x', '50%');
+			textElement.setAttribute('y', '80%');
+			textElement.setAttribute('text-anchor', 'middle');
+			textElement.setAttribute('id', 'instructionaboutclass');
+			textElement.setAttribute('font-family', 'Calibri');
+			textElement.setAttribute('fill', 'rgba(0,0,0,1)');
+			textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+			textElement.innerHTML = 'In this demo, we hope to identify three patterns formed on the grid. Plus, Cross and Minus.'
+			displaySvg.appendChild(textElement);
+			slide1Elements.push(textElement)
+
+		}
+
+		slide1()
+		
+		function setOpacities(slideElements, value) {
+			for (i=0; i<slideElements.length; i++) {
+				slideElements[i].style.opacity = value;
+				if (value == 1) {
+					slideElements[i].style.pointerEvents = 'auto';
+				}
+				else if (value == 0) {
+					slideElements[i].style.pointerEvents = 'none';
+				}
+			}
+		}
+
+		function setVisibilities(slideElements, value) {
+			for (i=0; i<slideElements.length; i++) {
+				slideElements[i].style.opacity = value;
+			}
+		}
+
+		function setEventStatus(slideElements, value, type, func) {
+			if(value == 'switch-on') {
+				for (i=0; i<slideElements.length; i++) {
+					slideElements[i].addEventListener(type, func)
+				}
+			}
+			else if(value == 'switch-off') {
+				for (i=0; i<slideElements.length; i++) {
+					slideElements[i].removeEventListener(type, func)
+				}
+			}
+				
+		}
+
+		setOpacities(slide1Elements, 0)
+		setEventStatus(slide1EventElements, 'switch-off', 'mouseover', statechange)
+
+		// Slide 2
+
+		slide2Elements = []
+
+		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		textElement.setAttribute('x', '60%');
+		textElement.setAttribute('y', '45%');
+		textElement.setAttribute('text-anchor', 'middle');
+		textElement.setAttribute('id', 'slide2inst');
+		textElement.setAttribute('font-family', 'Calibri');
+		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+		textElement.innerHTML = 'The image "pixels" are converted into an array (a string of 1s and 0s),'
+		displaySvg.appendChild(textElement);
+		slide2Elements.push(textElement)
+
+		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		textElement.setAttribute('x', '60%');
+		textElement.setAttribute('y', '50%');
+		textElement.setAttribute('text-anchor', 'middle');
+		textElement.setAttribute('id', 'slide2inst');
+		textElement.setAttribute('font-family', 'Calibri');
+		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+		textElement.innerHTML = 'and this forms the input data/layer.'
+		displaySvg.appendChild(textElement);
+		slide2Elements.push(textElement)
+
+		for (i=0; i<boxElements.length; i++) {
+			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+			textElement.setAttribute('x', '10%');
+			textElement.setAttribute('y', (3*boxwidth/4) + (window.innerHeight/13)*(i+2));
+			textElement.setAttribute('text-anchor', 'middle');
+			textElement.setAttribute('id', 'box value ' + i);
+			textElement.setAttribute('font-family', 'Calibri');
+			textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+			textElement.innerHTML = imagevector[i]
+			displaySvg.appendChild(textElement);
+			slide2Elements.push(textElement)
+		}
+
+		setOpacities(slide2Elements, 0)
+
+		function slide2(state) {
+			if(state == 'appear'){
+				for (i=0; i<boxElements.length; i++) {
+					boxElements[i].setAttribute('x', '15%')
+					boxElements[i].setAttribute('y', (window.innerHeight/13)*(i+2))
+				}
+				setOpacities(slide2Elements, 1)
+			}
+			else if(state == 'disappear'){
+				for(i = 0; i < 3; i++) {
+					for(j = 0; j < 3; j++) {
+						val = (j*1) + (i*3)
+						boxElement = document.getElementById('box ' + val)
+						boxElement.setAttribute('x', (j*(boxwidth+boxgap)) + window.innerWidth/4)
+						boxElement.setAttribute('y', (i*(boxheight+boxgap)) + window.innerHeight/3)
+					}
+				}
+				setOpacities(slide2Elements, 0)	
+			}
+		}
+
+
+		// Slide 3
+
+		slide3Elements = []
+
+		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		textElement.setAttribute('x', '50%');
+		textElement.setAttribute('y', '85%');
+		textElement.setAttribute('text-anchor', 'middle');
+		textElement.setAttribute('id', 'slide2inst');
+		textElement.setAttribute('font-family', 'Calibri');
+		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+		textElement.innerHTML = 'We have three possibilities. Hence, three outputs.'
+		displaySvg.appendChild(textElement);
+		slide3Elements.push(textElement)
+
+		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		textElement.setAttribute('x', '50%');
+		textElement.setAttribute('y', '90%');
+		textElement.setAttribute('text-anchor', 'middle');
+		textElement.setAttribute('id', 'slide2inst');
+		textElement.setAttribute('font-family', 'Calibri');
+		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+		textElement.innerHTML = 'and this forms the output layer.'
+		displaySvg.appendChild(textElement);
+		slide3Elements.push(textElement)
+
+		classesID = ['Plus', 'Minus', 'Cross']
+
+		for (i=0; i<3; i++) {
+			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+			textElement.setAttribute('x', '65%');
+			textElement.setAttribute('y', (window.innerHeight/6)*(i+2));
+			textElement.setAttribute('text-anchor', 'middle');
+			textElement.setAttribute('id', 'class value ' + i);
+			textElement.setAttribute('font-family', 'Calibri');
+			textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+			textElement.innerHTML = classesID[i]
+			displaySvg.appendChild(textElement);
+			slide3Elements.push(textElement)
+
+			var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+			circleElement.setAttribute('cx', '60%');
+			circleElement.setAttribute('cy', (window.innerHeight/6)*(i+2));	
+			circleElement.setAttribute('id', 'classbox value ' + i);
+			circleElement.setAttribute('r', '1.5%');
+			circleElement.setAttribute('fill','rgba(0,140,255,0.4)')
+			displaySvg.appendChild(circleElement);
+			slide3Elements.push(circleElement)
+		}
+
+		setOpacities(slide3Elements, 0)
+
+		function slide3(state) {
+			if(state == 'appear'){
+				for (i=0; i<boxElements.length; i++) {
+					boxElements[i].setAttribute('x', '15%')
+					boxElements[i].setAttribute('y', (window.innerHeight/13)*(i+2))
+				}
+				setOpacities(slide3Elements, 1)
+			}
+			else if(state == 'disappear'){
+				for(i = 0; i < 3; i++) {
+					for(j = 0; j < 3; j++) {
+						val = (j*1) + (i*3)
+						boxElement = document.getElementById('box ' + val)
+						boxElement.setAttribute('x', (j*(boxwidth+boxgap)) + window.innerWidth/4)
+						boxElement.setAttribute('y', (i*(boxheight+boxgap)) + window.innerHeight/3)
+					}
+				}
+				setOpacities(slide3Elements, 0)	
+			}
+		}
+		
+
+
+
+
+		slidesnumber = 8
+		transitpoints = 25
+		transitlength = window.innerHeight*(slidesnumber - 1)/transitpoints;
+		currentpoint = 0
+
+		document.body.style.height = slidesnumber + '00%'
+
+		function timeline(event) {
+			scrValue = window.scrollY
+			transitpoint = parseInt(scrValue/transitlength)
+			if (currentpoint <= 0 && transitpoint == 1) {
+				currentpoint = 1
+				setOpacities(slide1Elements, 1)
+				setOpacities(slide0Elements, 0)
+				setEventStatus(slide1EventElements, 'switch-on', 'mouseover', statechange)
+			} 
+			else if(currentpoint >= 1 && transitpoint == 0) {
+				setOpacities(slide1Elements, 0)
+				setOpacities(slide0Elements, 1)
+				setEventStatus(slide1EventElements, 'switch-off', 'mouseover', statechange)
+				currentpoint = 0
+			}
+			else if(currentpoint <= 1 && transitpoint == 2) {
+				slide2('appear')
+				document.getElementById('instructionaboutclass').style.opacity = 0;
+				document.getElementById('classdisplay').style.opacity = 0;
+				document.getElementById('classdisplaytext').style.opacity = 0;
+				document.getElementById('instructionaboutclass').style.pointerEvents = 'none';
+				document.getElementById('classdisplay').style.pointerEvents = 'none';
+				document.getElementById('classdisplaytext').style.pointerEvents = 'none';
+				currentpoint = 2
+			}
+			else if(currentpoint >= 2 && transitpoint == 1) {
+				setOpacities(slide1Elements, 1)
+				slide2('disappear')
+				setEventStatus(slide1EventElements, 'switch-on', 'mouseover', statechange)
+				document.getElementById('instructionaboutclass').style.pointerEvents = 'auto';
+				document.getElementById('classdisplay').style.pointerEvents = 'auto';
+				document.getElementById('classdisplaytext').style.pointerEvents = 'auto';
+				currentpoint = 1
+			}
+			else if(currentpoint <= 2 && transitpoint == 3) {
+				slide3('appear')
+				setOpacities(slide2Elements, 0)
+				currentpoint = 3
+			}
+		}
+
+		window.addEventListener('scroll', timeline)
+
+
+
+	</script>
+<html>
