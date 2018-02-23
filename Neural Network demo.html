@@ -37,7 +37,7 @@
 				return 'Cross'
 			}
 			else {
-				return 'something else'
+				return 'Something else'
 			}
 		}
 
@@ -48,18 +48,73 @@
 			statevalue = imagevector[event.target.id[4]]
 			if (statevalue == 0) {
 				imagevector[event.target.id[4]] = 1
-				event.target.style.fill = 'rgba(0,0,0,0.4)'
+				event.target.style.fill = 'rgba(0,0,0,1)'
 				document.getElementById('box value ' + event.target.id[4]).innerHTML = 1
 			}
 			else {
 				imagevector[event.target.id[4]] = 0
-				event.target.style.fill = 'rgba(0,140,255,0.4)'
+				event.target.style.fill = 'hsla(190,100%,50%,1)'
 				document.getElementById('box value ' + event.target.id[4]).innerHTML = 0
 			}
 			document.getElementById('classdisplay').innerHTML = classDirect(imagevector)
 		}
 
 		slide0Elements = [document.getElementById('introtext')]
+
+		boxwidth = window.innerHeight/20;
+		boxheight = window.innerHeight/20;
+		boxgap = window.innerHeight/80;
+
+
+		// Lower Layer Additions (Slide 4)
+
+		// hidden weights
+		weightsElements = []
+		for (k=0; k<9; k++) {
+			for (i=0; i<9; i++) {
+				var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+				lineElement.setAttribute('x1',(15*window.innerWidth/100) + boxwidth/2);
+				lineElement.setAttribute('y1',(window.innerHeight/13)*(k+2));
+				lineElement.setAttribute('x2','30%');
+				lineElement.setAttribute('id','weight ' + i + '-' + k + '-' + 1);
+				lineElement.setAttribute('y2',(window.innerHeight/13)*(i+2));
+				lineElement.style.stroke = 'rgba(255,140,0,1)'
+				lineElement.style.strokeWidth = 0.05 +'%';
+				displaySvg.appendChild(lineElement);
+				weightsElements.push(lineElement)
+			}
+		}
+
+		
+		for (k=0; k<9; k++) {
+			for (i=0; i<9; i++) {
+				var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+				lineElement.setAttribute('x1','30%');
+				lineElement.setAttribute('y1',(window.innerHeight/13)*(k+2));
+				lineElement.setAttribute('x2','45%');
+				lineElement.setAttribute('id','weight ' + i + '-' + k + '-' + 2);
+				lineElement.setAttribute('y2',(window.innerHeight/13)*(i+2));
+				lineElement.style.stroke = 'rgba(255,140,0,1)'
+				lineElement.style.strokeWidth = 0.05 +'%';
+				displaySvg.appendChild(lineElement);
+				weightsElements.push(lineElement)
+			}
+		}
+
+		for (k=0; k<9; k++) {
+			for (i=0; i<4; i++) {
+				var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+				lineElement.setAttribute('x1','45%');
+				lineElement.setAttribute('y1',(window.innerHeight/13)*(k+2));
+				lineElement.setAttribute('x2','60%');
+				lineElement.setAttribute('id','weight ' + i + '-' + k + '-' + 'output');
+				lineElement.setAttribute('y2',(window.innerHeight/12)*(i+4));
+				lineElement.style.stroke = 'rgba(255,140,0,1)'
+				lineElement.style.strokeWidth = 0.05 +'%';
+				displaySvg.appendChild(lineElement);
+				weightsElements.push(lineElement)
+			}
+		}
 
 
 		// Slide 1
@@ -70,11 +125,7 @@
 		elementPositions = []
 
 		function slide1() {
-			boxwidth = window.innerHeight/20;
-			boxheight = window.innerHeight/20;
-			boxgap = window.innerHeight/80;
-
-
+			
 			for(i = 0; i < 3; i++) {
 				for(j = 0; j < 3; j++) {
 					var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
@@ -86,10 +137,10 @@
 					rectElement.setAttribute('y', (i*(boxheight+boxgap)) + window.innerHeight/3);
 					rectElement.style.opacity = 1;
 					if (imagevector[val] == 0) {
-						rectElement.style.fill = 'rgba(0,140,255,0.4)'
+						rectElement.style.fill = 'hsla(190,100%,50%,1)'
 					}
 					else {
-						rectElement.style.fill = 'rgba(0,0,0,0.4)'
+						rectElement.style.fill = 'rgba(0,0,0,1)'
 					}
 					
 					rectElement.style.strokeWidth = '0';
@@ -118,7 +169,7 @@
 			textElement.setAttribute('text-anchor', 'middle');
 			textElement.setAttribute('id', 'classdisplaytext');
 			textElement.setAttribute('font-family', 'Calibri');
-			textElement.setAttribute('fill', 'rgba(0,140,255,1)');
+			textElement.setAttribute('fill', 'hsla(190,100%,50%,1)');
 			textElement.setAttribute('style', 'font-size:15px;font-size: 2vw;');
 			textElement.innerHTML = 'Class Type'
 			displaySvg.appendChild(textElement);
@@ -204,7 +255,7 @@
 		for (i=0; i<boxElements.length; i++) {
 			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
 			textElement.setAttribute('x', '10%');
-			textElement.setAttribute('y', (3*boxwidth/4) + (window.innerHeight/13)*(i+2));
+			textElement.setAttribute('y', (window.innerHeight/13)*(i+2) + boxwidth/4);
 			textElement.setAttribute('text-anchor', 'middle');
 			textElement.setAttribute('id', 'box value ' + i);
 			textElement.setAttribute('font-family', 'Calibri');
@@ -220,7 +271,7 @@
 			if(state == 'appear'){
 				for (i=0; i<boxElements.length; i++) {
 					boxElements[i].setAttribute('x', '15%')
-					boxElements[i].setAttribute('y', (window.innerHeight/13)*(i+2))
+					boxElements[i].setAttribute('y', (window.innerHeight/13)*(i+2) - 2*(boxwidth)/4)
 				}
 				setOpacities(slide2Elements, 1)
 			}
@@ -249,7 +300,7 @@
 		textElement.setAttribute('id', 'slide2inst');
 		textElement.setAttribute('font-family', 'Calibri');
 		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
-		textElement.innerHTML = 'We have three possibilities. Hence, three outputs.'
+		textElement.innerHTML = 'We have four possibilities. Hence, four outputs.'
 		displaySvg.appendChild(textElement);
 		slide3Elements.push(textElement)
 
@@ -264,13 +315,14 @@
 		displaySvg.appendChild(textElement);
 		slide3Elements.push(textElement)
 
-		classesID = ['Plus', 'Minus', 'Cross']
+		classesID = ['Plus', 'Minus', 'Cross', 'Something else']
 
-		for (i=0; i<3; i++) {
+		outputLayerElements = []
+
+		for (i=0; i<4; i++) {
 			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
 			textElement.setAttribute('x', '65%');
-			textElement.setAttribute('y', (window.innerHeight/6)*(i+2));
-			textElement.setAttribute('text-anchor', 'middle');
+			textElement.setAttribute('y', (window.innerHeight/12)*(i+4));
 			textElement.setAttribute('id', 'class value ' + i);
 			textElement.setAttribute('font-family', 'Calibri');
 			textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
@@ -280,34 +332,106 @@
 
 			var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
 			circleElement.setAttribute('cx', '60%');
-			circleElement.setAttribute('cy', (window.innerHeight/6)*(i+2));	
+			circleElement.setAttribute('cy', (window.innerHeight/12)*(i+4));	
 			circleElement.setAttribute('id', 'classbox value ' + i);
 			circleElement.setAttribute('r', '1.5%');
-			circleElement.setAttribute('fill','rgba(0,140,255,0.4)')
+			circleElement.setAttribute('fill','hsla(190,100%,50%,1)')
 			displaySvg.appendChild(circleElement);
 			slide3Elements.push(circleElement)
+			outputLayerElements.push(circleElement)
 		}
 
 		setOpacities(slide3Elements, 0)
 
 		function slide3(state) {
 			if(state == 'appear'){
-				for (i=0; i<boxElements.length; i++) {
-					boxElements[i].setAttribute('x', '15%')
-					boxElements[i].setAttribute('y', (window.innerHeight/13)*(i+2))
-				}
 				setOpacities(slide3Elements, 1)
 			}
 			else if(state == 'disappear'){
-				for(i = 0; i < 3; i++) {
-					for(j = 0; j < 3; j++) {
-						val = (j*1) + (i*3)
-						boxElement = document.getElementById('box ' + val)
-						boxElement.setAttribute('x', (j*(boxwidth+boxgap)) + window.innerWidth/4)
-						boxElement.setAttribute('y', (i*(boxheight+boxgap)) + window.innerHeight/3)
-					}
-				}
 				setOpacities(slide3Elements, 0)	
+			}
+		}
+
+
+		// Slide 4
+
+		slide4Elements = []
+
+		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		textElement.setAttribute('x', '80%');
+		textElement.setAttribute('y', '45%');
+		textElement.setAttribute('text-anchor', 'middle');
+		textElement.setAttribute('id', 'slide4inst');
+		textElement.setAttribute('font-family', 'Calibri');
+		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+		textElement.innerHTML = 'The network will have two hidden layers.'
+		displaySvg.appendChild(textElement);
+		slide4Elements.push(textElement)
+
+		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		textElement.setAttribute('x', '80%');
+		textElement.setAttribute('y', '50%');
+		textElement.setAttribute('text-anchor', 'middle');
+		textElement.setAttribute('id', 'slide4inst');
+		textElement.setAttribute('font-family', 'Calibri');
+		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+		textElement.innerHTML = 'Each with the same number of "Neurons"'
+		displaySvg.appendChild(textElement);
+		slide4Elements.push(textElement)
+
+		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		textElement.setAttribute('x', '80%');
+		textElement.setAttribute('y', '55%');
+		textElement.setAttribute('text-anchor', 'middle');
+		textElement.setAttribute('id', 'slide4inst');
+		textElement.setAttribute('font-family', 'Calibri');
+		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+		textElement.innerHTML = 'Each layer is connected by a set of lines called "weights".'
+		displaySvg.appendChild(textElement);
+		slide4Elements.push(textElement)
+
+		
+
+		
+
+		for (i=0; i<9; i++) {
+			var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+			circleElement.setAttribute('cx', '30%');
+			circleElement.setAttribute('cy',  (window.innerHeight/13)*(i+2));	
+			circleElement.setAttribute('id', 'hidden layer one ' + i);
+			circleElement.setAttribute('r', '1.5%');
+			circleElement.setAttribute('fill','hsla(190,100%,50%,1)')
+			displaySvg.appendChild(circleElement);
+			slide4Elements.push(circleElement)
+		}
+
+
+
+		for (i=0; i<9; i++) {
+			var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+			circleElement.setAttribute('cx', '45%');
+			circleElement.setAttribute('cy',  (window.innerHeight/13)*(i+2));	
+			circleElement.setAttribute('id', 'hidden layer two ' + i);
+			circleElement.setAttribute('r', '1.5%');
+			circleElement.setAttribute('fill','hsla(190,100%,50%,1)')
+			displaySvg.appendChild(circleElement);
+			slide4Elements.push(circleElement)
+		}
+
+		setOpacities(slide4Elements, 0)
+		setOpacities(weightsElements, 0)
+
+		function slide4(state) {
+			if(state == 'appear'){
+				setOpacities(slide4Elements, 1)
+				setOpacities(outputLayerElements, 1)
+				setTimeout( function(){
+					setOpacities(weightsElements, 1)
+				}  , 700 );
+			}
+			else if(state == 'disappear'){
+				setOpacities(slide4Elements, 0)
+				setOpacities(weightsElements, 0)
 			}
 		}
 		
@@ -330,12 +454,14 @@
 				setOpacities(slide1Elements, 1)
 				setOpacities(slide0Elements, 0)
 				setEventStatus(slide1EventElements, 'switch-on', 'mouseover', statechange)
+				setOpacities(weightsElements, 0)
 			} 
 			else if(currentpoint >= 1 && transitpoint == 0) {
 				setOpacities(slide1Elements, 0)
 				setOpacities(slide0Elements, 1)
 				setEventStatus(slide1EventElements, 'switch-off', 'mouseover', statechange)
 				currentpoint = 0
+				setOpacities(weightsElements, 0)
 			}
 			else if(currentpoint <= 1 && transitpoint == 2) {
 				slide2('appear')
@@ -346,6 +472,7 @@
 				document.getElementById('classdisplay').style.pointerEvents = 'none';
 				document.getElementById('classdisplaytext').style.pointerEvents = 'none';
 				currentpoint = 2
+				setOpacities(weightsElements, 0)
 			}
 			else if(currentpoint >= 2 && transitpoint == 1) {
 				setOpacities(slide1Elements, 1)
@@ -355,10 +482,30 @@
 				document.getElementById('classdisplay').style.pointerEvents = 'auto';
 				document.getElementById('classdisplaytext').style.pointerEvents = 'auto';
 				currentpoint = 1
+				setOpacities(weightsElements, 0)
 			}
 			else if(currentpoint <= 2 && transitpoint == 3) {
 				slide3('appear')
 				setOpacities(slide2Elements, 0)
+				currentpoint = 3
+				setOpacities(weightsElements, 0)
+			}
+			else if(currentpoint >=3 && transitpoint == 2) {
+				slide3('disappear')
+				setOpacities(slide2Elements, 1)
+				currentpoint = 2
+				setOpacities(weightsElements, 0)
+			}
+			else if(currentpoint <=3 && transitpoint == 4) {
+				setOpacities(slide3Elements, 0)
+				slide4('appear')
+				currentpoint = 4
+			}
+			else if(currentpoint >=4 && transitpoint == 3) {
+				setOpacities(slide4Elements, 0)
+				setOpacities(slide3Elements, 1)
+				setOpacities(weightsElements, 0)
+				slide4('disappear')
 				currentpoint = 3
 			}
 		}
