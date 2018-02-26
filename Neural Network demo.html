@@ -13,7 +13,7 @@
 	<body style='margin:0px;width:100%; height: 400%;'>
 		<div id='displayDiv' height="100%" width="100%" style="background-size: cover; z-index:1; position: fixed; left:0px; top:0px;right:0px;bottom: 0px;" >
 			<svg id='introduction' height="100%" width="100%">
-				<text id='introtext' x="50%" y="50%" fill="black" font-family="Calibri" style='font-size:35px;font-size: 5vw;' text-anchor="middle">
+				<text id='introtext' x="50%" y="50%" fill="black" font-family="Calibri" style='font-size:35px;font-size: 3.4vw;' text-anchor="middle">
 					A Neural Network Demo
 				</text>
 			</svg>
@@ -32,6 +32,10 @@
 		slide4Elements = []
 		slide5Elements = []
 		slide6Elements = []
+		slide7Elements = []
+		slide8Elements = []
+		slide9Elements = []
+		slide10Elements = []
 
 		function setOpacities(slideElements, value) {
 			for (i=0; i<slideElements.length; i++) {
@@ -370,7 +374,7 @@
 			textElement.setAttribute('font-family', 'Calibri');
 			textElement.setAttribute('fill', 'rgba(0,0,0,1)');
 			textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
-			textElement.innerHTML = 'In this demo, we hope to identify three patterns formed on the grid. Plus, Cross and Minus.'
+			textElement.innerHTML = "Suppose we want to classifies certain patterns. Let's see out how a neural net would do it."
 			displaySvg.appendChild(textElement);
 			slide1Elements.push(textElement)
 
@@ -382,14 +386,194 @@
 		setEventStatus(slide1EventElements, 'switch-off', 'mouseover', statechange)
 
 
-		
+		// Slide 2
+
+		function neuronHover(event) {
+			theID = event.target.id
+			document.getElementById('infoDisplay').innerHTML = "You just selected the " + nonBiasNeuronValueAndName[theID][1] + determineNsuffix(nonBiasNeuronValueAndName[theID][1]) + " neuron of the " + nonBiasNeuronValueAndName[theID][2] + " layer. It's current value is " + nonBiasNeuronValueAndName[theID][0].toFixed(4) + "."
+		}
 		
 
+		function neuronHoverOut(event) {
+			document.getElementById('infoDisplay').innerHTML = ""
+		}
+
+		nonBiasNeuronValueAndName = {}
+		
+
+		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		textElement.setAttribute('x', '60%');
+		textElement.setAttribute('y', '45%');
+		textElement.setAttribute('text-anchor', 'middle');
+		textElement.setAttribute('id', 'slide2inst');
+		textElement.setAttribute('font-family', 'Calibri');
+		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+		textElement.innerHTML = 'The image "pixels" are converted into an array (a string of 1s and 0s),'
+		displaySvg.appendChild(textElement);
+		slide2Elements.push(textElement)
+
+		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		textElement.setAttribute('x', '60%');
+		textElement.setAttribute('y', '50%');
+		textElement.setAttribute('text-anchor', 'middle');
+		textElement.setAttribute('id', 'slide2inst');
+		textElement.setAttribute('font-family', 'Calibri');
+		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+		textElement.innerHTML = 'and this is fed to what is called the input layer.'
+		displaySvg.appendChild(textElement);
+		slide2Elements.push(textElement)
+
+		inputLayerNeuronElements = []
+		inputLayerNeuronElementValue = {}
+
+		for (i=0; i<9; i++) {
+			var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+			circleElement.setAttribute('cx', '15%');
+			circleElement.setAttribute('cy',  (window.innerHeight/13)*(i+1));	
+			circleElement.setAttribute('id', 'input layer ' + i);
+			circleElement.setAttribute('r', '1.5%');
+			circleElement.setAttribute('fill','hsla(190,100%,50%,1)')
+			displaySvg.appendChild(circleElement);
+			slide2Elements.push(circleElement)
+			inputLayerNeuronElements.push(circleElement)
+			inputLayerNeuronElementValue['input layer ' + i] = 0
+			circleElement.addEventListener('mouseover', neuronHover)
+			circleElement.addEventListener('mouseout', neuronHoverOut)
+			circleElement.style.cursor = 'pointer'
+			nonBiasNeuronValueAndName[circleElement.id] = [0, i, 'input']
+		}
+
+		for (i=0; i<boxElements.length; i++) {
+			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+			textElement.setAttribute('x', '5%');
+			textElement.setAttribute('y', (window.innerHeight/13)*(i+1) + boxwidth/4);
+			textElement.setAttribute('text-anchor', 'middle');
+			textElement.setAttribute('id', 'box value ' + i);
+			textElement.setAttribute('font-family', 'Calibri');
+			textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+			textElement.innerHTML = imagevector[i]
+			displaySvg.appendChild(textElement);
+			slide2Elements.push(textElement)
+		}
+
+		setOpacities(slide2Elements, 0)
+
+		function tranferToInputLayer() {
+			for(i=0; i<inputLayerNeuronElements.length;i++) {
+				neuronOfInterest = document.getElementById('input layer ' + i)
+				neuronOfInterest.style.transition = 'fill 2s'
+				neuronOfInterest.style.fill = 'hsla(190,100%,'+ (1 - imagevector[i])*50 + '%,1)'
+				inputLayerNeuronElementValue['input layer ' + i] = imagevector[i]
+				nonBiasNeuronValueAndName[neuronOfInterest.id][0] = imagevector[i]
+			}
+		}
+
+		timeouts = []
+
+		function slide2(state) {
+			if(state == 'appear'){
+				for (i=0; i<boxElements.length; i++) {
+					boxElements[i].setAttribute('x', '7%')
+					boxElements[i].setAttribute('y', (window.innerHeight/13)*(i+1) - 2*(boxwidth)/4)
+				}
+				setOpacities(slide2Elements, 1)
+				timeouts.push(setTimeout( function(){
+					tranferToInputLayer()
+				}  , 1000 ));
+			}
+			else if(state == 'disappear'){
+				for(i = 0; i < 3; i++) {
+					for(j = 0; j < 3; j++) {
+						val = (j*1) + (i*3)
+						boxElement = document.getElementById('box ' + val)
+						boxElement.setAttribute('x', (j*(boxwidth+boxgap)) + window.innerWidth/4)
+						boxElement.setAttribute('y', (i*(boxheight+boxgap)) + window.innerHeight/3)
+					}
+				}
+				setOpacities(slide2Elements, 0)	
+				for(i=0; i<timeouts.length; i++) {
+					clearTimeout(timeouts[i])				}
+				timeouts = []
+			}
+		}
+
+
+		// Slide 3
+
+
+
+		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		textElement.setAttribute('x', '50%');
+		textElement.setAttribute('y', '85%');
+		textElement.setAttribute('text-anchor', 'middle');
+		textElement.setAttribute('id', 'slide2inst');
+		textElement.setAttribute('font-family', 'Calibri');
+		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+		textElement.innerHTML = 'We have four possibilities. Hence, four outputs.'
+		displaySvg.appendChild(textElement);
+		slide3Elements.push(textElement)
+
+		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		textElement.setAttribute('x', '50%');
+		textElement.setAttribute('y', '90%');
+		textElement.setAttribute('text-anchor', 'middle');
+		textElement.setAttribute('id', 'slide2inst');
+		textElement.setAttribute('font-family', 'Calibri');
+		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+		textElement.innerHTML = 'and this forms the output layer.'
+		displaySvg.appendChild(textElement);
+		slide3Elements.push(textElement)
+
+		classesID = ['Plus', 'Minus', 'Cross', 'Something else']
+
+		outputLayerElements = []
+		outputLayerElementValue = {}
+
+		for (i=0; i<4; i++) {
+			var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+			textElement.setAttribute('x', '65%');
+			textElement.setAttribute('y', (window.innerHeight/12)*(i+3));
+			textElement.setAttribute('id', 'class value ' + i);
+			textElement.setAttribute('font-family', 'Calibri');
+			textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+			textElement.innerHTML = classesID[i]
+			displaySvg.appendChild(textElement);
+			slide3Elements.push(textElement)
+
+			var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+			circleElement.setAttribute('cx', '60%');
+			circleElement.setAttribute('cy', (window.innerHeight/12)*(i+3));	
+			circleElement.setAttribute('id', 'classbox value ' + i);
+			circleElement.setAttribute('r', '1.5%');
+			circleElement.setAttribute('fill','hsla(190,100%,50%,1)')
+			displaySvg.appendChild(circleElement);
+			slide3Elements.push(circleElement)
+			outputLayerElements.push(circleElement)
+			outputLayerElementValue['classbox value ' + i] = 0
+			circleElement.addEventListener('mouseover', neuronHover)
+			circleElement.addEventListener('mouseout', neuronHoverOut)
+			circleElement.style.cursor = 'pointer'
+			nonBiasNeuronValueAndName[circleElement.id] = [0, i, 'output']
+		}
+
+		setOpacities(slide3Elements, 0)
+
+		function slide3(state) {
+			if(state == 'appear'){
+				setOpacities(slide3Elements, 1)
+			}
+			else if(state == 'disappear'){
+				setOpacities(slide3Elements, 0)	
+			}
+		}
+
+
+		
 
 
 
 		slidesnumber = 8
-		transitpoints = 25
+		transitpoints = 20
 		transitlength = window.innerHeight*(slidesnumber - 1)/transitpoints;
 		currentpoint = 0
 
@@ -411,6 +595,57 @@
 				setEventStatus(slide1EventElements, 'switch-off', 'mouseover', statechange)
 				currentpoint = 0
 				setOpacities(weightsElements, 0)
+			}
+			else if(currentpoint <= 1 && transitpoint == 2) {
+				slide2('appear')
+				document.getElementById('instructionaboutclass').style.opacity = 0;
+				document.getElementById('classdisplay').style.opacity = 0;
+				document.getElementById('classdisplaytext').style.opacity = 0;
+				document.getElementById('instructionaboutclass').style.pointerEvents = 'none';
+				document.getElementById('classdisplay').style.pointerEvents = 'none';
+				document.getElementById('classdisplaytext').style.pointerEvents = 'none';
+				currentpoint = 2
+				setOpacities(weightsElements, 0)
+			}
+			else if(currentpoint >= 2 && transitpoint == 1) {
+				setOpacities(slide1Elements, 1)
+				slide2('disappear')
+				setEventStatus(slide1EventElements, 'switch-on', 'mouseover', statechange)
+				document.getElementById('instructionaboutclass').style.pointerEvents = 'auto';
+				document.getElementById('classdisplay').style.pointerEvents = 'auto';
+				document.getElementById('classdisplaytext').style.pointerEvents = 'auto';
+				currentpoint = 1
+				setOpacities(weightsElements, 0)
+			}
+			else if(currentpoint <= 2 && transitpoint == 3) {
+				slide3('appear')
+				setOpacities(slide2Elements, 0)
+				setOpacities(inputLayerNeuronElements, 1)
+				currentpoint = 3
+				setOpacities(weightsElements, 0)
+			}
+			else if(currentpoint >=3 && transitpoint == 2) {
+				slide3('disappear')
+				setOpacities(slide2Elements, 1)
+				currentpoint = 2
+				setOpacities(weightsElements, 0)
+			}
+			else if(currentpoint <=3 && transitpoint == 4) {
+				setOpacities(slide3Elements, 0)
+				slide4('appear')
+				currentpoint = 4
+			}
+			else if(currentpoint >=4 && transitpoint == 3) {
+				setOpacities(slide4Elements, 0)
+				setOpacities(slide3Elements, 1)
+				setOpacities(weightsElements, 0)
+				slide4('disappear')
+				currentpoint = 3
+			}
+			else if(currentpoint <=4 && transitpoint == 5) {
+				setOpacities(slide4Elements, 0)
+				
+				currentpoint = 5
 			}
 			
 		}
