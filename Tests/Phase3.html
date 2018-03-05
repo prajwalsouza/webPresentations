@@ -1,12 +1,14 @@
 <html>
 	<head>
-		<title>  Partition </title>
+		<title> Spider Web Simulation </title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-		<script src="https://cdn.rawgit.com/prajwalsouza/QLearning/39137c9a/physicsjs-full.min.js" type="text/javascript"></script>
-		
+		<script src="https://cdn.rawgit.com/prajwalsouza/QLearning/39137c9a/physicsjs-full.min.js" type="text/javascript"></script>		
 	</head>
 	<body style='margin:0px;width:100%; height: 100%;'>
-		<div id="containWeb" style='margin:0px;width:100%; height: 100%;'> 
+		<div id="containWeb" style='margin:0px;width:100%; height: 100%;overflow: hidden;'> 
+			
+		</div>
+		<div id="containLab" style='margin:0px;width:100%; height: 100%;overflow: hidden;'> 
 			
 		</div>
 		
@@ -15,6 +17,125 @@
 		
 		<script>
 
+		if(window.innerHeight <= window.innerWidth) {
+			var div = document.createElement("div");
+			div.innerHTML = "Spider Web Simulation";
+			div.style.textAlign = "center";
+			div.id = "maintext";
+			div.style.position = "absolute";
+			div.style.fontSize = "6vw";
+			div.style.fontFamily = "Calibri";
+			div.style.zIndex = '2';
+			div.style.left = '50%'
+			div.style.top = '30%'
+			div.style.transform = 'translate(-50%, -30%)';
+			document.getElementById("containWeb").appendChild(div);
+
+			var div = document.createElement("div");
+			div.innerHTML = 'Made using <a href="http://wellcaffeinated.net/PhysicsJS/" target="_blank" style="text-decoration: none; color: inherit;">PhysicsJS</a> and based on <a href="http://www.cs.bham.ac.uk/~jer/spider.pdf" target="_blank" style="text-decoration: none; color: inherit;">work of Thiemo Krink and Fritz Vollrath.</a>'
+			div.id = "madeUsing";
+			div.style.textAlign = "center";
+			div.style.position = "absolute";
+			div.style.fontSize = "2vw";
+			div.style.zIndex = '2';
+			div.style.fontFamily = "Calibri";
+			div.style.left = '50%'
+			div.style.top = '60%'
+			div.style.color = 'hsla(199,100%,50%,1)'
+			div.style.transform = 'translate(-50%, -60%)';
+			document.getElementById("containWeb").appendChild(div);
+
+			var div = document.createElement("div");
+			div.innerHTML = 'In collaboration with <a href="https://www.instagram.com/ubermenschiv/" target="_blank" style="text-decoration: none; color: inherit;">ubermenschiv</a>'
+			div.id = "collaborationWith";
+			div.style.textAlign = "center";
+			div.style.position = "absolute";
+			div.style.fontSize = "1.5vw";
+			div.style.zIndex = '2';
+			div.style.fontFamily = "Calibri";
+			div.style.left = '50%'
+			div.style.top = '70%'
+			div.style.color = 'hsla(215,100%,50%,1)'
+			div.style.transform = 'translate(-50%, -70%)';
+			document.getElementById("containWeb").appendChild(div);
+
+			var div = document.createElement("div");
+			div.innerHTML = '<a href="https://prajwalsouza.github.io" target="_blank" style="text-decoration: none;color: inherit;">prajwalsouza.github.io</a>'
+			div.style.textAlign = "center";
+			div.id = "websitelink";
+			div.style.position = "absolute";
+			div.style.fontSize = "1vw";
+			div.style.zIndex = '2';
+			div.style.fontFamily = "Calibri";
+			div.style.left = '50%'
+			div.style.top = '95%'
+			div.style.color = 'hsla(270,100%,50%,1)'
+			div.style.transform = 'translate(-50%, -95%)';
+			document.getElementById("containWeb").appendChild(div);
+		
+		}
+		else {
+			var div = document.createElement("div");
+			div.innerHTML = "Spider Web Simulation";
+			div.style.textAlign = "center";
+			div.id = "maintext";
+			div.style.position = "absolute";
+			div.style.fontSize = "8vh";
+			div.style.fontFamily = "Calibri";
+			div.style.zIndex = '2';
+			div.style.left = '50%'
+			div.style.top = '30%'
+			div.style.transform = 'translate(-50%, -30%)';
+			document.getElementById("containWeb").appendChild(div);
+
+			var div = document.createElement("div");
+			div.innerHTML = 'Made using <a href="http://wellcaffeinated.net/PhysicsJS/" target="_blank" style="text-decoration: none; color: inherit;">PhysicsJS</a> and based on <a href="http://www.cs.bham.ac.uk/~jer/spider.pdf" target="_blank" style="text-decoration: none; color: inherit;">work of Thiemo Krink and Fritz Vollrath.</a>'
+			div.id = "madeUsing";
+			div.style.textAlign = "center";
+			div.style.position = "absolute";
+			div.style.fontSize = "3vh";
+			div.style.zIndex = '2';
+			div.style.fontFamily = "Calibri";
+			div.style.left = '50%'
+			div.style.top = '60%'
+			div.style.color = 'hsla(199,100%,50%,1)'
+			div.style.transform = 'translate(-50%, -60%)';
+			document.getElementById("containWeb").appendChild(div);
+
+			var div = document.createElement("div");
+			div.innerHTML = 'In collaboration with <a href="https://www.instagram.com/ubermenschiv/" target="_blank" style="text-decoration: none; color: inherit;">ubermenschiv</a>'
+			div.id = "collaborationWith";
+			div.style.textAlign = "center";
+			div.style.position = "absolute";
+			div.style.fontSize = "2vh";
+			div.style.zIndex = '2';
+			div.style.fontFamily = "Calibri";
+			div.style.left = '50%'
+			div.style.top = '70%'
+			div.style.color = 'hsla(215,100%,50%,1)'
+			div.style.transform = 'translate(-50%, -70%)';
+			document.getElementById("containWeb").appendChild(div);
+
+			var div = document.createElement("div");
+			div.innerHTML = '<a href="https://prajwalsouza.github.io" target="_blank" style="text-decoration: none;color: inherit;">prajwalsouza.github.io</a>'
+			div.style.textAlign = "center";
+			div.id = "websitelink";
+			div.style.position = "absolute";
+			div.style.fontSize = "2vh";
+			div.style.zIndex = '2';
+			div.style.fontFamily = "Calibri";
+			div.style.left = '50%'
+			div.style.top = '95%'
+			div.style.color = 'hsla(270,100%,50%,1)'
+			div.style.transform = 'translate(-50%, -95%)';
+			document.getElementById("containWeb").appendChild(div);
+
+		
+		}
+
+		
+
+ 	
 
 
 		Physics({ timestep: 8, sleepDisabled: true },function (world) {
@@ -456,7 +577,7 @@
 		}, null, 100);
 
 		// render
-		var webStyles = { strokeStyle: 'rgba(0,0,0,1)', lineWidth: 1 };
+		var webStyles = { strokeStyle: 'hsla(50,100%,50%,1)', lineWidth: 1.5 };
 		world.on('render', function( data ){
 
 			var renderer = data.renderer
