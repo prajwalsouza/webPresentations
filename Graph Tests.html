@@ -1,0 +1,183 @@
+<html>
+	<head>
+		<title> Fourier Transform </title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+
+	</head>
+	<body style='margin:0px;width:100%; height: 100%;'>
+		<div id="containAll" style='margin:0px;width:100%; height: 100%;overflow: hidden; font-size: 0;box-shadow: 0px 20px 50px rgba(0,0,0,0.2);'> 
+			<div id="containGraph" style='margin:0px;width:100%; height: 40%;overflow: hidden;background: white;position: relative;'>
+				<svg id='graphSvg' height="100%" width="100%" viewBox="0 0 100 100" preserveAspectRatio="none" style='position: absolute; z-index: 1'>
+
+				</svg>
+				<div id="containGraphtexts" style='margin:0px;width:100%; height: 100%;overflow: hidden;background: white; position: absolute; '>
+				
+				</div>
+			</div>
+
+			<div id="containPolar" style='margin:0px;width:40%; height: 60%;overflow: hidden; display: inline-block;background: white;box-shadow: 0px -20px 50px rgba(0,0,0,0.2);'></div>
+			<div id="containTransform" style='margin:0px;width:60%; height: 60%;overflow: hidden;display: inline-block;background: white;box-shadow: -10px -20px 50px rgba(0,0,0,0.2);'></div>
+		</div>
+		
+		
+		<script>
+
+		graphSvg = document.getElementById('graphSvg')
+
+
+		graphymax = 1.5
+		graphymin = -1.5
+
+		graphxmax = 10
+
+		
+
+		function drawgraphAxes() {
+			var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+			lineElement.setAttribute('x1', graphToSvgX(0) + '%');
+			lineElement.setAttribute('y1', graphToSvgY(0) + '%');
+			lineElement.setAttribute('vector-effect','non-scaling-stroke');
+			lineElement.setAttribute('x2', graphToSvgX(graphxmax) + '%')
+			lineElement.setAttribute('y2', graphToSvgY(0) + '%');
+			lineElement.style.stroke = 'hsla(32,1%,70%,1)'
+			lineElement.style.strokeWidth = '2%';
+			graphSvg.appendChild(lineElement);
+
+			var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+			lineElement.setAttribute('x1', graphToSvgX(0) + '%');
+			lineElement.setAttribute('y1', graphToSvgY(graphymax) + '%');
+			lineElement.setAttribute('x2', graphToSvgX(0) + '%')
+			lineElement.setAttribute('y2', graphToSvgY(graphymin) + '%');
+			lineElement.setAttribute('vector-effect','non-scaling-stroke');
+			lineElement.style.stroke = 'hsla(32,1%,70%,1)'
+			lineElement.style.strokeWidth = '2%';
+			graphSvg.appendChild(lineElement);
+
+		}
+		
+		drawgraphAxes()
+
+		function drawgraphAxesTicksAndLabels() {
+			numberofticks = parseInt(graphxmax)
+			ticklengthsX = (graphymax - graphymin)/40
+			ticklengthsY = (graphxmax - 0)/200
+
+			for(i=0; i<numberofticks; i++) {
+				var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+				lineElement.setAttribute('x1', graphToSvgX(i) + '%');
+				lineElement.setAttribute('y1', graphToSvgY(ticklengthsX) + '%');
+				lineElement.setAttribute('x2', graphToSvgX(i) + '%')
+				lineElement.setAttribute('y2', graphToSvgY(-ticklengthsX) + '%');
+				lineElement.setAttribute('vector-effect','non-scaling-stroke');
+				lineElement.style.stroke = 'hsla(32,1%,70%,1)'
+				lineElement.style.strokeWidth = '1.5%';
+				graphSvg.appendChild(lineElement);
+
+				var div = document.createElement("div");
+				div.innerHTML = i;
+				div.style.textAlign = "center";
+				div.id = 'xtick' + i;
+				div.style.position = "absolute";
+				div.style.fontSize = "1vw";
+				div.style.fontFamily = "Calibri";
+				div.style.zIndex = '0';
+				div.style.left = graphToSvgX(i + ticklengthsY) + '%'
+				div.style.top =  graphToSvgY(-2*ticklengthsX) + '%'
+				div.style.transform = 'translate(' + (-1)*graphToSvgX(i + ticklengthsY) +  '%, ' +  (-1)*graphToSvgY(-2*ticklengthsX) + '%';
+				document.getElementById('containGraphtexts').appendChild(div);
+			}
+
+			
+
+			for(i=parseInt(graphymin); i<=parseInt(graphymax); i++) {
+				var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+				lineElement.setAttribute('x1', graphToSvgX(ticklengthsY) + '%');
+				lineElement.setAttribute('y1', graphToSvgY(i) + '%');
+				lineElement.setAttribute('x2', graphToSvgX(-ticklengthsY) + '%')
+				lineElement.setAttribute('y2', graphToSvgY(i) + '%');
+				lineElement.setAttribute('vector-effect','non-scaling-stroke');
+				lineElement.style.stroke = 'hsla(32,1%,70%,1)'
+				lineElement.style.strokeWidth = '1.5%';
+				graphSvg.appendChild(lineElement);
+
+				// var div = document.createElement("div");
+				// div.innerHTML = i;
+				// div.style.textAlign = "center";
+				// div.id = 'ytick' + i;
+				// div.style.position = "absolute";
+				// div.style.fontSize = "1vw";
+				// div.style.fontFamily = "Calibri";
+				// div.style.zIndex = '0';
+				// div.style.left = graphToSvgX(-3*ticklengthsY) + '%'
+				// div.style.top =  graphToSvgY(i + ticklengthsX) + '%'
+				// div.style.transform = 'translate(' + (-1)*graphToSvgX(-3*ticklengthsY) +  '%, ' +  (-1)*graphToSvgY(i + ticklengthsX) + '%';
+				// document.getElementById('containGraphtexts').appendChild(div);
+			}
+
+
+		}
+
+		drawgraphAxesTicksAndLabels()
+
+
+
+
+		pointsDict = []
+
+		
+
+		function graphToSvgY(value) {
+			y = ((-80)/(graphymax - graphymin))*(value - graphymin) + 90
+			return y
+		}
+
+		function graphToSvgX(value) {
+			x = (80/graphxmax)*(value) + 10
+			return x
+		}
+
+
+		curvepoints = 10000
+
+		frequency = 0.5
+
+		for (i =0; i < curvepoints; i++) {
+			step = (graphxmax/curvepoints)
+			xval = i*step
+			yvalue = Math.sin(2*Math.PI*frequency*xval)
+			pointsDict.push([graphToSvgX(xval),graphToSvgY(yvalue)]); 
+			
+		}
+
+		pString = 'M ' + pointsDict[0][0] + " " + pointsDict[0][1] + " "
+
+		for(k = 0; k < pointsDict.length; k++) {
+			pString = pString + 'L ' + pointsDict[k][0] + " " + pointsDict[k][1] + " ";
+		}
+
+		// console.log(pString)
+
+		var pathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
+		pathElement.setAttribute('fill','transparent');
+		pathElement.setAttribute('vector-effect','non-scaling-stroke');
+		pathElement.setAttribute('d',pString);
+		colorC = 'hsla(186,100%,50%,1)'
+		pathElement.style.strokeWidth = '2%';
+		pathElement.setAttribute('stroke', colorC);
+		graphSvg.appendChild(pathElement);
+		
+
+
+
+		
+
+
+
+		
+		</script>
+
+
+
+	</body>
+<html>
