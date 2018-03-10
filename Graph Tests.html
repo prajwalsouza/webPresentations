@@ -6,7 +6,7 @@
 
 	</head>
 	<body style='margin:0px;width:100%; height: 100%;'>
-		<div id="containAll" style='margin:0px;width:100%; height: 100%;overflow: hidden; font-size: 0;box-shadow: 0px 20px 50px rgba(0,0,0,0.2);'> 
+		<div id="containAll" style='margin:0px;width:100%; height: 100%;overflow: hidden; font-size: 0;'> 
 			<div id="containGraph" style='margin:0px;width:100%; height: 35%;overflow: hidden;background: white;position: relative;'>
 				<svg id='graphSvg' height="100%" width="100%" viewBox="0 0 100 100" preserveAspectRatio="none" style='position: absolute; z-index: 1'>
 
@@ -15,9 +15,9 @@
 				
 				</div>
 			</div>
-			<div id="containDetails" style='margin:0px;width:100%; height: 5%;overflow: hidden;background: white;'>
+			<div id="containDetails" style='margin:0px;width:100%; height: 5%;overflow: hidden;background: white;box-shadow: inset 0px 0px 20px rgba(0,0,0,0.3);'>
 			</div>
-			<div id="polarSection" style='margin:0px;width:40%; height: 55%;overflow: hidden; display: inline-block;background: white; box-shadow: 0px -5px 50px rgba(0,0,0,0.2);'>
+			<div id="polarSection" style='margin:0px;width:40%; height: 55%;overflow: hidden; display: inline-block;background: white;'>
 				<div id="containPolar" style='margin:0px;width:100%; height: 90%;overflow: hidden; display: inline-block;background: white;'>
 					
 				</div>
@@ -29,7 +29,7 @@
 				</div>
 			</div>
 			
-			<div id="containTransform" style='margin:0px;width:60%; height: 55%;overflow: hidden;display: inline-block;background: white; position: relative; box-shadow: 0px -5px 50px rgba(0,0,0,0.2);'>
+			<div id="containTransform" style='margin:0px;width:60%; height: 55%;overflow: hidden;display: inline-block;background: white; position: relative; '>
 				<svg id='finalgraphSvg' height="90%" width="100%" viewBox="0 0 100 100" preserveAspectRatio="none" style='position: absolute; z-index: 1'>
 
 				</svg>
@@ -40,13 +40,22 @@
 					
 				</div>
 				<div id="containfinalGraphDetails" style='margin:0px;width:100%; height: 10%;overflow: hidden;background: white; position: relative;text-align: center; font-family: Calibri; font-size: 2vh'>
-					The almost Fourier Transform of the wave.
+					<div id="containfinalGraphDetailsText" style='margin:0px;background: white; text-align: center; font-family: Calibri; font-size: 2vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: absolute;'>
+						The almost Fourier Transform of the wave.
+					</div>
+					
 				</div>
 			</div>
-			<div id="containSettings" style='margin:0px;width:100%; height: 10%;overflow: hidden;background: white; position: relative;text-align: center; font-family: Calibri; font-size: 2vh; box-shadow: 0px -5px 50px rgba(0,0,0,0.2);'>
-				Settings
+			<div id="containSettings" style='margin:0px;width:100%; height: 10%;overflow: hidden;background: hsla(200 ,100%,50%,0); position: relative;text-align: center; font-family: Calibri; font-size: 2vh; cursor: pointer; box-shadow: inset 0px 0px 20px rgba(0,0,0,0.3);'>
+				<div id="containSettingsText" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 2vh; transform: translate(-50%,-20%); left: 50%; top: 20%; position: relative;'>
+						Settings
+				</div>
+				
 			</div>
 		</div>
+		<div id="containSettingsDiv" style='margin:0px;width:100%; height: 0%;overflow: hidden; font-size: 0; transition: height 1s; '> 
+		</div>
+
 		
 		
 		<script>
@@ -216,7 +225,8 @@
 
 		function drawEquation() {
 			var div = document.createElement("div");
-			div.innerHTML = "A cosine wave with frequency " + frequency + "Hz shifted "+ shiftdirection(shift) +" by " + Math.abs(shift) + ".";
+			// div.innerHTML = "A cosine wave with frequency " + frequency + "Hz shifted "+ shiftdirection(shift) +" by " + Math.abs(shift) + ".";
+			div.innerHTML = "Input signal"
 			div.style.textAlign = "center";
 			div.id = 'equation detail';
 			div.style.position = "relative";
@@ -469,10 +479,37 @@
 		circleElement.setAttribute('cx','0%');
 		circleElement.setAttribute('cy','0%');
 		circleElement.style.opacity = 0
-		circleElement.style.fill = 'hsla(300,100%,50%,0.6)'
+		circleElement.style.fill = 'hsla(260,100%,50%,0.6)'
 		circleElement.style.strokeWidth = '0';
 		circleElement.setAttribute('id','centerOfMass');
 		document.getElementById('polarSvg').appendChild(circleElement);
+
+		var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+		lineElement.setAttribute('x1', polarToSvgX(0) + '%');
+		lineElement.setAttribute('y1', polarToSvgY(0) + '%');
+		lineElement.setAttribute('vector-effect','non-scaling-stroke');
+		lineElement.setAttribute('x2', polarToSvgX(0) + '%')
+		lineElement.setAttribute('y2', polarToSvgY(0) + '%');
+		lineElement.setAttribute('id', 'x-corPolar');
+		lineElement.style.stroke = 'hsla(260,100%,50%,1)'
+		lineElement.style.strokeWidth = '2%';
+		lineElement.style.opacity = 0
+		polarSvg.appendChild(lineElement);
+
+		var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+		lineElement.setAttribute('x1', polarToSvgX(0) + '%');
+		lineElement.setAttribute('y1', polarToSvgY(0) + '%');
+		lineElement.setAttribute('vector-effect','non-scaling-stroke');
+		lineElement.setAttribute('x2', polarToSvgX(0) + '%')
+		lineElement.setAttribute('y2', polarToSvgY(0) + '%');
+		lineElement.setAttribute('id', 'y-corPolar');
+		lineElement.style.stroke = 'hsla(260,100%,50%,1)'
+		lineElement.style.strokeWidth = '2%';
+		lineElement.style.opacity = 0
+		polarSvg.appendChild(lineElement);
+
+		plotXcor = 1
+		plotYcor = 1
 
 		cOM = [0,0]
 
@@ -497,6 +534,24 @@
 			circleElement.setAttribute('cy', polarToSvgY(avgY) + '%');
 			circleElement.style.opacity = 1
 
+			if (plotXcor == 1) {
+				lineElement = document.getElementById('x-corPolar')
+				lineElement.setAttribute('x1', polarToSvgX(avgX) + '%');
+				lineElement.setAttribute('y1', polarToSvgY(0) + '%');
+				lineElement.setAttribute('x2', polarToSvgX(0) + '%');
+				lineElement.setAttribute('y2', polarToSvgY(0) + '%');
+				lineElement.style.opacity = 1
+			}
+
+			if (plotYcor == 1) {
+				lineElement = document.getElementById('y-corPolar')
+				lineElement.setAttribute('x1', polarToSvgX(0) + '%');
+				lineElement.setAttribute('y1', polarToSvgY(avgY) + '%');
+				lineElement.setAttribute('x2', polarToSvgX(0) + '%');
+				lineElement.setAttribute('y2', polarToSvgY(0) + '%');
+				lineElement.style.opacity = 1
+			}
+
 		}
 
 		plotCenterOfMass()
@@ -515,6 +570,12 @@
 
 		function finalgraphToSvgX(value) {
 			x = (80/finalgraphxmax)*(value) + 10
+			return x
+		}
+
+
+		function svgXPercentToFinalGraph(value) {
+			x = (value - 10)*finalgraphxmax/80
 			return x
 		}
 
@@ -551,7 +612,7 @@
 		ellipseElement.setAttribute('cy','0%');
 		ellipseElement.setAttribute('vector-effect','non-scaling-stroke')
 		ellipseElement.style.opacity = 0
-		ellipseElement.style.fill = 'hsla(300,100%,50%,0.6)'
+		ellipseElement.style.fill = 'hsla(260,100%,50%,0.6)'
 		ellipseElement.style.strokeWidth = '0';
 		ellipseElement.setAttribute('id','centerOfMassX');
 		document.getElementById('finalgraphSvg').appendChild(ellipseElement);
@@ -563,12 +624,14 @@
 				ellipseElement.setAttribute('cx', finalgraphToSvgX(windingfrequency) + '%');
 				ellipseElement.setAttribute('cy', finalgraphToSvgY(cOM[0]) + '%');
 				scalevalue = 1
-				if(window.innerHeight < window.innerWidth) {
-					ellipseElement.setAttribute('rx',scalevalue*(window.innerHeight/window.innerWidth) + '%');
+				ww = finalgraphSvg.getBoundingClientRect().width
+				hh = finalgraphSvg.getBoundingClientRect().height
+				if(hh < ww) {
+					ellipseElement.setAttribute('rx',scalevalue*(hh/ww) + '%');
 					ellipseElement.setAttribute('ry',scalevalue + '%');
 				}
 				else {
-					ellipseElement.setAttribute('ry',scalevalue*(window.innerWidth/window.innerHeight) + '%');
+					ellipseElement.setAttribute('ry',scalevalue*(ww/hh) + '%');
 					ellipseElement.setAttribute('rx',scalevalue + '%');
 				}
 			}
@@ -696,6 +759,31 @@
 		}
 
 		plotTransform()
+
+		function transformGraphEvent(event) {
+			var rect = event.target.getBoundingClientRect()
+			posX = event.clientX - rect.left
+			posY = event.clientY - rect.top
+			suggestedWF = svgXPercentToFinalGraph(posX*100/rect.width)
+			if (suggestedWF < finalgraphxmax && suggestedWF >= 0) {
+				windingfrequency = suggestedWF
+				updatePolar()
+				plotCenterOfMass()
+				plotCOMX()
+			} 
+		}
+
+		finalgraphSvg.addEventListener('mousemove',transformGraphEvent)
+
+		function openSettings() {
+			document.getElementById('containSettingsDiv').style.height = '100%'
+			setTimeout( function(){
+					location.href = '#'
+					location.href = '#containSettingsDiv'
+				}  , 700 )
+			
+		}
+		document.getElementById('containSettings').addEventListener('click',openSettings)
 
 
 
