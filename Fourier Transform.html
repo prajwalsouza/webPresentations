@@ -567,7 +567,7 @@
 			rectB = polarDiv.getBoundingClientRect()
 			if(rectB.width < rectB.height) {
 				minDimension = rectB.width
-				polarSquareSide = 9*minDimension/10
+				polarSquareSide = 10*minDimension/10
 				polarSquareSideGap = minDimension/20
 
 				var div = document.createElement("div");
@@ -586,7 +586,7 @@
 			}
 			else {
 				minDimension = rectB.height
-				polarSquareSide = 9*minDimension/10
+				polarSquareSide = 10*minDimension/10
 				polarSquareSideGap = minDimension/20
 
 
@@ -1270,7 +1270,23 @@
 			} 
 		}
 
+		function transformGraphEventviaTouch(event) {
+			var touch = event.touches[0]
+			var rect = event.target.getBoundingClientRect()
+			posX = touch.pageX - rect.left
+			posY = touch.pageY - rect.top
+			suggestedWF = svgXPercentToFinalGraph(posX*100/rect.width)
+			if (suggestedWF < finalgraphxmax && suggestedWF >= 0) {
+				windingfrequency = suggestedWF
+				document.getElementById('wfSlider').setAttribute('width', (windingfrequency)*100/(maxwindingFrequency) + '%')
+				updatePolar()
+				plotCenterOfMass()
+				plotCOMX()
+			} 
+		}
+
 		finalgraphSvg.addEventListener('mousemove',transformGraphEvent)
+		finalgraphSvg.addEventListener('touchmove',transformGraphEventviaTouch)
 
 		settingsStateOpen = false
 
