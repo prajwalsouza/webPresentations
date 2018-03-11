@@ -71,6 +71,16 @@
 		
 		<script>
 
+		if(window.innerWidth < window.innerHeight) {
+			document.getElementById('containGraph').style.height = '22%'
+			document.getElementById('containEquationSettings').style.height = '4%'
+			document.getElementById('polarSection').style.height = '40%'
+			document.getElementById('polarSection').style.width = '100%'
+			document.getElementById('containTransform').style.height = '30%'
+			document.getElementById('containTransform').style.width = '100%'
+			document.getElementById('containSettings').style.height = '4%'
+		}
+
 
 
 
@@ -88,8 +98,8 @@
 
 		// Default Waves
 
-		waveStatus[0] = [true,1,2,0,1,'cosine',[],0,0]
-		waveStatus[1] = [false,1,3,0,1,'cosine',[],0,0]
+		waveStatus[0] = [true,1,3,0,1,'cosine',[],0,0]
+		waveStatus[1] = [false,1,2,0,1,'cosine',[],0,0]
 
 		function addSWave(waveState) {
 			wave = {}
@@ -760,9 +770,12 @@
 		maxwindingFrequency = 5
 
 		function update(event) {
-			windingfrequency = (event.clientX)*(maxwindingFrequency)/(4*window.innerWidth/10)
+			var rect = event.target.getBoundingClientRect()
+			posX = event.clientX - rect.left
+			posY = event.clientY - rect.top
+			windingfrequency = (posX)*(maxwindingFrequency)/(rect.width)
 			// console.log(windingfrequency)
-			document.getElementById('wfSlider').setAttribute('width', (event.clientX)*100/(4*window.innerWidth/10) + '%')
+			document.getElementById('wfSlider').setAttribute('width', (posX)*(100)/(rect.width) + '%')
 			updatePolar()
 			plotCenterOfMass()
 			plotCOMX()
