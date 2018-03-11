@@ -21,7 +21,7 @@
 			<div id="containequationLab" style='margin:0px;width:100%; height: 0%;overflow: hidden;background: white;box-shadow: inset 0px -10px 20px rgba(0,0,0,0.3); transition: height 1s;'>
 				<div id="equationLabTextContainer" style='margin:0px;width:100%; height: 10vh;overflow: hidden; font-size: 2vh; '>
 					<div id="equationLabText" style='margin:0px;overflow: hidden;text-align: center; font-family: Calibri; font-size: 2vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: relative; '>
-						The above signal is a sum of the signals below.  
+						The above signal is a sum, of some of the signals below.  
 					</div>
 				</div>
 			</div>
@@ -85,8 +85,11 @@
 
 		waveStatus = {}
 
-		waveStatus[0] = ['true',1,2,0,1,'cosine',[],0,0]
-		waveStatus[1] = ['true',0,3,0,0,'cosine',[],0,0]
+
+		// Default Waves
+
+		waveStatus[0] = [true,1,2,0,1,'cosine',[],0,0]
+		waveStatus[1] = [false,1,3,0,1,'cosine',[],0,0]
 
 		function addSWave(waveState) {
 			wave = {}
@@ -356,7 +359,9 @@
 		function waveEquation(value) {
 			sum = 0
 			for (j=0; j<countWaves; j++) {
-				sum = sum + waveStatus[j][6][value]
+				if(waveStatus[j][0] == true) {
+					sum = sum + waveStatus[j][6][value]
+				}
 			}
 			return sum
 		}
@@ -719,7 +724,7 @@
 			polarymax = graphymax
 			polarxmax = graphymax
 			polarxmin = -graphymax
-			
+
 			pointsDictPolar = []
 			pointsDictPolarActual = []
 
@@ -848,8 +853,8 @@
 		plotCenterOfMass()
 
 
-		finalgraphymax = 3*graphymax/4
-		finalgraphymin = -graphymax/4
+		finalgraphymax = graphymax
+		finalgraphymin = -graphymax
 
 		finalgraphxmax = maxwindingFrequency
 
@@ -911,7 +916,7 @@
 
 		}
 
-		drawgraphAxesFinalPlot()
+		
 
 		var ellipseElement = document.createElementNS("http://www.w3.org/2000/svg", 'ellipse');
 		ellipseElement.setAttribute('rx','1%');
@@ -945,8 +950,6 @@
 			}
 			
 		}
-
-		plotCOMX()
 
 		function drawfinalgraphAxesTicksAndLabels() {
 			numberofticks = parseInt(finalgraphxmax)
@@ -1016,10 +1019,12 @@
 
 			for(i=0; i<numberofticks; i++) {
 				var lineElement = document.getElementById('final graph xtick ' + i)
-				lineElement.setAttribute('x1', finalgraphToSvgX(i) + '%');
-				lineElement.setAttribute('y1', finalgraphToSvgY(ticklengthsX) + '%');
-				lineElement.setAttribute('x2', finalgraphToSvgX(i) + '%')
-				lineElement.setAttribute('y2', finalgraphToSvgY(-ticklengthsX) + '%');
+				if (lineElement !== null) {
+					lineElement.setAttribute('x1', finalgraphToSvgX(i) + '%');
+					lineElement.setAttribute('y1', finalgraphToSvgY(ticklengthsX) + '%');
+					lineElement.setAttribute('x2', finalgraphToSvgX(i) + '%')
+					lineElement.setAttribute('y2', finalgraphToSvgY(-ticklengthsX) + '%');
+				}
 
 				var div = document.getElementById('xtick final ' + i)
 				div.innerHTML = i;
@@ -1032,10 +1037,12 @@
 
 			for(i=parseInt(finalgraphymin); i<=parseInt(finalgraphymax); i++) {
 				var lineElement = document.getElementById('final graph ytick ' + i)
-				lineElement.setAttribute('x1', finalgraphToSvgX(ticklengthsY) + '%');
-				lineElement.setAttribute('y1', finalgraphToSvgY(i) + '%');
-				lineElement.setAttribute('x2', finalgraphToSvgX(-ticklengthsY) + '%')
-				lineElement.setAttribute('y2', finalgraphToSvgY(i) + '%');
+				if (lineElement !== null) {
+					lineElement.setAttribute('x1', finalgraphToSvgX(ticklengthsY) + '%');
+					lineElement.setAttribute('y1', finalgraphToSvgY(i) + '%');
+					lineElement.setAttribute('x2', finalgraphToSvgX(-ticklengthsY) + '%')
+					lineElement.setAttribute('y2', finalgraphToSvgY(i) + '%');
+				}
 				
 
 				// var div = document.createElement("div");
@@ -1054,14 +1061,16 @@
 		}
 
 
-		drawfinalgraphAxesTicksAndLabels()
+		
 		transformPointsDict = []
+		initTransformPointsDict = []
 
 		function plotTransform() {
 			curvepointsT = curvepoints/100
 			if (curvepointsT <= 10) {
 				curvepointsT = 100
 			}
+
 			for (i = 0; i < curvepointsT; i++) {
 				step = (finalgraphxmax/curvepointsT)
 				wf = i*step
@@ -1092,9 +1101,30 @@
 				avgY = sumY/temppointsDictPolarActual.length
 
 				tempcOM = [avgX,avgY]
+				
+				if (i == 0) {
+					finalgraphymax = avgX
+					finalgraphymin = avgX
+				}
+				if (finalgraphymax <= avgX) {
+					finalgraphymax = avgX
+				}
+				if (finalgraphymin >= avgX) {
+					finalgraphymin = avgX
+				}
 
+				initTransformPointsDict.push([wf,avgX])
+
+			}
+
+			drawfinalgraphAxesTicksAndLabels()
+			drawgraphAxesFinalPlot()
+			plotCOMX()
+
+			for(b=0; b < initTransformPointsDict.length; b++) {
+				wf = initTransformPointsDict[b][0]
+				avgX = initTransformPointsDict[b][1]
 				transformPointsDict.push([finalgraphToSvgX(wf),finalgraphToSvgY(avgX)])
-
 			}
 
 			pString = 'M ' + transformPointsDict[0][0] + " " + transformPointsDict[0][1] + " "
@@ -1119,6 +1149,7 @@
 
 		function updateplotTransform() {
 			transformPointsDict = []
+			initTransformPointsDict = []
 			curvepointsT = curvepoints/100
 			if (curvepointsT <= 10) {
 				curvepointsT = 100
@@ -1154,8 +1185,29 @@
 
 				tempcOM = [avgX,avgY]
 
-				transformPointsDict.push([finalgraphToSvgX(wf),finalgraphToSvgY(avgX)])
+				if (i == 0) {
+					finalgraphymax = avgX
+					finalgraphymin = avgX
+				}
+				if (finalgraphymax <= avgX) {
+					finalgraphymax = avgX
+				}
+				if (finalgraphymin >= avgX) {
+					finalgraphymin = avgX
+				}
 
+				initTransformPointsDict.push([wf,avgX])
+
+			}
+
+			updatefinalgraphAxesTicksAndLabels()
+			updategraphAxesFinalPlot()
+			plotCOMX()
+
+			for(b=0; b < initTransformPointsDict.length; b++) {
+				wf = initTransformPointsDict[b][0]
+				avgX = initTransformPointsDict[b][1]
+				transformPointsDict.push([finalgraphToSvgX(wf),finalgraphToSvgY(avgX)])
 			}
 
 			pString = 'M ' + transformPointsDict[0][0] + " " + transformPointsDict[0][1] + " "
@@ -1232,7 +1284,7 @@
 
 		function openequationLab() {
 			if(equationLabStateOpen == false) {
-				document.getElementById('containequationLab').style.height = 10 + 40*countWaves +'%'
+				document.getElementById('containequationLab').style.height = 10 + 40*countWaves + 20 + '%'
 				document.getElementById('containAll').style.overflow = 'auto'
 				equationLabStateOpen = true
 			}
@@ -1246,6 +1298,9 @@
 				plotCOMX()
 				updatefinalgraphAxesTicksAndLabels()
 				updateplotTransform()
+				for(i = 0; i < countWaves; i++) {
+					document.getElementById('eq ' + i + ' blank text subdiv').innerHTML = ""
+				}
 			}	
 		}
 
@@ -1265,7 +1320,7 @@
 			
 		}
 
-		function drawAGraph(data,div,wmin,wmax,xmin,xmax) {
+		function drawAGraph(data,div,wmin,wmax,xmin,xmax,num) {
 			var svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg')
 			svgElement.setAttribute('id',div.id + " svg")
 			svgElement.setAttribute('height','25vh')
@@ -1332,7 +1387,7 @@
 			pathElement.setAttribute('vector-effect','non-scaling-stroke');
 			pathElement.setAttribute('id',div.id + " path");
 			pathElement.setAttribute('d',pString);
-			colorC = 'hsla(' + Math.random()*340 + ',100%,50%,0.2)'
+			colorC = 'hsla(' + ((num+1)/countWaves)*40 + ',100%,50%,0.5)'
 			pathElement.style.strokeWidth = '2%';
 			pathElement.setAttribute('stroke', colorC);
 			svgElement.appendChild(pathElement);
@@ -1457,6 +1512,10 @@
 
 			waveStatus[ivalue][tval] = changevalue
 			document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').innerHTML = tstring + changevalue.toFixed(2)
+			if (waveStatus[ivalue][0] == true) {
+				document.getElementById('eq ' + ivalue + ' blank text subdiv').innerHTML = "The tranform result hasn't been updated. Close this section to update it."
+			}
+			
 
 			updateAGraph(ivalue)
 			updateMainGraph()
@@ -1477,6 +1536,35 @@
 
 			document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').innerHTML = 'Type : ' + waveStatus[ivalue][5]
 
+			if (waveStatus[ivalue][0] == true) {
+				document.getElementById('eq ' + ivalue + ' blank text subdiv').innerHTML = "The tranform result hasn't been updated. Close this section to update it."
+			}
+
+			updateAGraph(ivalue)
+			updateMainGraph()
+
+		}
+
+
+		function changeStatus(event) {
+			ivalue = controlIDs[event.target.id][0]
+			typevalue = controlIDs[event.target.id][1]
+
+			if (waveStatus[ivalue][0] == true) {
+				waveStatus[ivalue][0] = false
+				document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').innerHTML = 'Status : not part of the sum'
+				document.getElementById('eq ' + ivalue + ' div').style.opacity = 0.4
+			}
+			else {
+				waveStatus[ivalue][0] = true
+				document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').innerHTML = 'Status : part of the sum'
+				document.getElementById('eq ' + ivalue + ' div').style.opacity = 1
+			}
+
+			if (waveStatus[ivalue][0] == true) {
+				document.getElementById('eq ' + ivalue + ' blank text subdiv').innerHTML = "The tranform result hasn't been updated. Close this section to update it."
+			}
+			
 			updateAGraph(ivalue)
 			updateMainGraph()
 
@@ -1492,6 +1580,12 @@
 			elm = document.getElementById('eq ' + ivalue + ' div')
 			elm.outerHTML = ""
 			delete elm
+
+			elm = document.getElementById('eq ' + ivalue + ' blank div')
+			elm.outerHTML = ""
+			delete elm
+
+
 
 			for(i = ivalue + 1; i <countWaves; i++) {
 				waveStatus[i - 1] = waveStatus[i]
@@ -1520,6 +1614,7 @@
 
 		function drawControls(maindiv,stateoptions,indexval) {
 
+			signState = stateoptions[5]
 			ampC = stateoptions[0]
 			freqC = stateoptions[1]
 			phasC = stateoptions[2]
@@ -1763,7 +1858,7 @@
 			div.id = 'control type ' + indexval + ' div';
 			div.style.position = "relative";
 			div.style.zIndex = '0';
-			div.style.width = '50%'
+			div.style.width = '30%'
 			div.style.height = '5vh'
 			div.style.display = 'inline-block'
 			div.style.overflow = 'hidden'
@@ -1786,10 +1881,41 @@
 			div.addEventListener('click',changeSinosoidType)
 
 			var div = document.createElement("div");
+			div.id = 'control status ' + indexval + ' div';
+			div.style.position = "relative";
+			div.style.zIndex = '0';
+			div.style.width = '40%'
+			div.style.height = '5vh'
+			div.style.display = 'inline-block'
+			div.style.overflow = 'hidden'
+			controldiv.appendChild(div);
+
+			controlsubdiv = div
+			var div = document.createElement("div");
+			div.id = 'control status text ' + indexval + ' div';
+			div.style.position = "absolute";
+			if (signState == true) {
+				div.innerHTML = 'Status : part of the sum'
+			}
+			else {
+				div.innerHTML = 'Status : not part of the sum'
+			}
+			div.style.fontSize = '2vh'
+			div.style.fontFamily = 'Calibri'
+			div.style.textAlign = 'center'
+			div.style.top = '50%'
+			div.style.left = '50%'
+			div.style.cursor = 'pointer'
+			div.style.transform = 'translate(-50%,-50%)'
+			controlsubdiv.appendChild(div);
+			controlIDs[div.id] = [indexval,'status']
+			div.addEventListener('click', changeStatus)
+
+			var div = document.createElement("div");
 			div.id = 'control remove ' + indexval + ' div';
 			div.style.position = "relative";
 			div.style.zIndex = '0';
-			div.style.width = '50%'
+			div.style.width = '30%'
 			div.style.height = '5vh'
 			div.style.display = 'inline-block'
 			div.style.overflow = 'hidden'
@@ -1820,6 +1946,9 @@
 			div.id = 'eq ' + i + ' div';
 			div.style.position = "relative";
 			div.style.zIndex = '0';
+			if (waveStatus[i][0] == false) {
+				div.style.opacity = 0.4
+			}
 			div.style.width = '100%'
 			div.style.height = '35vh'
 			document.getElementById('containequationLab').appendChild(div);
@@ -1832,16 +1961,113 @@
 			div.style.height = '5vh'
 			document.getElementById('containequationLab').appendChild(div);
 
+			var subdiv = document.createElement("div");
+			subdiv.id = 'eq ' + i + ' blank text subdiv';
+			subdiv.style.position = "relative";
+			subdiv.style.zIndex = '0';
+			subdiv.style.position = "absolute";
+			subdiv.innerHTML = ''
+			subdiv.style.fontSize = '1.6vh'
+			subdiv.style.fontFamily = 'Calibri'
+			subdiv.style.textAlign = 'center'
+			subdiv.style.top = '50%'
+			subdiv.style.color = 'hsla(195,100%,50%,0.7)'
+			subdiv.style.left = '50%'
+			subdiv.style.transform = 'translate(-50%,-50%)'
+			div.appendChild(subdiv);
+
 
 		}
 
-		drawAGraph(waveStatus[0][6],document.getElementById('eq '+ 0 + ' div'),waveStatus[0][7],waveStatus[0][8],0,graphxmax)
+		function addWave() {
+			waveStatus[countWaves] = [false,0.5,1,0,0,'cosine',[],0,0]
+			wavedata = addSWave(waveStatus[countWaves])
+			waveStatus[countWaves][6] = wavedata[0]
+			waveStatus[countWaves][7] = wavedata[1]
+			waveStatus[countWaves][8] = wavedata[2]
 
-		drawControls(document.getElementById('eq '+ 0 + ' div'), [waveStatus[0][1],waveStatus[0][2],waveStatus[0][3],waveStatus[0][4],waveStatus[0][5]],0)
+			eqSettingDiv = document.getElementById('containequationLab')
+			var div = document.createElement("div");
+			div.id = 'eq ' + countWaves + ' div';
+			div.style.position = "relative";
+			div.style.zIndex = '0';
+			if (waveStatus[countWaves][0] == false) {
+				div.style.opacity = 0.4
+			}
+			div.style.width = '100%'
+			div.style.height = '35vh'
 
-		drawAGraph(waveStatus[1][6],document.getElementById('eq '+ 1 + ' div'),waveStatus[1][7],waveStatus[1][8],0,graphxmax)
+			document.getElementById('containequationLab').insertBefore(div, document.getElementById('add signal div'));
 
-		drawControls(document.getElementById('eq '+ 1 + ' div'), [waveStatus[1][1],waveStatus[1][2],waveStatus[1][3],waveStatus[1][4],waveStatus[1][5]],1)
+
+			var div = document.createElement("div");
+			div.id = 'eq ' + countWaves + ' blank div';
+			div.style.position = "relative";
+			div.style.zIndex = '0';
+			div.style.width = '100%'
+			div.style.height = '5vh'
+			document.getElementById('containequationLab').insertBefore(div, document.getElementById('add signal div'));
+
+			var subdiv = document.createElement("div");
+			subdiv.id = 'eq ' + countWaves + ' blank text subdiv';
+			subdiv.style.position = "relative";
+			subdiv.style.zIndex = '0';
+			subdiv.style.position = "absolute";
+			subdiv.innerHTML = ''
+			subdiv.style.fontSize = '1.6vh'
+			subdiv.style.fontFamily = 'Calibri'
+			subdiv.style.textAlign = 'center'
+			subdiv.style.top = '50%'
+			subdiv.style.color = 'hsla(195,100%,50%,0.7)'
+			subdiv.style.left = '50%'
+			subdiv.style.transform = 'translate(-50%,-50%)'
+			div.appendChild(subdiv);
+
+			cw = countWaves
+
+			countWaves = countWaves + 1
+
+			drawAGraph(waveStatus[cw][6],document.getElementById('eq '+ cw + ' div'),waveStatus[cw][7],waveStatus[cw][8],0,graphxmax,cw)
+
+			drawControls(document.getElementById('eq '+ cw + ' div'), [waveStatus[cw][1],waveStatus[cw][2],waveStatus[cw][3],waveStatus[cw][4],waveStatus[cw][5],waveStatus[cw][0]],cw)
+
+			document.getElementById('containequationLab').style.height = 10 + 40*countWaves + 20 + '%'
+
+
+		}
+
+		var div = document.createElement("div");
+		div.id = 'add signal div';
+		div.style.position = "relative";
+		div.style.zIndex = '0';
+		div.style.width = '100%'
+		div.style.height = '20vh'
+		document.getElementById('containequationLab').appendChild(div);
+
+		var subdiv = document.createElement("div");
+		subdiv.id = 'add signal div text';
+		subdiv.style.position = "relative";
+		subdiv.style.zIndex = '0';
+		subdiv.style.position = "absolute";
+		subdiv.innerHTML = 'Add Signal'
+		subdiv.style.fontSize = '2.5vh'
+		subdiv.style.cursor = 'pointer'
+		subdiv.style.fontFamily = 'Calibri'
+		subdiv.style.textAlign = 'center'
+		subdiv.style.top = '50%'
+		subdiv.style.color = 'hsla(195,100%,50%,1)'
+		subdiv.style.left = '50%'
+		subdiv.style.transform = 'translate(-50%,-50%)'
+		div.appendChild(subdiv);
+		div.addEventListener('click',addWave)
+
+		drawAGraph(waveStatus[0][6],document.getElementById('eq '+ 0 + ' div'),waveStatus[0][7],waveStatus[0][8],0,graphxmax,0)
+
+		drawControls(document.getElementById('eq '+ 0 + ' div'), [waveStatus[0][1],waveStatus[0][2],waveStatus[0][3],waveStatus[0][4],waveStatus[0][5],waveStatus[0][0]],0)
+
+		drawAGraph(waveStatus[1][6],document.getElementById('eq '+ 1 + ' div'),waveStatus[1][7],waveStatus[1][8],0,graphxmax,1)
+
+		drawControls(document.getElementById('eq '+ 1 + ' div'), [waveStatus[1][1],waveStatus[1][2],waveStatus[1][3],waveStatus[1][4],waveStatus[1][5],waveStatus[1][0]],1)
 
 
 
