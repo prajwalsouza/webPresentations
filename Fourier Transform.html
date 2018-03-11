@@ -85,8 +85,8 @@
 
 		waveStatus = {}
 
-		waveStatus[0] = ['true',0.5,2,0,0.5,'cosine',[],0,0]
-		waveStatus[1] = ['true',0.5,3,0,0.5,'cosine',[],0,0]
+		waveStatus[0] = ['true',1,2,0,1,'cosine',[],0,0]
+		waveStatus[1] = ['true',0,3,0,0,'cosine',[],0,0]
 
 		function addSWave(waveState) {
 			wave = {}
@@ -196,6 +196,10 @@
 		}
 
 		function updategraphAxes() {
+			if (graphymax == graphymin) {
+				graphymax = graphxmax + 0.5
+				graphymin = graphymin - 0.5
+			}
 			var lineElement = document.getElementById('x main axis')
 			lineElement.setAttribute('x1', graphToSvgX(0) + '%');
 			lineElement.setAttribute('y1', graphToSvgY(0) + '%');
@@ -273,6 +277,10 @@
 		}
 
 		function updategraphAxesTicksAndLabels() {
+			if (graphymax == graphymin) {
+				graphymax = graphxmax + 0.5
+				graphymin = graphymin - 0.5
+			}
 			numberofticks = parseInt(graphxmax)
 			ticklengthsX = (graphymax - graphymin)/40
 			ticklengthsY = (graphxmax - 0)/200
@@ -376,6 +384,11 @@
 				if (graphymin >= yvalue) {
 					graphymin = yvalue
 				}
+			}
+
+			if (graphymax == graphymin) {
+				graphymax = graphxmax + 0.5
+				graphymin = graphymin - 0.5
 			}
 
 			LUgapmain = (graphymax - graphymin)/10
@@ -702,6 +715,11 @@
 		}
 
 		function updatePolar() {
+			polarymin = -graphymax
+			polarymax = graphymax
+			polarxmax = graphymax
+			polarxmin = -graphymax
+			
 			pointsDictPolar = []
 			pointsDictPolarActual = []
 
@@ -1235,10 +1253,14 @@
 
 		function getPercentages(val, vmin, vmax, returntype) {
 			if(returntype == 'x') {
-				return (((90 - 10)/(vmax - vmin))*(val - vmin)) + 10
+				if (vmin != vmax) {
+					return (((90 - 10)/(vmax - vmin))*(val - vmin)) + 10
+				}
 			}
 			else if(returntype == 'y') {
-				return (((10 - 90)/(vmax - vmin))*(val - vmin)) + 90
+				if (vmin != vmax) {
+					return (((10 - 90)/(vmax - vmin))*(val - vmin)) + 90
+				}
 			}
 			
 		}
@@ -1253,10 +1275,18 @@
 			svgElement.style.position = 'relative'
 			div.appendChild(svgElement)
 
+			if (wmin == wmax) {
+				wmax = wmax + 0.5
+				wmin = wmin - 0.5
+			}
+
 			LUgap = (wmax - wmin)/10
+
+
 
 			wmax = wmax + LUgap
 			wmin = wmin - LUgap
+
 
 			var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
 			lineElement.setAttribute('x1', getPercentages(0,xmin,xmax,'x') + '%');
@@ -1316,12 +1346,18 @@
 			updateSWave(wavedata, num)
 
 			wavedata = waveStatus[num]
-			wmax = wavedata[7]
-			wmin = wavedata[8]
+			wmin = wavedata[7]
+			wmax = wavedata[8]
 			data = wavedata[6]
 
 			xmin = 0
 			xmax = graphxmax
+
+			if (wmin == wmax) {
+				wmax = wmax + 0.5
+				wmin = wmin - 0.5
+			}
+
 
 			LUgap = (wmax - wmin)/10
 
@@ -1331,7 +1367,6 @@
 			var lineElement = document.getElementById('eq ' + num + ' div yaxis')
 			lineElement.setAttribute('x1', getPercentages(0,xmin,xmax,'x') + '%');
 			lineElement.setAttribute('y1', getPercentages(0,wmin,wmax,'y') + '%');
-			lineElement.setAttribute('vector-effect','non-scaling-stroke');
 			lineElement.setAttribute('x2', getPercentages(xmax,xmin,xmax,'x') + '%')
 			lineElement.setAttribute('y2', getPercentages(0,wmin,wmax,'y') + '%');
 
@@ -1424,6 +1459,50 @@
 			document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').innerHTML = tstring + changevalue.toFixed(2)
 
 			updateAGraph(ivalue)
+			updateMainGraph()
+
+		}
+
+		function changeSinosoidType(event) {
+			ivalue = controlIDs[event.target.id][0]
+			typevalue = controlIDs[event.target.id][1]
+
+			if (waveStatus[ivalue][5] == 'cosine') {
+				waveStatus[ivalue][5] = 'sine'
+			}
+			else {
+				waveStatus[ivalue][5] = 'cosine'
+			}
+			
+
+			document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').innerHTML = 'Type : ' + waveStatus[ivalue][5]
+
+			updateAGraph(ivalue)
+			updateMainGraph()
+
+		}
+
+		function removeDiv(event) {
+
+			ivalue = controlIDs[event.target.id][0]
+			typevalue = controlIDs[event.target.id][1]
+
+			delete waveStatus[ivalue]
+			
+			elm = document.getElementById('eq ' + ivalue + ' div')
+			elm.outerHTML = ""
+			delete elm
+
+			for(i = ivalue + 1; i <countWaves; i++) {
+				waveStatus[i - 1] = waveStatus[i]
+			}
+
+			delete waveStatus[countWaves - 1]
+
+			console.log(waveStatus)
+
+			countWaves = countWaves - 1
+
 			updateMainGraph()
 
 		}
@@ -1703,6 +1782,8 @@
 			div.style.left = '50%'
 			div.style.transform = 'translate(-50%,-50%)'
 			controlsubdiv.appendChild(div);
+			controlIDs[div.id] = [indexval,'type']
+			div.addEventListener('click',changeSinosoidType)
 
 			var div = document.createElement("div");
 			div.id = 'control remove ' + indexval + ' div';
@@ -1727,6 +1808,8 @@
 			div.style.cursor = 'pointer'
 			div.style.transform = 'translate(-50%,-50%)'
 			controlsubdiv.appendChild(div);
+			controlIDs[div.id] = [indexval,'remove']
+			div.addEventListener('click',removeDiv)
 
 		}
 
