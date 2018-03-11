@@ -564,9 +564,10 @@
 
 		function makePolarFrame() {
 			polarDiv = document.getElementById('containPolar')
-			if(40*window.innerWidth/100 < ((60*window.innerHeight/100) - 10*(60*window.innerHeight/100)/100)) {
-				minDimension = 40*window.innerWidth/100
-				polarSquareSide = 9*minDimension/10
+			rectB = polarDiv.getBoundingClientRect()
+			if(rectB.width < rectB.height) {
+				minDimension = rectB.width
+				polarSquareSide = minDimension
 				polarSquareSideGap = minDimension/20
 
 				var div = document.createElement("div");
@@ -584,8 +585,8 @@
 
 			}
 			else {
-				minDimension = ((60*window.innerHeight/100) - 10*(60*window.innerHeight/100)/100)
-				polarSquareSide = 9*minDimension/10
+				minDimension = rectB.height
+				polarSquareSide = minDimension
 				polarSquareSideGap = minDimension/20
 
 
