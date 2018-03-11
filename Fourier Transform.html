@@ -1505,6 +1505,18 @@
 			document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').style.fontWeight = 'bold'
 		}
 
+		function controlClickviaTouch(event) {
+			var touch = event.touches[0]
+
+			ivalue = controlIDs[event.target.id][0]
+			typevalue = controlIDs[event.target.id][1]
+			mainDIV = document.getElementById('control ' + typevalue + ' ' + ivalue + ' div');
+			mainDIV.style.cursor = 'ew-resize'
+			svgDIV = document.getElementById('control ' + typevalue + ' ' + ivalue + ' svg');
+			svgDIV.style.pointerEvents = 'auto'
+			document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').style.fontWeight = 'bold'
+		}
+
 		function updateControlValue(event) {
 			ivalue = controlIDs[event.target.id][0]
 			typevalue = controlIDs[event.target.id][1]
@@ -1534,6 +1546,52 @@
 				tstring = 'Shift : '
 			}
 			changevaluepercent = (event.clientX - rect.left)/rect.width
+			changevalue = (maxVal - minVal)*changevaluepercent + minVal
+			rectElement = document.getElementById('control ' + typevalue + ' ' + ivalue + ' slider')
+			rectElement.setAttribute('width' , (changevaluepercent)*100 + '%')
+
+			waveStatus[ivalue][tval] = changevalue
+			document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').innerHTML = tstring + changevalue.toFixed(2)
+			if (waveStatus[ivalue][0] == true) {
+				document.getElementById('eq ' + ivalue + ' blank text subdiv').innerHTML = "The tranform result hasn't been updated. Close this section to update it."
+			}
+			
+
+			updateAGraph(ivalue)
+			updateMainGraph()
+
+		}
+
+		function updateControlValueviaTouch(event) {
+			var touch = event.touches[0]
+			ivalue = controlIDs[event.target.id][0]
+			typevalue = controlIDs[event.target.id][1]
+			rect = document.getElementById('control ' + typevalue + ' ' + ivalue + ' div').getBoundingClientRect()
+			if(typevalue == 'amp') {
+				maxVal = maxSAmplitude
+				minVal = minSAmplitude
+				tval = 1
+				tstring = 'Amplitude : '
+			}
+			else if(typevalue == 'freq') {
+				maxVal = maxSFrequency
+				minVal = minSFrequency
+				tval = 2
+				tstring = 'Frequency : '
+			}
+			else if(typevalue == 'phas') {
+				maxVal = maxSPhase
+				minVal = minSPhase
+				tval = 3
+				tstring = 'Phase : '
+			}
+			else if(typevalue == 'shif') {
+				maxVal = maxSShift
+				minVal = minSShift
+				tval = 4
+				tstring = 'Shift : '
+			}
+			changevaluepercent = (touch.pageX - rect.left)/rect.width
 			changevalue = (maxVal - minVal)*changevaluepercent + minVal
 			rectElement = document.getElementById('control ' + typevalue + ' ' + ivalue + ' slider')
 			rectElement.setAttribute('width' , (changevaluepercent)*100 + '%')
@@ -1672,7 +1730,7 @@
 			controldiv.appendChild(div);
 			controlIDs[div.id] = [indexval,'amp']
 			div.addEventListener('mousedown',controlClick)
-			div.addEventListener('touchstart',controlClick)
+			div.addEventListener('touchstart',controlClickviaTouch)
 			
 
 
@@ -1701,7 +1759,7 @@
 			svgElement.style.pointerEvents = 'none'
 			svgElement.addEventListener('mousemove',updateControlValue)
 			svgElement.addEventListener('mouseout',controlOut)
-			svgElement.addEventListener('touchmove', updateControlValue)
+			svgElement.addEventListener('touchmove', updateControlValueviaTouch)
 			svgElement.addEventListener('touchend', controlOut)
 			controlsubdiv.appendChild(svgElement)
 			controlIDs[svgElement.id] = [indexval,'amp']
@@ -1732,7 +1790,7 @@
 			controldiv.appendChild(div);
 			controlIDs[div.id] = [indexval,'freq']
 			div.addEventListener('mousedown',controlClick)
-			div.addEventListener('touchstart',controlClick)
+			div.addEventListener('touchstart',controlClickviaTouch)
 
 			controlsubdiv = div
 			var div = document.createElement("div");
@@ -1761,7 +1819,7 @@
 			svgElement.style.pointerEvents = 'none'
 			svgElement.addEventListener('mousemove',updateControlValue)
 			svgElement.addEventListener('mouseout',controlOut)
-			svgElement.addEventListener('touchmove', updateControlValue)
+			svgElement.addEventListener('touchmove', updateControlValueviaTouch)
 			svgElement.addEventListener('touchend', controlOut)
 
 			var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
@@ -1790,7 +1848,7 @@
 			controldiv.appendChild(div);
 			controlIDs[div.id] = [indexval,'phas']
 			div.addEventListener('mousedown',controlClick)
-			div.addEventListener('touchstart',controlClick)
+			div.addEventListener('touchstart',controlClickviaTouch)
 
 			controlsubdiv = div
 			var div = document.createElement("div");
@@ -1818,7 +1876,7 @@
 			controlIDs[svgElement.id] = [indexval,'phas']
 			svgElement.addEventListener('mousemove',updateControlValue)
 			svgElement.addEventListener('mouseout',controlOut)
-			svgElement.addEventListener('touchmove', updateControlValue)
+			svgElement.addEventListener('touchmove', updateControlValueviaTouch)
 			svgElement.addEventListener('touchend', controlOut)
 			svgElement.style.pointerEvents = 'none'
 
@@ -1848,7 +1906,7 @@
 			controldiv.appendChild(div);
 			controlIDs[div.id] = [indexval,'shif']
 			div.addEventListener('mousedown',controlClick)
-			div.addEventListener('touchstart',controlClick)
+			div.addEventListener('touchstart',controlClickviaTouch)
 
 			controlsubdiv = div
 			var div = document.createElement("div");
@@ -1876,7 +1934,7 @@
 			controlIDs[svgElement.id] = [indexval,'shif']
 			svgElement.addEventListener('mousemove',updateControlValue)
 			svgElement.addEventListener('mouseout',controlOut)
-			svgElement.addEventListener('touchmove', updateControlValue)
+			svgElement.addEventListener('touchmove', updateControlValueviaTouch)
 			svgElement.addEventListener('touchend', controlOut)
 			svgElement.style.pointerEvents = 'none'
 
