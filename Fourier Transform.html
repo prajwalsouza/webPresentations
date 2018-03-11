@@ -782,8 +782,21 @@
 			plotCOMX()
 		}
 
+		function updateviaTouch(event) {
+			var touch = event.touches[0];
+			var rect = event.target.getBoundingClientRect()
+			posX = touch.pageX - rect.left
+			posY = touch.pageY - rect.top
+			windingfrequency = (posX)*(maxwindingFrequency)/(rect.width)
+			// console.log(windingfrequency)
+			document.getElementById('wfSlider').setAttribute('width', (posX)*(100)/(rect.width) + '%')
+			updatePolar()
+			plotCenterOfMass()
+			plotCOMX()
+		}
+
 		document.getElementById('containPolarDetails').addEventListener('mousemove',update)
-		document.getElementById('containPolarDetails').addEventListener('touchstart',update)
+		document.getElementById('containPolarDetails').addEventListener('touchmove',updateviaTouch)
 
 		var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
 		circleElement.setAttribute('r','1%');
