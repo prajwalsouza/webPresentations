@@ -783,6 +783,8 @@
 		}
 
 		document.getElementById('containPolarDetails').addEventListener('mousemove',update)
+		document.getElementById('containPolarDetails').addEventListener('touchstart',update)
+		document.getElementById('containPolarDetails').addEventListener('touchmove',update)
 
 		var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
 		circleElement.setAttribute('r','1%');
