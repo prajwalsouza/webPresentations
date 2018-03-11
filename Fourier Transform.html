@@ -1657,6 +1657,7 @@
 			controldiv.appendChild(div);
 			controlIDs[div.id] = [indexval,'amp']
 			div.addEventListener('mousedown',controlClick)
+			div.addEventListener('touchstart',controlClick)
 			
 
 
@@ -1685,6 +1686,8 @@
 			svgElement.style.pointerEvents = 'none'
 			svgElement.addEventListener('mousemove',updateControlValue)
 			svgElement.addEventListener('mouseout',controlOut)
+			svgElement.addEventListener('touchmove', updateControlValue)
+			svgElement.addEventListener('touchend', controlOut)
 			controlsubdiv.appendChild(svgElement)
 			controlIDs[svgElement.id] = [indexval,'amp']
 
@@ -1714,6 +1717,7 @@
 			controldiv.appendChild(div);
 			controlIDs[div.id] = [indexval,'freq']
 			div.addEventListener('mousedown',controlClick)
+			div.addEventListener('touchstart',controlClick)
 
 			controlsubdiv = div
 			var div = document.createElement("div");
@@ -1742,6 +1746,8 @@
 			svgElement.style.pointerEvents = 'none'
 			svgElement.addEventListener('mousemove',updateControlValue)
 			svgElement.addEventListener('mouseout',controlOut)
+			svgElement.addEventListener('touchmove', updateControlValue)
+			svgElement.addEventListener('touchend', controlOut)
 
 			var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 			rectElement.setAttribute('height',"100%");
@@ -1769,6 +1775,7 @@
 			controldiv.appendChild(div);
 			controlIDs[div.id] = [indexval,'phas']
 			div.addEventListener('mousedown',controlClick)
+			div.addEventListener('touchstart',controlClick)
 
 			controlsubdiv = div
 			var div = document.createElement("div");
@@ -1796,6 +1803,8 @@
 			controlIDs[svgElement.id] = [indexval,'phas']
 			svgElement.addEventListener('mousemove',updateControlValue)
 			svgElement.addEventListener('mouseout',controlOut)
+			svgElement.addEventListener('touchmove', updateControlValue)
+			svgElement.addEventListener('touchend', controlOut)
 			svgElement.style.pointerEvents = 'none'
 
 			var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
@@ -1824,6 +1833,7 @@
 			controldiv.appendChild(div);
 			controlIDs[div.id] = [indexval,'shif']
 			div.addEventListener('mousedown',controlClick)
+			div.addEventListener('touchstart',controlClick)
 
 			controlsubdiv = div
 			var div = document.createElement("div");
@@ -1851,6 +1861,8 @@
 			controlIDs[svgElement.id] = [indexval,'shif']
 			svgElement.addEventListener('mousemove',updateControlValue)
 			svgElement.addEventListener('mouseout',controlOut)
+			svgElement.addEventListener('touchmove', updateControlValue)
+			svgElement.addEventListener('touchend', controlOut)
 			svgElement.style.pointerEvents = 'none'
 
 			var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
