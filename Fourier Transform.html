@@ -567,7 +567,7 @@
 			rectB = polarDiv.getBoundingClientRect()
 			if(rectB.width < rectB.height) {
 				minDimension = rectB.width
-				polarSquareSide = minDimension
+				polarSquareSide = 9*minDimension/10
 				polarSquareSideGap = minDimension/20
 
 				var div = document.createElement("div");
@@ -586,7 +586,7 @@
 			}
 			else {
 				minDimension = rectB.height
-				polarSquareSide = minDimension
+				polarSquareSide = 9*minDimension/10
 				polarSquareSideGap = minDimension/20
 
 
@@ -784,7 +784,6 @@
 
 		document.getElementById('containPolarDetails').addEventListener('mousemove',update)
 		document.getElementById('containPolarDetails').addEventListener('touchstart',update)
-		document.getElementById('containPolarDetails').addEventListener('touchmove',update)
 
 		var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
 		circleElement.setAttribute('r','1%');
