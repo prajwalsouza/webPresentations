@@ -71,6 +71,34 @@
 		
 		<script>
 
+		function checkResize(event) {
+			if(window.innerWidth < window.innerHeight) {
+				document.getElementById('containGraph').style.height = '22%'
+				document.getElementById('containEquationSettings').style.height = '4%'
+				document.getElementById('polarSection').style.height = '40%'
+				document.getElementById('polarSection').style.width = '100%'
+				document.getElementById('containTransform').style.height = '30%'
+				document.getElementById('containTransform').style.width = '100%'
+				document.getElementById('containSettings').style.height = '4%'
+			}
+			else {
+				document.getElementById('containGraph').style.height = '35%'
+				document.getElementById('containEquationSettings').style.height = '5%'
+				document.getElementById('polarSection').style.height = '55%'
+				document.getElementById('polarSection').style.width = '40%'
+				document.getElementById('containTransform').style.height = '55%'
+				document.getElementById('containTransform').style.width = '60%'
+				document.getElementById('containSettings').style.height = '5%'
+			}
+			updatePolarFrame()
+			updatePolarAxes()
+			updatePolar()
+			plotCenterOfMass()
+			plotCOMX()
+			updatefinalgraphAxesTicksAndLabels()
+			updateplotTransform()
+		}
+
 		if(window.innerWidth < window.innerHeight) {
 			document.getElementById('containGraph').style.height = '22%'
 			document.getElementById('containEquationSettings').style.height = '4%'
@@ -80,6 +108,8 @@
 			document.getElementById('containTransform').style.width = '100%'
 			document.getElementById('containSettings').style.height = '4%'
 		}
+
+		window.addEventListener('resize', checkResize)
 
 
 
@@ -91,7 +121,7 @@
 
 		graphxmax = 5
 
-		curvepoints = 1000
+		curvepoints = 1300
 
 		waveStatus = {}
 
@@ -100,6 +130,7 @@
 
 		waveStatus[0] = [true,1,3,0,1,'cosine',[],0,0]
 		waveStatus[1] = [false,1,2,0,1,'cosine',[],0,0]
+		waveStatus[2] = [false,1,1,0,0,'cosine',[],0,0]
 
 		function addSWave(waveState) {
 			wave = {}
@@ -149,6 +180,7 @@
 			wave = {}
 			wavemax = 0
 			wavemin = 0
+
 			for (i =0; i < curvepoints; i++) {
 				step = (graphxmax/curvepoints)
 				xval = i*step
@@ -175,6 +207,161 @@
 
 				wave[xval] = yvalue;
 			}
+
+			waveStatus[numb][6] = wave
+			waveStatus[numb][7] = wavemin
+			waveStatus[numb][8] = wavemax
+		}
+
+		function modifyGraphDrawn(event) {
+			numvalue = graphSVGid[event.target.id]
+
+
+			minvalue = waveStatus[numvalue][7]
+			maxvalue = waveStatus[numvalue][8]
+
+			var rect = event.target.getBoundingClientRect()
+			posX = event.clientX - rect.left
+			posY = event.clientY - rect.top
+
+			xPer = (posX/rect.width)*100
+			yPer = (posY/rect.height)*100
+
+			if (minvalue == maxvalue) {
+				maxvalue = maxvalue + 0.5
+				minvalue = minvalue - 0.5
+			}
+
+			LUgap = (maxvalue - minvalue)/10
+
+			maxvalue = maxvalue + LUgap
+			minvalue = minvalue - LUgap
+
+			cxpoint = getValFromPercentages(xPer, 0, graphxmax,'x')
+			xinCP = parseInt(getValFromPercentages(xPer, 0, curvepoints,'x'))
+
+			drawingRes = parseInt(3*rect.width/curvepoints)
+			if (drawingRes < 2) {
+				drawingRes = 2
+			}
+			drawResDeviation = parseInt(drawingRes*2)
+
+			for (j= xinCP - drawResDeviation; j <= xinCP + drawResDeviation; j++) {
+				step = (graphxmax/curvepoints)
+				xval = j*step
+				cxpoint = xval
+
+				cypoint = getValFromPercentages(yPer, minvalue, maxvalue,'y')
+				if (cxpoint < graphxmax && cxpoint >= 0) {
+					modifyWavePoint(waveStatus[numvalue], numvalue, [cxpoint, cypoint])
+				}
+			}
+
+				
+
+			updateACustomGraph(numvalue)
+			updateMainGraph()
+
+			svgElement = document.getElementById('eq ' + numvalue + ' div svg')
+			svgElement.style.pointerEvents = 'auto'
+			svgElement.style.cursor = 'pointer'
+			svgElement.addEventListener('mousemove', modifyGraphDrawn)
+			svgElement.addEventListener('mouseup', checkmodifyGraphDrawn)
+			svgElement.addEventListener('mouseout', checkmodifyGraphDrawn)
+
+		}
+
+		function modifyGraphDrawnviaTouch(event) {
+			numvalue = graphSVGid[event.target.id]
+
+
+			minvalue = waveStatus[numvalue][7]
+			maxvalue = waveStatus[numvalue][8]
+
+			var touch = event.touches[0];
+			var rect = event.target.getBoundingClientRect()
+			posX = touch.pageX - rect.left
+			posY = touch.pageY - rect.top
+
+			xPer = (posX/rect.width)*100
+			yPer = (posY/rect.height)*100
+
+			if (minvalue == maxvalue) {
+				maxvalue = maxvalue + 0.5
+				minvalue = minvalue - 0.5
+			}
+
+			LUgap = (maxvalue - minvalue)/10
+
+			maxvalue = maxvalue + LUgap
+			minvalue = minvalue - LUgap
+
+			cxpoint = getValFromPercentages(xPer, 0, graphxmax,'x')
+			xinCP = parseInt(getValFromPercentages(xPer, 0, curvepoints,'x'))
+
+			drawingRes = parseInt(3*rect.width/curvepoints)
+			if (drawingRes < 2) {
+				drawingRes = 2
+			}
+			drawResDeviation = parseInt(drawingRes*2)
+
+			for (j= xinCP - drawResDeviation; j <= xinCP + drawResDeviation; j++) {
+				step = (graphxmax/curvepoints)
+				xval = j*step
+				cxpoint = xval
+
+				cypoint = getValFromPercentages(yPer, minvalue, maxvalue,'y')
+				if (cxpoint < graphxmax && cxpoint >= 0) {
+					modifyWavePoint(waveStatus[numvalue], numvalue, [cxpoint, cypoint])
+				}
+			}
+
+				
+
+			updateACustomGraph(numvalue)
+			updateMainGraph()
+
+			svgElement = document.getElementById('eq ' + numvalue + ' div svg')
+			svgElement.style.pointerEvents = 'auto'
+			svgElement.style.cursor = 'pointer'
+			svgElement.addEventListener('touchmove', modifyGraphDrawnviaTouch)
+			svgElement.addEventListener('touchend', checkmodifyGraphDrawnviaTouch)
+			svgElement.addEventListener('touchcancel', checkmodifyGraphDrawnviaTouch)
+
+		}
+
+
+		function checkmodifyGraphDrawnviaTouch(event) {
+			svgElement.removeEventListener('touchmove', modifyGraphDrawnviaTouch)
+			svgElement.removeEventListener('touchend', checkmodifyGraphDrawnviaTouch)
+			svgElement.removeEventListener('touchcancel', checkmodifyGraphDrawnviaTouch)
+		}
+
+		function checkmodifyGraphDrawn(event) {
+			svgElement.removeEventListener('mousemove', modifyGraphDrawn)
+			svgElement.removeEventListener('mouseup', checkmodifyGraphDrawn)
+			svgElement.removeEventListener('mouseout', checkmodifyGraphDrawn)
+		}
+
+
+		function modifyWavePoint(waveState,numb,point) {
+			wavemin = waveStatus[numb][7]
+			wavemax = waveStatus[numb][8]
+			wave = waveStatus[numb][6]
+
+			yvalue = point[1]
+			xval = point[0]
+			
+			if (yvalue >= wavemax) {
+				wavemax = yvalue
+			}
+			if (yvalue <= wavemin) {
+				wavemin = yvalue
+			}
+			// console.log(" chec ")
+			// console.log(xval, wave[xval])
+			wave[xval] = yvalue;
+			// console.log(xval, wave[xval])
 
 			waveStatus[numb][6] = wave
 			waveStatus[numb][7] = wavemin
@@ -273,21 +460,25 @@
 				lineElement.style.stroke = 'hsla(32,1%,70%,1)'
 				lineElement.style.strokeWidth = '1.5%';
 				graphSvg.appendChild(lineElement);
+				
 
-				// var div = document.createElement("div");
-				// div.innerHTML = i;
-				// div.style.textAlign = "center";
-				// div.id = 'ytick' + i;
-				// div.style.position = "absolute";
-				// div.style.fontSize = "1vw";
-				// div.style.fontFamily = "Calibri";
-				// div.style.zIndex = '0';
-				// div.style.left = graphToSvgX(-3*ticklengthsY) + '%'
-				// div.style.top =  graphToSvgY(i + ticklengthsX) + '%'
-				// div.style.transform = 'translate(' + (-1)*graphToSvgX(-3*ticklengthsY) +  '%, ' +  (-1)*graphToSvgY(i + ticklengthsX) + '%';
-				// document.getElementById('containGraphtexts').appendChild(div);
+				var div = document.createElement("div");
+				div.innerHTML = i;
+				div.style.textAlign = "center";
+				div.id = 'ytick text ' + i;
+				div.style.position = "absolute";
+				div.style.fontSize = "1vw";
+				div.style.fontFamily = "Calibri";
+				div.style.zIndex = '0';
+				div.style.left = graphToSvgX(-3*ticklengthsY) + '%'
+				div.style.top =  graphToSvgY(i + ticklengthsX) + '%'
+				div.style.transform = 'translate(' + (-1)*graphToSvgX(-3*ticklengthsY) +  '%, ' +  (-1)*graphToSvgY(i + ticklengthsX) + '%';
+				document.getElementById('containGraphtexts').appendChild(div);
+				allmainGraphYticks.push([lineElement,i,div])
 			}
 		}
+
+		allmainGraphYticks = []
 
 		function updategraphAxesTicksAndLabels() {
 			if (graphymax == graphymin) {
@@ -311,16 +502,72 @@
 				div.style.transform = 'translate(' + (-1)*graphToSvgX(i + ticklengthsY) +  '%, ' +  (-1)*graphToSvgY(-4*ticklengthsX) + '%)';
 			}
 
-			
+			ylengths = Math.round((parseInt(graphymax) - parseInt(graphymin))/4)
 
-			for(i=parseInt(graphymin); i<=parseInt(graphymax); i++) {
+			if (ylengths == 0) {
+				ylengths = 1
+			}
+
+			for(i=0; i<allmainGraphYticks.length; i++) {
+				allmainGraphYticks[i][0].style.opacity = 0
+				allmainGraphYticks[i][2].style.opacity = 0
+			}
+
+			
+			ticktrack = 0
+			for(i=parseInt(graphymin); i<=parseInt(graphymax); i = i + 1) {
 				var lineElement = document.getElementById('y tick ' + i)
-				if (lineElement !== null) {
-					lineElement.setAttribute('x1', graphToSvgX(ticklengthsY) + '%');
-					lineElement.setAttribute('y1', graphToSvgY(i) + '%');
-					lineElement.setAttribute('x2', graphToSvgX(-ticklengthsY) + '%')
-					lineElement.setAttribute('y2', graphToSvgY(i) + '%');
+				var divEl = document.getElementById('ytick text ' + i)
+				if(ticktrack % ylengths == 0) {
+					if (lineElement !== null && divEl !== null) {
+						lineElement.setAttribute('x1', graphToSvgX(ticklengthsY) + '%');
+						lineElement.setAttribute('y1', graphToSvgY(i) + '%');
+						lineElement.setAttribute('x2', graphToSvgX(-ticklengthsY) + '%')
+						lineElement.setAttribute('y2', graphToSvgY(i) + '%');
+						lineElement.style.opacity = 1
+						divEl.style.left = graphToSvgX(-3*ticklengthsY) + '%'
+						divEl.style.top =  graphToSvgY(i + ticklengthsX) + '%'
+						divEl.style.transform = 'translate(' + (-1)*graphToSvgX(-3*ticklengthsY) +  '%, ' +  (-1)*graphToSvgY(i + ticklengthsX) + '%';
+						divEl.style.opacity = 1
+					}
+					else {
+						var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+						lineElement.setAttribute('x1', graphToSvgX(ticklengthsY) + '%');
+						lineElement.setAttribute('y1', graphToSvgY(i) + '%');
+						lineElement.setAttribute('x2', graphToSvgX(-ticklengthsY) + '%')
+						lineElement.setAttribute('y2', graphToSvgY(i) + '%');
+						lineElement.setAttribute('id', 'y tick ' + i)
+						lineElement.setAttribute('vector-effect','non-scaling-stroke');
+						lineElement.style.stroke = 'hsla(32,1%,70%,1)'
+						lineElement.style.strokeWidth = '1.5%';
+						graphSvg.appendChild(lineElement);
+
+						var div = document.createElement("div");
+						div.innerHTML = i;
+						div.style.textAlign = "center";
+						div.id = 'ytick text ' + i;
+						div.style.position = "absolute";
+						div.style.fontSize = "1vw";
+						div.style.fontFamily = "Calibri";
+						div.style.zIndex = '0';
+						div.style.left = graphToSvgX(-3*ticklengthsY) + '%'
+						div.style.top =  graphToSvgY(i + ticklengthsX) + '%'
+						div.style.transform = 'translate(' + (-1)*graphToSvgX(-3*ticklengthsY) +  '%, ' +  (-1)*graphToSvgY(i + ticklengthsX) + '%';
+						document.getElementById('containGraphtexts').appendChild(div);
+						allmainGraphYticks.push([lineElement,i,div])
+					}
 				}
+				else {
+					if (lineElement !== null) {
+						lineElement.style.opacity = 0
+					}
+					if (divEl !== null) {
+						divEl.style.opacity = 0
+					}
+				}
+
+				ticktrack = ticktrack + 1
+					
 					
 
 				// var div = document.createElement("div");
@@ -335,6 +582,7 @@
 				// div.style.top =  graphToSvgY(i + ticklengthsX) + '%'
 				// div.style.transform = 'translate(' + (-1)*graphToSvgX(-3*ticklengthsY) +  '%, ' +  (-1)*graphToSvgY(i + ticklengthsX) + '%';
 				// document.getElementById('containGraphtexts').appendChild(div);
+				
 			}
 		}
 
@@ -607,6 +855,40 @@
 			
 		}
 
+		function updatePolarFrame() {
+			polarDiv = document.getElementById('containPolar')
+			rectB = polarDiv.getBoundingClientRect()
+			if(rectB.width < rectB.height) {
+				minDimension = rectB.width
+				polarSquareSide = 10*minDimension/10
+				polarSquareSideGap = minDimension/20
+
+				var div = document.getElementById("polarFrame");
+				
+				div.style.left = '50%'
+				div.style.top =  '50%'
+				div.style.width = polarSquareSide
+				div.style.height = polarSquareSide
+				div.style.transform = 'translate(-50%,-50%)';
+
+			}
+			else {
+				minDimension = rectB.height
+				polarSquareSide = 10*minDimension/10
+				polarSquareSideGap = minDimension/20
+
+
+				var div = document.getElementById("polarFrame");				
+				div.style.left = '50%'
+				div.style.top =  '50%'
+				div.style.width = polarSquareSide
+				div.style.height = polarSquareSide
+				div.style.transform = 'translate(-50%,-50%)';
+			}
+
+			
+		}
+
 		makePolarFrame()
 
 		polarymin = -graphymax
@@ -696,7 +978,6 @@
 		function plotPolar() {
 			pointsDictPolar = []
 
-
 			for (i =0; i < curveDict.length; i++) {
 				xval = curveDict[i][0]
 				if (xval > analysisWindow[1]) {
@@ -736,6 +1017,8 @@
 			polarxmax = graphymax
 			polarxmin = -graphymax
 
+
+
 			pointsDictPolar = []
 			pointsDictPolarActual = []
 
@@ -768,7 +1051,7 @@
 
 
 		plotPolar()
-		maxwindingFrequency = 5
+		maxwindingFrequency = 12
 
 		function update(event) {
 			var rect = event.target.getBoundingClientRect()
@@ -1097,8 +1380,8 @@
 		initTransformPointsDict = []
 
 		function plotTransform() {
-			curvepointsT = curvepoints/100
-			if (curvepointsT <= 10) {
+			curvepointsT = curvepoints/2
+			if (curvepointsT <= 100) {
 				curvepointsT = 100
 			}
 
@@ -1181,8 +1464,8 @@
 		function updateplotTransform() {
 			transformPointsDict = []
 			initTransformPointsDict = []
-			curvepointsT = curvepoints/100
-			if (curvepointsT <= 10) {
+			curvepointsT = curvepoints/2
+			if (curvepointsT <= 100) {
 				curvepointsT = 100
 			}
 			for (i = 0; i < curvepointsT; i++) {
@@ -1307,6 +1590,7 @@
 			}
 					
 		}
+
 		document.getElementById('containSettings').addEventListener('click',openSettings)
 
 		wFsliderSvg = document.getElementById('wFsliderSvg')
@@ -1364,10 +1648,51 @@
 					return (((10 - 90)/(vmax - vmin))*(val - vmin)) + 90
 				}
 			}
-			
 		}
 
+		function getValFromPercentages(percent, vmin, vmax, returntype) {
+			if(returntype == 'x') {
+				if (vmin != vmax) {
+					return (((percent - 10)*(vmax - vmin))/(90 - 10)) + vmin
+				}
+			}
+			else if(returntype == 'y') {
+				if (vmin != vmax) {
+					return (((percent - 90)*(vmax - vmin))/(10 - 90)) + vmin
+				}
+			}
+		}
+
+		graphSVGid = {}
+
 		function drawAGraph(data,div,wmin,wmax,xmin,xmax,num) {
+
+			var infoholderdiv = document.createElement("div");
+			infoholderdiv.id = 'graph svg info holder ' + num + ' div';
+			infoholderdiv.style.position = "relative";
+			infoholderdiv.style.zIndex = '-1';
+			infoholderdiv.style.width = '100%'
+			infoholderdiv.style.height = '25vh'
+			infoholderdiv.style.overflow = 'hidden'
+			infoholderdiv.style.position = 'absolute'
+			infoholderdiv.style.pointerEvents = 'none'
+			div.appendChild(infoholderdiv);
+
+			var infotextdiv = document.createElement("div");
+			infotextdiv.id = 'graph svg info holder text ' + num + ' div';
+			infotextdiv.style.position = "absolute";
+			infotextdiv.innerHTML = 'Click/Tap and drag to draw the function.'
+			infotextdiv.style.fontSize = '2vh'
+			infotextdiv.style.color = 'hsla(200,0%,50%,0.5)'
+			infotextdiv.style.opacity = 0
+			infotextdiv.style.fontFamily = 'Calibri'
+			infotextdiv.style.textAlign = 'center'
+			infotextdiv.style.top = '50%'
+			infotextdiv.style.left = '50%'
+			infotextdiv.style.pointerEvents = 'none'
+			infotextdiv.style.transform = 'translate(-50%,-50%)'
+			infoholderdiv.appendChild(infotextdiv);
+
 			var svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg')
 			svgElement.setAttribute('id',div.id + " svg")
 			svgElement.setAttribute('height','25vh')
@@ -1377,14 +1702,15 @@
 			svgElement.style.position = 'relative'
 			div.appendChild(svgElement)
 
+
+			graphSVGid[svgElement.id] = num
+
 			if (wmin == wmax) {
 				wmax = wmax + 0.5
 				wmin = wmin - 0.5
 			}
 
 			LUgap = (wmax - wmin)/10
-
-
 
 			wmax = wmax + LUgap
 			wmin = wmin - LUgap
@@ -1398,6 +1724,7 @@
 			lineElement.setAttribute('y2', getPercentages(0,wmin,wmax,'y') + '%');
 			lineElement.setAttribute('id', div.id + " yaxis")
 			lineElement.style.stroke = 'hsla(32,1%,70%,1)'
+			lineElement.style.pointerEvents = 'none'
 			lineElement.style.strokeWidth = '2%';
 			svgElement.appendChild(lineElement);
 
@@ -1409,6 +1736,7 @@
 			lineElement.setAttribute('vector-effect','non-scaling-stroke');
 			lineElement.setAttribute('id', div.id + " xaxis")
 			lineElement.style.stroke = 'hsla(32,1%,70%,1)'
+			lineElement.style.pointerEvents = 'none'
 			lineElement.style.strokeWidth = '2%';
 			svgElement.appendChild(lineElement);
 
@@ -1436,16 +1764,73 @@
 			pathElement.setAttribute('d',pString);
 			colorC = 'hsla(' + ((num+1)/countWaves)*40 + ',100%,50%,0.5)'
 			pathElement.style.strokeWidth = '2%';
+			pathElement.style.pointerEvents = 'none'
 			pathElement.setAttribute('stroke', colorC);
 			svgElement.appendChild(pathElement);
 
 		}
 
 		function updateAGraph(num) {
-			var svgElement = document.getElementById('eq ' + num + 'div svg')
+			var svgElement = document.getElementById('eq ' + num + ' div svg')
 
 			wavedata = waveStatus[num]
 			updateSWave(wavedata, num)
+
+			wavedata = waveStatus[num]
+			wmin = wavedata[7]
+			wmax = wavedata[8]
+			data = wavedata[6]
+
+			xmin = 0
+			xmax = graphxmax
+
+			if (wmin == wmax) {
+				wmax = wmax + 0.5
+				wmin = wmin - 0.5
+			}
+
+
+			LUgap = (wmax - wmin)/10
+
+			wmax = wmax + LUgap
+			wmin = wmin - LUgap
+
+			var lineElement = document.getElementById('eq ' + num + ' div yaxis')
+			lineElement.setAttribute('x1', getPercentages(0,xmin,xmax,'x') + '%');
+			lineElement.setAttribute('y1', getPercentages(0,wmin,wmax,'y') + '%');
+			lineElement.setAttribute('x2', getPercentages(xmax,xmin,xmax,'x') + '%')
+			lineElement.setAttribute('y2', getPercentages(0,wmin,wmax,'y') + '%');
+
+			var lineElement = document.getElementById('eq ' + num + ' div xaxis')
+			lineElement.setAttribute('x1', getPercentages(0,xmin,xmax,'x') + '%');
+			lineElement.setAttribute('y1', getPercentages(wmin,wmin,wmax,'y') + '%');
+			lineElement.setAttribute('x2', getPercentages(0,xmin,xmax,'x') + '%')
+			lineElement.setAttribute('y2', getPercentages(wmax,wmin,wmax,'y') + '%');
+			
+			jump = 1
+
+			pDict = []
+			for(m=0; m<curvepoints; m = m+jump) {
+				step = (xmax/curvepoints)
+				xval = m*step
+				yvalue = data[xval]
+				pDict.push([getPercentages(xval,xmin,xmax,'x'),getPercentages(yvalue,wmin,wmax,'y')]); 
+			}
+
+			pString = 'M ' + pDict[0][0] + " " + pDict[0][1] + " "
+
+			for(k = 0; k < pDict.length; k++) {
+				pString = pString + 'L ' + pDict[k][0] + " " + pDict[k][1] + " ";
+			}
+
+
+			var pathElement = document.getElementById('eq ' + num + ' div path')
+			pathElement.setAttribute('d',pString);
+
+		}
+
+		function updateACustomGraph(num) {
+			var svgElement = document.getElementById('eq ' + num + ' div svg')
 
 			wavedata = waveStatus[num]
 			wmin = wavedata[7]
@@ -1515,13 +1900,30 @@
 		controlIDs = {}
 
 		function controlClick(event) {
-			ivalue = controlIDs[event.target.id][0]
-			typevalue = controlIDs[event.target.id][1]
-			mainDIV = document.getElementById('control ' + typevalue + ' ' + ivalue + ' div');
-			mainDIV.style.cursor = 'ew-resize'
-			svgDIV = document.getElementById('control ' + typevalue + ' ' + ivalue + ' svg');
-			svgDIV.style.pointerEvents = 'auto'
-			document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').style.fontWeight = 'bold'
+			if (controlIDs[event.target.id][2] == false) {
+				ivalue = controlIDs[event.target.id][0]
+				typevalue = controlIDs[event.target.id][1]
+				mainDIV = document.getElementById('control ' + typevalue + ' ' + ivalue + ' div');
+				mainDIV.style.cursor = 'ew-resize'
+				// svgDIV = document.getElementById('control ' + typevalue + ' ' + ivalue + ' svg');
+				// svgDIV.style.pointerEvents = 'auto'
+				mainDIV.addEventListener('mousemove',updateControlValue)
+				
+				document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').style.fontWeight = 'bold'
+				controlIDs[event.target.id][2] = true
+			}
+			else {
+				ivalue = controlIDs[event.target.id][0]
+				typevalue = controlIDs[event.target.id][1]
+				mainDIV = document.getElementById('control ' + typevalue + ' ' + ivalue + ' div');
+				mainDIV.style.cursor = 'pointer'
+				mainDIV.removeEventListener('mousemove',updateControlValue)
+				// svgDIV = document.getElementById('control ' + typevalue + ' ' + ivalue + ' svg');
+				// svgDIV.style.pointerEvents = 'none'
+				document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').style.fontWeight = 'normal'
+				controlIDs[event.target.id][2] = false
+			}
+				
 		}
 
 		function controlClickviaTouch(event) {
@@ -1574,11 +1976,9 @@
 			if (waveStatus[ivalue][0] == true) {
 				document.getElementById('eq ' + ivalue + ' blank text subdiv').innerHTML = "The tranform result hasn't been updated. Close this section to update it."
 			}
-			
 
 			updateAGraph(ivalue)
 			updateMainGraph()
-
 		}
 
 		function updateControlValueviaTouch(event) {
@@ -1610,6 +2010,7 @@
 				tval = 4
 				tstring = 'Shift : '
 			}
+
 			changevaluepercent = (touch.pageX - rect.left)/rect.width
 			changevalue = (maxVal - minVal)*changevaluepercent + minVal
 			rectElement = document.getElementById('control ' + typevalue + ' ' + ivalue + ' slider')
@@ -1620,7 +2021,6 @@
 			if (waveStatus[ivalue][0] == true) {
 				document.getElementById('eq ' + ivalue + ' blank text subdiv').innerHTML = "The tranform result hasn't been updated. Close this section to update it."
 			}
-			
 
 			updateAGraph(ivalue)
 			updateMainGraph()
@@ -1634,8 +2034,40 @@
 			if (waveStatus[ivalue][5] == 'cosine') {
 				waveStatus[ivalue][5] = 'sine'
 			}
+			else if(waveStatus[ivalue][5] == 'sine') {
+				waveStatus[ivalue][5] = 'custom wave'
+				document.getElementById('control amp ' + ivalue + ' div').style.opacity = 0.3
+				document.getElementById('control freq ' + ivalue + ' div').style.opacity = 0.3
+				document.getElementById('control phas ' + ivalue + ' div').style.opacity = 0.3
+				document.getElementById('control shif ' + ivalue + ' div').style.opacity = 0.3
+				document.getElementById('control amp ' + ivalue + ' div').style.pointerEvents = 'none'
+				document.getElementById('control freq ' + ivalue + ' div').style.pointerEvents = 'none'
+				document.getElementById('control phas ' + ivalue + ' div').style.pointerEvents = 'none'
+				document.getElementById('control shif ' + ivalue + ' div').style.pointerEvents = 'none'
+				svgElement = document.getElementById('eq ' + ivalue + ' div svg')
+				svgElement.style.pointerEvents = 'auto'
+				svgElement.style.cursor = 'pointer'
+				svgElement.addEventListener('mousedown', modifyGraphDrawn)
+
+				document.getElementById('graph svg info holder text ' + ivalue + ' div').style.opacity = 1;
+
+
+			}
 			else {
 				waveStatus[ivalue][5] = 'cosine'
+				document.getElementById('control amp ' + ivalue + ' div').style.opacity = 1
+				document.getElementById('control freq ' + ivalue + ' div').style.opacity = 1
+				document.getElementById('control phas ' + ivalue + ' div').style.opacity = 1
+				document.getElementById('control shif ' + ivalue + ' div').style.opacity = 1
+				document.getElementById('control amp ' + ivalue + ' div').style.pointerEvents = 'auto'
+				document.getElementById('control freq ' + ivalue + ' div').style.pointerEvents = 'auto'
+				document.getElementById('control phas ' + ivalue + ' div').style.pointerEvents = 'auto'
+				document.getElementById('control shif ' + ivalue + ' div').style.pointerEvents = 'auto'
+				svgElement = document.getElementById('eq ' + ivalue + ' div svg')
+				svgElement.style.pointerEvents = 'auto'
+				svgElement.style.cursor = 'auto'
+				svgElement.removeEventListener('mousedown', modifyGraphDrawn)
+				document.getElementById('graph svg info holder text ' + ivalue + ' div').style.opacity = 0;
 			}
 			
 
@@ -1645,7 +2077,11 @@
 				document.getElementById('eq ' + ivalue + ' blank text subdiv').innerHTML = "The tranform result hasn't been updated. Close this section to update it."
 			}
 
-			updateAGraph(ivalue)
+			if(waveStatus[ivalue][5] != 'custom wave') {
+				updateAGraph(ivalue)
+			}
+
+			
 			updateMainGraph()
 
 		}
@@ -1698,7 +2134,7 @@
 
 			delete waveStatus[countWaves - 1]
 
-			console.log(waveStatus)
+
 
 			countWaves = countWaves - 1
 
@@ -1711,10 +2147,11 @@
 			typevalue = controlIDs[event.target.id][1]
 			mainDIV = document.getElementById('control ' + typevalue + ' ' + ivalue + ' div');
 			mainDIV.style.cursor = 'pointer'
-			svgDIV = document.getElementById('control ' + typevalue + ' ' + ivalue + ' svg');
-			svgDIV.style.pointerEvents = 'none'
+			mainDIV.removeEventListener('mousemove',updateControlValue)
+			// svgDIV = document.getElementById('control ' + typevalue + ' ' + ivalue + ' svg');
+			// svgDIV.style.pointerEvents = 'none'
 			document.getElementById('control ' + typevalue + ' text ' + ivalue + ' div').style.fontWeight = 'normal'
-
+			controlIDs[event.target.id][2] = false
 		}
 
 		function drawControls(maindiv,stateoptions,indexval) {
@@ -1747,9 +2184,12 @@
 			div.style.cursor = 'pointer'
 			div.style.overflow = 'hidden'
 			controldiv.appendChild(div);
-			controlIDs[div.id] = [indexval,'amp']
+			controlIDs[div.id] = [indexval,'amp',false]
 			div.addEventListener('mousedown',controlClick)
 			div.addEventListener('touchstart',controlClickviaTouch)
+			div.addEventListener('mouseout',controlOut)
+			div.addEventListener('touchmove', updateControlValueviaTouch)
+			div.addEventListener('touchend', controlOut)
 			
 
 
@@ -1765,8 +2205,9 @@
 			div.style.left = '50%'
 			div.style.pointerEvents = 'none'
 			div.style.transform = 'translate(-50%,-50%)'
+			div.style.pointerEvents = 'none'
 			controlsubdiv.appendChild(div);
-			controlIDs[div.id] = [indexval,'amp']
+			// controlIDs[div.id] = [indexval,'amp',false]
 
 			var svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg')
 			svgElement.setAttribute('id','control amp ' + indexval + ' svg')
@@ -1776,12 +2217,8 @@
 			svgElement.setAttribute('preserveAspectRatio', "none")
 			svgElement.style.position = 'absolute'
 			svgElement.style.pointerEvents = 'none'
-			svgElement.addEventListener('mousemove',updateControlValue)
-			svgElement.addEventListener('mouseout',controlOut)
-			svgElement.addEventListener('touchmove', updateControlValueviaTouch)
-			svgElement.addEventListener('touchend', controlOut)
 			controlsubdiv.appendChild(svgElement)
-			controlIDs[svgElement.id] = [indexval,'amp']
+			// controlIDs[svgElement.id] = [indexval,'amp',false]
 
 			var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 			rectElement.setAttribute('height',"100%");
@@ -1795,7 +2232,7 @@
 			rectElement.style.strokeWidth = '0';
 			rectElement.style.pointerEvents = 'none'
 			svgElement.appendChild(rectElement);
-			controlIDs[rectElement.id] = [indexval,'amp']
+			// controlIDs[rectElement.id] = [indexval,'amp',false]
 
 			var div = document.createElement("div");
 			div.id = 'control freq ' + indexval + ' div';
@@ -1807,9 +2244,12 @@
 			div.style.cursor = 'pointer'
 			div.style.overflow = 'hidden'
 			controldiv.appendChild(div);
-			controlIDs[div.id] = [indexval,'freq']
+			controlIDs[div.id] = [indexval,'freq',false]
 			div.addEventListener('mousedown',controlClick)
 			div.addEventListener('touchstart',controlClickviaTouch)
+			div.addEventListener('mouseout',controlOut)
+			div.addEventListener('touchmove', updateControlValueviaTouch)
+			div.addEventListener('touchend', controlOut)
 
 			controlsubdiv = div
 			var div = document.createElement("div");
@@ -1824,7 +2264,7 @@
 			div.style.pointerEvents = 'none'
 			div.style.transform = 'translate(-50%,-50%)'
 			controlsubdiv.appendChild(div);
-			controlIDs[div.id] = [indexval,'freq']
+			controlIDs[div.id] = [indexval,'freq',false]
 
 			var svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg')
 			svgElement.setAttribute('id','control freq ' + indexval + ' svg')
@@ -1834,12 +2274,9 @@
 			svgElement.setAttribute('preserveAspectRatio', "none")
 			svgElement.style.position = 'absolute'
 			controlsubdiv.appendChild(svgElement)
-			controlIDs[svgElement.id] = [indexval,'freq']
+			controlIDs[svgElement.id] = [indexval,'freq',false]
 			svgElement.style.pointerEvents = 'none'
-			svgElement.addEventListener('mousemove',updateControlValue)
-			svgElement.addEventListener('mouseout',controlOut)
-			svgElement.addEventListener('touchmove', updateControlValueviaTouch)
-			svgElement.addEventListener('touchend', controlOut)
+			
 
 			var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 			rectElement.setAttribute('height',"100%");
@@ -1853,7 +2290,7 @@
 			rectElement.style.strokeWidth = '0';
 			rectElement.style.pointerEvents = 'none'
 			svgElement.appendChild(rectElement);
-			controlIDs[rectElement.id] = [indexval,'freq']
+			controlIDs[rectElement.id] = [indexval,'freq',false]
 
 			var div = document.createElement("div");
 			div.id = 'control phas ' + indexval + ' div';
@@ -1865,9 +2302,12 @@
 			div.style.cursor = 'pointer'
 			div.style.overflow = 'hidden'
 			controldiv.appendChild(div);
-			controlIDs[div.id] = [indexval,'phas']
+			controlIDs[div.id] = [indexval,'phas',false]
 			div.addEventListener('mousedown',controlClick)
 			div.addEventListener('touchstart',controlClickviaTouch)
+			div.addEventListener('mouseout',controlOut)
+			div.addEventListener('touchmove', updateControlValueviaTouch)
+			div.addEventListener('touchend', controlOut)
 
 			controlsubdiv = div
 			var div = document.createElement("div");
@@ -1882,7 +2322,7 @@
 			div.style.pointerEvents = 'none'
 			div.style.transform = 'translate(-50%,-50%)'
 			controlsubdiv.appendChild(div);
-			controlIDs[div.id] = [indexval,'phas']
+			// controlIDs[div.id] = [indexval,'phas',false]
 
 			var svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg')
 			svgElement.setAttribute('id','control phas ' + indexval + ' svg')
@@ -1892,11 +2332,7 @@
 			svgElement.setAttribute('preserveAspectRatio', "none")
 			svgElement.style.position = 'absolute'
 			controlsubdiv.appendChild(svgElement)
-			controlIDs[svgElement.id] = [indexval,'phas']
-			svgElement.addEventListener('mousemove',updateControlValue)
-			svgElement.addEventListener('mouseout',controlOut)
-			svgElement.addEventListener('touchmove', updateControlValueviaTouch)
-			svgElement.addEventListener('touchend', controlOut)
+			// controlIDs[svgElement.id] = [indexval,'phas',false]
 			svgElement.style.pointerEvents = 'none'
 
 			var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
@@ -1911,7 +2347,7 @@
 			rectElement.style.strokeWidth = '0';
 			rectElement.style.pointerEvents = 'none'
 			svgElement.appendChild(rectElement);
-			controlIDs[rectElement.id] = [indexval,'phas']
+			// controlIDs[rectElement.id] = [indexval,'phas',false]
 
 			var div = document.createElement("div");
 			div.id = 'control shif ' + indexval + ' div';
@@ -1923,9 +2359,12 @@
 			div.style.cursor = 'pointer'
 			div.style.overflow = 'hidden'
 			controldiv.appendChild(div);
-			controlIDs[div.id] = [indexval,'shif']
+			controlIDs[div.id] = [indexval,'shif',false]
 			div.addEventListener('mousedown',controlClick)
 			div.addEventListener('touchstart',controlClickviaTouch)
+			div.addEventListener('mouseout',controlOut)
+			div.addEventListener('touchmove', updateControlValueviaTouch)
+			div.addEventListener('touchend', controlOut)
 
 			controlsubdiv = div
 			var div = document.createElement("div");
@@ -1940,7 +2379,7 @@
 			div.style.pointerEvents = 'none'
 			div.style.transform = 'translate(-50%,-50%)'
 			controlsubdiv.appendChild(div);
-			controlIDs[div.id] = [indexval,'shif']
+			// controlIDs[div.id] = [indexval,'shif',false]
 
 			var svgElement = document.createElementNS("http://www.w3.org/2000/svg", 'svg')
 			svgElement.setAttribute('id','control shif ' + indexval + ' svg')
@@ -1950,11 +2389,7 @@
 			svgElement.setAttribute('preserveAspectRatio', "none")
 			svgElement.style.position = 'absolute'
 			controlsubdiv.appendChild(svgElement)
-			controlIDs[svgElement.id] = [indexval,'shif']
-			svgElement.addEventListener('mousemove',updateControlValue)
-			svgElement.addEventListener('mouseout',controlOut)
-			svgElement.addEventListener('touchmove', updateControlValueviaTouch)
-			svgElement.addEventListener('touchend', controlOut)
+			// controlIDs[svgElement.id] = [indexval,'shif',false]
 			svgElement.style.pointerEvents = 'none'
 
 			var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
@@ -1969,7 +2404,7 @@
 			rectElement.style.strokeWidth = '0';
 			rectElement.style.pointerEvents = 'none'
 			svgElement.appendChild(rectElement);
-			controlIDs[rectElement.id] = [indexval,'shif']
+			// controlIDs[rectElement.id] = [indexval,'shif',false]
 
 			var div = document.createElement("div");
 			div.id = 'control type ' + indexval + ' div';
@@ -1994,7 +2429,7 @@
 			div.style.left = '50%'
 			div.style.transform = 'translate(-50%,-50%)'
 			controlsubdiv.appendChild(div);
-			controlIDs[div.id] = [indexval,'type']
+			controlIDs[div.id] = [indexval,'type',false]
 			div.addEventListener('click',changeSinosoidType)
 
 			var div = document.createElement("div");
@@ -2025,7 +2460,7 @@
 			div.style.cursor = 'pointer'
 			div.style.transform = 'translate(-50%,-50%)'
 			controlsubdiv.appendChild(div);
-			controlIDs[div.id] = [indexval,'status']
+			controlIDs[div.id] = [indexval,'status',false]
 			div.addEventListener('click', changeStatus)
 
 			var div = document.createElement("div");
@@ -2051,7 +2486,7 @@
 			div.style.cursor = 'pointer'
 			div.style.transform = 'translate(-50%,-50%)'
 			controlsubdiv.appendChild(div);
-			controlIDs[div.id] = [indexval,'remove']
+			controlIDs[div.id] = [indexval,'remove',false]
 			div.addEventListener('click',removeDiv)
 
 		}
@@ -2096,7 +2531,7 @@
 
 		}
 
-		function addWave() {
+		function addSinosoidWave() {
 			waveStatus[countWaves] = [false,0.5,1,0,0,'cosine',[],0,0]
 			wavedata = addSWave(waveStatus[countWaves])
 			waveStatus[countWaves][6] = wavedata[0]
@@ -2149,14 +2584,37 @@
 			drawControls(document.getElementById('eq '+ cw + ' div'), [waveStatus[cw][1],waveStatus[cw][2],waveStatus[cw][3],waveStatus[cw][4],waveStatus[cw][5],waveStatus[cw][0]],cw)
 
 			document.getElementById('containequationLab').style.height = 10 + 40*countWaves + 20 + '%'
+			document.getElementById('add sine signal div').style.height = 0
+			document.getElementById('add custom signal div').style.height =  0
+			document.getElementById('cancel signal div').style.height = 0
 
 
+		}
+
+		function addWave(event) {
+			document.getElementById('add sine signal div').style.height = '10vh'
+			document.getElementById('add custom signal div').style.height = '10vh'
+			document.getElementById('cancel signal div').style.height = '10vh'
+			document.getElementById('containequationLab').style.height = 10 + 40*countWaves + 40 + '%'
+
+		}
+
+		function cancelWave(event) {
+			document.getElementById('add sine signal div').style.height = 0
+			document.getElementById('add custom signal div').style.height = 0
+			document.getElementById('cancel signal div').style.height = 0
+			document.getElementById('containequationLab').style.height = 10 + 40*countWaves + 20 + '%'
+		}
+
+		function drawWave(event) {
+			
 		}
 
 		var div = document.createElement("div");
 		div.id = 'add signal div';
 		div.style.position = "relative";
 		div.style.zIndex = '0';
+		div.style.overflow = 'hidden'
 		div.style.width = '100%'
 		div.style.height = '20vh'
 		document.getElementById('containequationLab').appendChild(div);
@@ -2178,6 +2636,99 @@
 		div.appendChild(subdiv);
 		div.addEventListener('click',addWave)
 
+		var div = document.createElement("div");
+		div.id = 'add signal options div';
+		div.style.position = "relative";
+		div.style.zIndex = '0';
+		div.style.overflow = 'hidden'
+		div.style.width = '100%'
+		div.style.height = '10vh'
+		div.style.fontSize = 0
+		document.getElementById('containequationLab').appendChild(div);
+
+		optionsDiv = div
+
+		var div = document.createElement("div");
+		div.id = 'add sine signal div';
+		div.style.position = "relative";
+		div.style.zIndex = '0';
+		div.style.overflow = 'hidden'
+		div.style.width = '33%'
+		div.style.height = '0'
+		div.style.display = 'inline-block'
+		optionsDiv.appendChild(div);
+
+		var subdiv = document.createElement("div");
+		subdiv.id = 'add sine signal div text';
+		subdiv.style.position = "relative";
+		subdiv.style.zIndex = '0';
+		subdiv.style.position = "absolute";
+		subdiv.innerHTML = 'Add Sinosoid'
+		subdiv.style.fontSize = '2.5vh'
+		subdiv.style.cursor = 'pointer'
+		subdiv.style.fontFamily = 'Calibri'
+		subdiv.style.textAlign = 'center'
+		subdiv.style.top = '50%'
+		subdiv.style.color = 'hsla(35,100%,50%,1)'
+		subdiv.style.left = '50%'
+		subdiv.style.transform = 'translate(-50%,-50%)'
+		div.appendChild(subdiv);
+		div.addEventListener('click',addSinosoidWave)
+
+		var div = document.createElement("div");
+		div.id = 'add custom signal div';
+		div.style.position = "relative";
+		div.style.zIndex = '0';
+		div.style.overflow = 'hidden'
+		div.style.width = '33%'
+		div.style.height = '0'
+		div.style.display = 'inline-block'
+		optionsDiv.appendChild(div);
+
+		var subdiv = document.createElement("div");
+		subdiv.id = 'add custom signal div text';
+		subdiv.style.position = "relative";
+		subdiv.style.zIndex = '0';
+		subdiv.style.position = "absolute";
+		subdiv.innerHTML = 'Draw the Signal'
+		subdiv.style.fontSize = '2.5vh'
+		subdiv.style.cursor = 'pointer'
+		subdiv.style.fontFamily = 'Calibri'
+		subdiv.style.textAlign = 'center'
+		subdiv.style.top = '50%'
+		subdiv.style.color = 'hsla(35,100%,50%,1)'
+		subdiv.style.left = '50%'
+		subdiv.style.transform = 'translate(-50%,-50%)'
+		div.appendChild(subdiv);
+		div.addEventListener('click',drawWave)
+
+		var div = document.createElement("div");
+		div.id = 'cancel signal div';
+		div.style.position = "relative";
+		div.style.zIndex = '0';
+		div.style.overflow = 'hidden'
+		div.style.width = '33%'
+		div.style.height = '0'
+		div.style.display = 'inline-block'
+		optionsDiv.appendChild(div);
+
+		var subdiv = document.createElement("div");
+		subdiv.id = 'cancel signal div text';
+		subdiv.style.position = "relative";
+		subdiv.style.zIndex = '0';
+		subdiv.style.position = "absolute";
+		subdiv.innerHTML = 'Cancel'
+		subdiv.style.fontSize = '2.5vh'
+		subdiv.style.cursor = 'pointer'
+		subdiv.style.fontFamily = 'Calibri'
+		subdiv.style.textAlign = 'center'
+		subdiv.style.top = '50%'
+		subdiv.style.color = 'hsla(35,100%,50%,1)'
+		subdiv.style.left = '50%'
+		subdiv.style.transform = 'translate(-50%,-50%)'
+		div.appendChild(subdiv);
+		div.addEventListener('click',cancelWave)
+
 		drawAGraph(waveStatus[0][6],document.getElementById('eq '+ 0 + ' div'),waveStatus[0][7],waveStatus[0][8],0,graphxmax,0)
 
 		drawControls(document.getElementById('eq '+ 0 + ' div'), [waveStatus[0][1],waveStatus[0][2],waveStatus[0][3],waveStatus[0][4],waveStatus[0][5],waveStatus[0][0]],0)
@@ -2185,6 +2736,10 @@
 		drawAGraph(waveStatus[1][6],document.getElementById('eq '+ 1 + ' div'),waveStatus[1][7],waveStatus[1][8],0,graphxmax,1)
 
 		drawControls(document.getElementById('eq '+ 1 + ' div'), [waveStatus[1][1],waveStatus[1][2],waveStatus[1][3],waveStatus[1][4],waveStatus[1][5],waveStatus[1][0]],1)
+
+		drawAGraph(waveStatus[2][6],document.getElementById('eq '+ 2 + ' div'),waveStatus[2][7],waveStatus[2][8],0,graphxmax,2)
+
+		drawControls(document.getElementById('eq '+ 2 + ' div'), [waveStatus[2][1],waveStatus[2][2],waveStatus[2][3],waveStatus[2][4],waveStatus[2][5],waveStatus[2][0]],2)
 
 
 
