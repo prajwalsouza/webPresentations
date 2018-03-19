@@ -66,6 +66,7 @@
 			
 		</div>
 		
+		
 
 		
 		
@@ -121,8 +122,6 @@
 
 		graphSvg = document.getElementById('graphSvg')
 
-
-		
 
 		graphxmax = 5
 
@@ -321,8 +320,6 @@
 				}
 			}
 
-				
-
 			updateACustomGraph(numvalue)
 			updateMainGraph()
 
@@ -372,6 +369,9 @@
 			waveStatus[numb][7] = wavemin
 			waveStatus[numb][8] = wavemax
 		}
+
+
+
 
 		
 
@@ -490,6 +490,7 @@
 				graphymax = graphxmax + 0.5
 				graphymin = graphymin - 0.5
 			}
+
 			numberofticks = parseInt(graphxmax)
 			ticklengthsX = (graphymax - graphymin)/40
 			ticklengthsY = (graphxmax - 0)/200
@@ -681,13 +682,12 @@
 				pString = pString + 'L ' + pointsDict[k][0] + " " + pointsDict[k][1] + " ";
 			}
 
-			// console.log(pString)
-
 			var pathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
 			pathElement.setAttribute('fill','transparent');
 			pathElement.setAttribute('vector-effect','non-scaling-stroke');
 			pathElement.setAttribute('d',pString);
 			pathElement.setAttribute('id','main graph path')
+			pathElement.style.pointerEvents = 'none'
 			colorC = 'hsla(186,100%,50%,1)'
 			pathElement.style.strokeWidth = '2%';
 			pathElement.setAttribute('stroke', colorC);
@@ -695,6 +695,80 @@
 		}
 
 		drawMainGraph()
+
+		function valueLocator(event) {
+			lineElement = document.getElementById('locatorMain')
+			lineElement.style.stroke = 'hsla(15,100%,0%,1)'
+
+			var rect = graphSvg.getBoundingClientRect()
+			posX = event.clientX - rect.left
+
+			xPer = (posX/rect.width)*100
+
+			cxpoint = getValFromPercentages(xPer, 0, graphxmax,'x')
+			if (cxpoint > analysisWindow[0] && cxpoint < analysisWindow[1]) {
+				xinCP = parseInt(getValFromPercentages(graphToSvgX(cxpoint), 0, curvepoints,'x'))
+
+				step = (graphxmax/curvepoints)
+				xval = xinCP*step
+				cxpoint = xval
+
+				yP = waveEquation(cxpoint)
+
+				lineElement.setAttribute('x1', graphToSvgX(cxpoint) + '%');
+				lineElement.setAttribute('y1', graphToSvgY(yP) + '%');
+				lineElement.setAttribute('x2', graphToSvgX(cxpoint) + '%')
+				lineElement.setAttribute('y2', graphToSvgY(0) + '%');
+
+				lineElement = document.getElementById('locatorPolar')
+				lineElement.style.stroke = 'hsla(15,100%,0%,1)'
+
+				polarX = yP*Math.cos(-2*Math.PI*windingfrequency*xval)
+				polarY = yP*Math.sin(-2*Math.PI*windingfrequency*xval)
+
+				lineElement.setAttribute('x1', polarToSvgX(0) + '%');
+				lineElement.setAttribute('y1', polarToSvgY(0) + '%');
+				lineElement.setAttribute('x2', polarToSvgX(polarX) + '%')
+				lineElement.setAttribute('y2', polarToSvgY(polarY) + '%');
+
+
+			}
+			else {
+				lineElement.style.stroke = 'hsla(32,100%,50%,0)'
+			}
+
+		}
+
+		graphSvg.style.cursor = 'pointer'
+
+
+		var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+		lineElement.setAttribute('x1', graphToSvgX(1) + '%');
+		lineElement.setAttribute('y1', graphToSvgY(graphymax) + '%');
+		lineElement.setAttribute('x2', graphToSvgX(1) + '%')
+		lineElement.setAttribute('y2', graphToSvgY(graphymin) + '%');
+		lineElement.setAttribute('vector-effect','non-scaling-stroke');
+		lineElement.style.stroke = 'hsla(32,100%,50%,0)'
+		lineElement.style.strokeWidth = '2%';
+		lineElement.id = 'locatorMain'
+		graphSvg.appendChild(lineElement);
+
+		function valueSpecifier(event) {
+			graphSvg.addEventListener('mousemove', valueLocator)
+			graphSvg.removeEventListener('mouseover', valueSpecifier)
+			graphSvg.addEventListener('mouseout', valueSpecifierOut)
+		}
+
+		function valueSpecifierOut(event) {
+			graphSvg.removeEventListener('mousemove', valueLocator)
+			graphSvg.addEventListener('mouseover', valueSpecifier)
+			graphSvg.removeEventListener('mouseout', valueSpecifierOut)
+
+			document.getElementById('locatorMain').style.stroke = 'hsla(32,100%,50%,0)'
+			document.getElementById('locatorPolar').style.stroke = 'hsla(32,100%,50%,0)'
+		}
+
+		graphSvg.addEventListener('mouseover', valueSpecifier)
 
 
 		function updateMainGraph() {
@@ -777,6 +851,95 @@
 
 
 		analysisWindow = [0,3]
+
+		function analysisWindow0down(event) {
+			graphSvg.addEventListener('mousemove', analysisWindow0move)
+			graphSvg.addEventListener('mouseup', analysisWindow0out)
+			document.getElementById('analysisWindow 0').removeEventListener('mousedown', analysisWindow0down)
+			graphSvg.removeEventListener('mouseover',valueSpecifier)
+		}
+
+		function analysisWindow0out(event) {
+			graphSvg.removeEventListener('mousemove', analysisWindow0move)
+			graphSvg.removeEventListener('mouseup', analysisWindow0out)
+			document.getElementById('analysisWindow 0').addEventListener('mousedown', analysisWindow0down)
+			graphSvg.addEventListener('mouseover',valueSpecifier)
+			updatePolarAxes()
+			updatePolar()
+			plotCenterOfMass()
+			plotCOMX()
+			updatefinalgraphAxesTicksAndLabels()
+			updateplotTransform()
+		}
+
+		function analysisWindow0move(event) {
+			var rect = graphSvg.getBoundingClientRect()
+			posX = event.clientX - rect.left
+
+			xPer = (posX/rect.width)*100
+
+			cxpoint = getValFromPercentages(xPer, 0, graphxmax,'x')
+
+			if (cxpoint < analysisWindow[1] && cxpoint > 0) {
+				lineElement = document.getElementById('analysisWindow 0')
+
+				lineElement.setAttribute('x1', graphToSvgX(cxpoint) + '%');
+				lineElement.setAttribute('y1', graphToSvgY(graphymax) + '%');
+				lineElement.setAttribute('x2', graphToSvgX(cxpoint) + '%')
+				lineElement.setAttribute('y2', graphToSvgY(graphymin) + '%');
+				analysisWindow[0] = cxpoint
+
+				windowstring = "M " + graphToSvgX(analysisWindow[0]) + "," + graphToSvgY(graphymax) + " L " + graphToSvgX(analysisWindow[1]) + "," + graphToSvgY(graphymax) + " L " + graphToSvgX(analysisWindow[1]) + "," + graphToSvgY(graphymin) + " L " + graphToSvgX(analysisWindow[0]) + "," + graphToSvgY(graphymin)
+				document.getElementById('analysisWindow area').setAttribute('d',windowstring);
+			}
+
+			
+
+				
+		}
+
+		function analysisWindow1down(event) {
+			graphSvg.addEventListener('mousemove', analysisWindow1move)
+			graphSvg.addEventListener('mouseup', analysisWindow1out)
+			document.getElementById('analysisWindow 1').removeEventListener('mousedown', analysisWindow1down)
+			graphSvg.removeEventListener('mouseover',valueSpecifier)
+		}
+
+		function analysisWindow1out(event) {
+			graphSvg.removeEventListener('mousemove', analysisWindow1move)
+			graphSvg.removeEventListener('mouseup', analysisWindow1out)
+			document.getElementById('analysisWindow 1').addEventListener('mousedown', analysisWindow1down)
+			graphSvg.addEventListener('mouseover',valueSpecifier)
+			updatePolarAxes()
+			updatePolar()
+			plotCenterOfMass()
+			plotCOMX()
+			updatefinalgraphAxesTicksAndLabels()
+			updateplotTransform()
+		}
+
+		function analysisWindow1move(event) {
+			var rect = graphSvg.getBoundingClientRect()
+			posX = event.clientX - rect.left
+
+			xPer = (posX/rect.width)*100
+
+			cxpoint = getValFromPercentages(xPer, 0, graphxmax,'x')
+
+			if (cxpoint > analysisWindow[0] && cxpoint < graphxmax) {
+				lineElement = document.getElementById('analysisWindow 1')
+
+				lineElement.setAttribute('x1', graphToSvgX(cxpoint) + '%');
+				lineElement.setAttribute('y1', graphToSvgY(graphymax) + '%');
+				lineElement.setAttribute('x2', graphToSvgX(cxpoint) + '%')
+				lineElement.setAttribute('y2', graphToSvgY(graphymin) + '%');
+				analysisWindow[1] = cxpoint
+
+				windowstring = "M " + graphToSvgX(analysisWindow[0]) + "," + graphToSvgY(graphymax) + " L " + graphToSvgX(analysisWindow[1]) + "," + graphToSvgY(graphymax) + " L " + graphToSvgX(analysisWindow[1]) + "," + graphToSvgY(graphymin) + " L " + graphToSvgX(analysisWindow[0]) + "," + graphToSvgY(graphymin)
+				document.getElementById('analysisWindow area').setAttribute('d',windowstring);
+			}
+				
+		}
 		
 		function drawAnalysisWindow() {
 			var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
@@ -786,8 +949,10 @@
 			lineElement.setAttribute('y2', graphToSvgY(graphymin) + '%');
 			lineElement.setAttribute('vector-effect','non-scaling-stroke');
 			lineElement.style.stroke = 'hsla(32,100%,50%,0.2)'
-			lineElement.style.strokeWidth = '5%';
+			lineElement.id = 'analysisWindow 0'
+			lineElement.style.strokeWidth = '10%';
 			lineElement.style.cursor = 'ew-resize'
+			lineElement.addEventListener('mousedown', analysisWindow0down)
 			graphSvg.appendChild(lineElement);
 
 			var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
@@ -797,8 +962,10 @@
 			lineElement.setAttribute('y2', graphToSvgY(graphymin) + '%');
 			lineElement.setAttribute('vector-effect','non-scaling-stroke');
 			lineElement.style.stroke = 'hsla(32,100%,50%,0.2)'
-			lineElement.style.strokeWidth = '5%';
+			lineElement.style.strokeWidth = '10%';
+			lineElement.id = 'analysisWindow 1'
 			lineElement.style.cursor = 'ew-resize'
+			lineElement.addEventListener('mousedown', analysisWindow1down)
 			graphSvg.appendChild(lineElement);
 
 			var pathElement = document.createElementNS("http://www.w3.org/2000/svg", 'path');
@@ -806,7 +973,9 @@
 			pathElement.setAttribute('vector-effect','non-scaling-stroke');
 			windowstring = "M " + graphToSvgX(analysisWindow[0]) + "," + graphToSvgY(graphymax) + " L " + graphToSvgX(analysisWindow[1]) + "," + graphToSvgY(graphymax) + " L " + graphToSvgX(analysisWindow[1]) + "," + graphToSvgY(graphymin) + " L " + graphToSvgX(analysisWindow[0]) + "," + graphToSvgY(graphymin)
 			pathElement.setAttribute('d',windowstring);
+			pathElement.style.pointerEvents = 'none'
 			colorC = 'hsla(186,100%,50%,1)'
+			pathElement.id = 'analysisWindow area'
 			pathElement.style.strokeWidth = '0';
 			graphSvg.appendChild(pathElement);
 
@@ -962,6 +1131,19 @@
 
 		windingfrequency = 0.2
 
+		polarSvg = document.getElementById('polarSvg')
+
+		var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+		lineElement.setAttribute('x1', polarToSvgX(0) + '%');
+		lineElement.setAttribute('y1', polarToSvgY(polarymin) + '%');
+		lineElement.setAttribute('x2', polarToSvgX(0) + '%')
+		lineElement.setAttribute('y2', polarToSvgY(polarymax) + '%');
+		lineElement.setAttribute('vector-effect','non-scaling-stroke');
+		lineElement.style.stroke = 'hsla(32,100%,50%,0)'
+		lineElement.style.strokeWidth = '2%';
+		lineElement.id = 'locatorPolar'
+		polarSvg.appendChild(lineElement);
+
 
 		var div = document.createElement("div");
 		div.innerHTML = "Winding frequency : " + windingfrequency.toFixed(2) + " cycles/sec";
@@ -1032,11 +1214,13 @@
 				if (xval > analysisWindow[1]) {
 					break
 				}
-				yvalue = curveDict[i][1]
-				polarX = yvalue*Math.cos(-2*Math.PI*windingfrequency*xval)
-				polarY = yvalue*Math.sin(-2*Math.PI*windingfrequency*xval)
-				pointsDictPolar.push([polarToSvgX(polarX),polarToSvgY(polarY)]);
-				pointsDictPolarActual.push([polarX,polarY])
+				if (xval > analysisWindow[0]) {
+					yvalue = curveDict[i][1]
+					polarX = yvalue*Math.cos(-2*Math.PI*windingfrequency*xval)
+					polarY = yvalue*Math.sin(-2*Math.PI*windingfrequency*xval)
+					pointsDictPolar.push([polarToSvgX(polarX),polarToSvgY(polarY)]);
+					pointsDictPolarActual.push([polarX,polarY])
+				}
 			}
 
 			pString = 'M ' + pointsDictPolar[0][0] + " " + pointsDictPolar[0][1] + " "
@@ -1083,11 +1267,38 @@
 			plotCOMX()
 		}
 
+		function updatePdown(event) {
+			document.getElementById('containPolar').removeEventListener('mousedown',updatePdown)
+			document.getElementById('containPolarDetails').removeEventListener('mousedown',updatePdown)
+			document.getElementById('containPolar').addEventListener('mousemove',update)
+			document.getElementById('containPolarDetails').addEventListener('mousemove',update)
+			document.getElementById('containPolar').addEventListener('mouseup',updatePUp)
+			document.getElementById('containPolarDetails').addEventListener('mouseup',updatePUp)
+			document.getElementById('containPolar').style.cursor = 'ew-resize'
+			document.getElementById('containPolarDetails').style.cursor = 'ew-resize'
+		}
+
+		function updatePUp(event) {
+			document.getElementById('containPolar').removeEventListener('mousemove',update)
+			document.getElementById('containPolarDetails').removeEventListener('mousemove',update)
+			document.getElementById('containPolar').removeEventListener('mouseup',updatePUp)
+			document.getElementById('containPolarDetails').removeEventListener('mouseup',updatePUp)
+			document.getElementById('containPolar').addEventListener('mousedown',updatePdown)
+			document.getElementById('containPolarDetails').addEventListener('mousedown',updatePdown)
+			document.getElementById('containPolar').style.cursor = 'pointer'
+			document.getElementById('containPolarDetails').style.cursor = 'pointer'
+		}
+
 		document.getElementById('containPolarDetails').addEventListener('mousemove',update)
 		document.getElementById('containPolarDetails').addEventListener('touchmove',updateviaTouch)
 
 		document.getElementById('containPolar').addEventListener('mousemove',update)
 		document.getElementById('containPolar').addEventListener('touchmove',updateviaTouch)
+
+		document.getElementById('containPolarDetails').addEventListener('mousedown',updatePdown)
+		document.getElementById('containPolar').addEventListener('mousedown',updatePdown)
+		document.getElementById('containPolar').style.cursor = 'pointer'
+		document.getElementById('containPolarDetails').style.cursor = 'pointer'
 
 		var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
 		circleElement.setAttribute('r','1%');
@@ -1118,7 +1329,7 @@
 		lineElement.setAttribute('x2', polarToSvgX(0) + '%')
 		lineElement.setAttribute('y2', polarToSvgY(0) + '%');
 		lineElement.setAttribute('id', 'y-corPolar');
-		lineElement.style.stroke = 'hsla(250,100%,50%,0.5)'
+		lineElement.style.stroke = 'hsla(7,100%,50%,0.5)'
 		lineElement.style.strokeWidth = '2%';
 		lineElement.style.opacity = 0
 		polarSvg.appendChild(lineElement);
@@ -1252,9 +1463,20 @@
 		function plotCOMX() {
 			ellipseElement = document.getElementById('centerOfMassX')
 			ellipseElement.style.opacity = 1
+
+			lineElement = document.getElementById('xcor on transform')
+			lineElement.style.opacity = 1
+
+
 			if (windingfrequency < finalgraphxmax) {
 				ellipseElement.setAttribute('cx', finalgraphToSvgX(windingfrequency) + '%');
 				ellipseElement.setAttribute('cy', finalgraphToSvgY(cOM[0]) + '%');
+
+				lineElement.setAttribute('x1', finalgraphToSvgX(0) + '%');
+				lineElement.setAttribute('y1', finalgraphToSvgY(0) + '%');
+				lineElement.setAttribute('x2', finalgraphToSvgX(0) + '%')
+				lineElement.setAttribute('y2', finalgraphToSvgY(cOM[0]) + '%');
+
 				scalevalue = 1
 				ww = finalgraphSvg.getBoundingClientRect().width
 				hh = finalgraphSvg.getBoundingClientRect().height
@@ -1438,6 +1660,18 @@
 
 			drawfinalgraphAxesTicksAndLabels()
 			drawgraphAxesFinalPlot()
+
+			var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
+			lineElement.setAttribute('x1', finalgraphToSvgX(0) + '%');
+			lineElement.setAttribute('y1', finalgraphToSvgY(finalgraphymax) + '%');
+			lineElement.setAttribute('x2', finalgraphToSvgX(0) + '%')
+			lineElement.setAttribute('y2', finalgraphToSvgY(finalgraphymin) + '%');
+			lineElement.setAttribute('vector-effect','non-scaling-stroke');
+			lineElement.setAttribute('id', 'xcor on transform');
+			lineElement.style.stroke =  'hsla(250,100%,50%,0.5)'
+			lineElement.style.strokeWidth = '2%';
+			finalgraphSvg.appendChild(lineElement);
+
 			plotCOMX()
 
 			for(b=0; b < initTransformPointsDict.length; b++) {
@@ -1466,6 +1700,11 @@
 				
 		}
 
+
+		
+
+		document.getElementById('finalgraphSvg').style.cursor = 'pointer'
+
 		function updateplotTransform() {
 			transformPointsDict = []
 			initTransformPointsDict = []
@@ -1484,10 +1723,12 @@
 					if (xval > analysisWindow[1]) {
 						break
 					}
-					yvalue = curveDict[k][1]
-					polarX = yvalue*Math.cos(-2*Math.PI*wf*xval)
-					polarY = yvalue*Math.sin(-2*Math.PI*wf*xval)
-					temppointsDictPolarActual.push([polarX,polarY])
+					if (xval > analysisWindow[0]) {
+						yvalue = curveDict[k][1]
+						polarX = yvalue*Math.cos(-2*Math.PI*wf*xval)
+						polarY = yvalue*Math.sin(-2*Math.PI*wf*xval)
+						temppointsDictPolarActual.push([polarX,polarY])
+					}
 				}
 
 				sumX = 0
@@ -1585,6 +1826,7 @@
 					scrollTop: $("#containSettingsDiv").offset().top
 				}, 1000);
 				settingsStateOpen = true
+				document.getElementById('containAll').style.overflow = 'auto'
 			}
 			else {
 				document.getElementById('containSettingsDiv').style.height = '0%'
@@ -1592,8 +1834,10 @@
 					scrollBottom: $("#containSettingsDiv").offset().bottom
 				}, 1000);
 				settingsStateOpen = false
-			}
-					
+				if (equationLabStateOpen == false) {
+					document.getElementById('containAll').style.overflow = 'hidden'
+				}
+			}		
 		}
 
 		document.getElementById('containSettings').addEventListener('click',openSettings)
@@ -1629,7 +1873,9 @@
 			}
 			else {
 				document.getElementById('containequationLab').style.height = '0%'
-				document.getElementById('containAll').style.overflow = 'hidden'
+				if (settingsStateOpen == false) {
+					document.getElementById('containAll').style.overflow = 'hidden'
+				}
 				equationLabStateOpen = false
 				updatePolarAxes()
 				updatePolar()
@@ -1988,6 +2234,8 @@
 			updateAGraph(ivalue)
 			updateMainGraph()
 		}
+
+
 
 		function updateControlValueviaTouch(event) {
 			var touch = event.touches[0]
@@ -2622,38 +2870,9 @@
 			if (displaymode == 'portrait') {
 				document.getElementById('containequationLab').style.height = 10 + 70*countWaves + 20 + '%'
 			}
-			
-			document.getElementById('add sine signal div').style.height = 0
-			document.getElementById('add custom signal div').style.height =  0
-			document.getElementById('cancel signal div').style.height = 0
-
 
 		}
 
-		function addWave(event) {
-			document.getElementById('add sine signal div').style.height = '10vh'
-			document.getElementById('add custom signal div').style.height = '10vh'
-			document.getElementById('cancel signal div').style.height = '10vh'
-			document.getElementById('containequationLab').style.height = 10 + 40*countWaves + 40 + '%'
-			if (displaymode == 'portrait') {
-				document.getElementById('containequationLab').style.height = 10 + 70*countWaves + 40 + '%'
-			}
-
-		}
-
-		function cancelWave(event) {
-			document.getElementById('add sine signal div').style.height = 0
-			document.getElementById('add custom signal div').style.height = 0
-			document.getElementById('cancel signal div').style.height = 0
-			document.getElementById('containequationLab').style.height = 10 + 40*countWaves + 20 + '%'
-			if (displaymode == 'portrait') {
-				document.getElementById('containequationLab').style.height = 10 + 70*countWaves + 20 + '%'
-			}
-		}
-
-		function drawWave(event) {
-			
-		}
 
 		var div = document.createElement("div");
 		div.id = 'add signal div';
@@ -2679,100 +2898,7 @@
 		subdiv.style.left = '50%'
 		subdiv.style.transform = 'translate(-50%,-50%)'
 		div.appendChild(subdiv);
-		div.addEventListener('click',addWave)
-
-		var div = document.createElement("div");
-		div.id = 'add signal options div';
-		div.style.position = "relative";
-		div.style.zIndex = '0';
-		div.style.overflow = 'hidden'
-		div.style.width = '100%'
-		div.style.height = '10vh'
-		div.style.fontSize = 0
-		document.getElementById('containequationLab').appendChild(div);
-
-		optionsDiv = div
-
-		var div = document.createElement("div");
-		div.id = 'add sine signal div';
-		div.style.position = "relative";
-		div.style.zIndex = '0';
-		div.style.overflow = 'hidden'
-		div.style.width = '33%'
-		div.style.height = '0'
-		div.style.display = 'inline-block'
-		optionsDiv.appendChild(div);
-
-		var subdiv = document.createElement("div");
-		subdiv.id = 'add sine signal div text';
-		subdiv.style.position = "relative";
-		subdiv.style.zIndex = '0';
-		subdiv.style.position = "absolute";
-		subdiv.innerHTML = 'Add Sinosoid'
-		subdiv.style.fontSize = '2.5vh'
-		subdiv.style.cursor = 'pointer'
-		subdiv.style.fontFamily = 'Calibri'
-		subdiv.style.textAlign = 'center'
-		subdiv.style.top = '50%'
-		subdiv.style.color = 'hsla(35,100%,50%,1)'
-		subdiv.style.left = '50%'
-		subdiv.style.transform = 'translate(-50%,-50%)'
-		div.appendChild(subdiv);
 		div.addEventListener('click',addSinosoidWave)
-
-		var div = document.createElement("div");
-		div.id = 'add custom signal div';
-		div.style.position = "relative";
-		div.style.zIndex = '0';
-		div.style.overflow = 'hidden'
-		div.style.width = '33%'
-		div.style.height = '0'
-		div.style.display = 'inline-block'
-		optionsDiv.appendChild(div);
-
-		var subdiv = document.createElement("div");
-		subdiv.id = 'add custom signal div text';
-		subdiv.style.position = "relative";
-		subdiv.style.zIndex = '0';
-		subdiv.style.position = "absolute";
-		subdiv.innerHTML = 'Draw the Signal'
-		subdiv.style.fontSize = '2.5vh'
-		subdiv.style.cursor = 'pointer'
-		subdiv.style.fontFamily = 'Calibri'
-		subdiv.style.textAlign = 'center'
-		subdiv.style.top = '50%'
-		subdiv.style.color = 'hsla(35,100%,50%,1)'
-		subdiv.style.left = '50%'
-		subdiv.style.transform = 'translate(-50%,-50%)'
-		div.appendChild(subdiv);
-		div.addEventListener('click',drawWave)
-
-		var div = document.createElement("div");
-		div.id = 'cancel signal div';
-		div.style.position = "relative";
-		div.style.zIndex = '0';
-		div.style.overflow = 'hidden'
-		div.style.width = '33%'
-		div.style.height = '0'
-		div.style.display = 'inline-block'
-		optionsDiv.appendChild(div);
-
-		var subdiv = document.createElement("div");
-		subdiv.id = 'cancel signal div text';
-		subdiv.style.position = "relative";
-		subdiv.style.zIndex = '0';
-		subdiv.style.position = "absolute";
-		subdiv.innerHTML = 'Cancel'
-		subdiv.style.fontSize = '2.5vh'
-		subdiv.style.cursor = 'pointer'
-		subdiv.style.fontFamily = 'Calibri'
-		subdiv.style.textAlign = 'center'
-		subdiv.style.top = '50%'
-		subdiv.style.color = 'hsla(35,100%,50%,1)'
-		subdiv.style.left = '50%'
-		subdiv.style.transform = 'translate(-50%,-50%)'
-		div.appendChild(subdiv);
-		div.addEventListener('click',cancelWave)
 
 		drawAGraph(waveStatus[0][6],document.getElementById('eq '+ 0 + ' div'),waveStatus[0][7],waveStatus[0][8],0,graphxmax,0)
 
