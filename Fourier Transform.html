@@ -3,12 +3,47 @@
 		<title> Fourier Transform Visualization</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<link href='https://fonts.googleapis.com/css?family=Alegreya Sans SC' rel='stylesheet'>
+		<link href='https://fonts.googleapis.com/css?family=Handlee' rel='stylesheet'>
+		<link href='https://fonts.googleapis.com/css?family=Caveat Brush' rel='stylesheet'>
+		<link href='https://fonts.googleapis.com/css?family=McLaren' rel='stylesheet'>
 
 
 	</head>
 	<body style='margin:0px;width:100%; height: 100%;'>
 		<div id="containAll" style='margin:0px;width:100%; height: 100%;overflow: hidden; font-size: 0;'> 
-			<div id="containGraph" style='margin:0px;width:100%; height: 35%;overflow: hidden;background: white;position: relative;'>
+			<div id="containIntro" style='margin:0px;width:100%; height: 100%;overflow: hidden;background: hsla(300,100%,0%,0.8);box-shadow: inset 0px 0px 20px rgba(0,0,0,0.3); cursor: auto; position: absolute; z-index: 7; opacity: 1;'>
+				<div id="TitleText" style='margin:0px;overflow: hidden;text-align: center; font-family: Alegreya Sans SC; letter-spacing: 1vh; font-weight: lighter; font-size: 5vh; transform: translate(-50%,-40%); left: 50%; top: 40%; position: relative; color: hsla(190,100%,100%,1); '>
+						<!-- FOURIER TRANSFORM VISUALIZATION -->
+						Fourier Transform Visualization
+				</div>
+				
+				<div id="DescriptionText" style='margin:0px;overflow: hidden;text-align: center; font-family: Handlee; font-size: 3vh; transform: translate(-50%,-40%); left: 50%; top: 40%; position: relative; color: hsla(185,100%,50%,1); '>
+					<a href="https://www.youtube.com/watch?v=spUNpyF58BY" target="_blank" style="text-decoration: none; color: hsla(185,100%,50%,1); ">
+						Based on a 3Blue1Brown video
+					</a>
+				</div>
+
+				<div id="diveIn" style='margin:0px;overflow: hidden;transform: translate(-50%,-50%); left: 50%; top: 50%; position: relative; background: hsla(180,100%,50%,0.3); width: 10vw; height: 6vh; border-color: hsla(260,100%,50%,1); cursor: pointer;'>
+
+					<div id="diveInText" style='margin:0px;overflow: hidden;text-align: center; font-family: McLaren; font-size: 2.5vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: relative; color: hsla(185,100%,100%,1); '>
+						VIEW
+					</div>
+					
+				</div>
+				
+				<div id="WebsiteText" style='margin:0px;overflow: hidden;text-align: center; font-family: Caveat Brush; font-size: 2.5vh; transform: translate(-50%,-70%); left: 50%; top: 70%; position: relative; color: hsla(40,100%,50%,1); '>
+					<a href="https://prajwalsouza.github.io" target="_blank" style="text-decoration: none;  color: hsla(40,100%,50%,1); ">
+						prajwalsouza.github.io
+					</a>
+				</div>
+			</div>
+			<div id="containIntroButton" style='margin:0px;width:100%; height: 5%;overflow: hidden;background: white;box-shadow: inset 0px 0px 20px rgba(0,0,0,0.3); cursor: pointer;'>
+				<div id="introbuttonText" style='margin:0px;overflow: hidden;text-align: center; font-family: Alegreya Sans SC; letter-spacing: 1vh; font-weight: lighter; font-size: 2vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: relative; color: hsla(190,100%,0%,1); '>
+						Fourier Transform Visualization
+				</div>
+			</div>
+			<div id="containGraph" style='margin:0px;width:100%; height: 30%;overflow: hidden;background: white;position: relative;'>
 				<svg id='graphSvg' height="100%" width="100%" viewBox="0 0 100 100" preserveAspectRatio="none" style='position: absolute; z-index: 1'>
 
 				</svg>
@@ -49,21 +84,92 @@
 					
 				</div>
 				<div id="containfinalGraphDetails" style='margin:0px;width:100%; height: 10%;overflow: hidden;background: white; position: relative;text-align: center; font-family: Calibri; font-size: 2vh'>
-					<div id="containfinalGraphDetailsText" style='margin:0px;background: white; text-align: center; font-family: Calibri; font-size: 2vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: absolute;'>
+					<div id="containfinalGraphDetailsText" style='margin:0px;background: white; text-align: center; font-family: Calibri; font-size: 2vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: relative;'>
 						The almost Fourier Transform of the wave.
 					</div>
 					
 				</div>
 			</div>
 			<div id="containSettings" style='margin:0px;width:100%; height: 5%;overflow: hidden;background: hsla(200 ,100%,50%,0);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; cursor: pointer; box-shadow: inset 0px 0px 20px rgba(0,0,0,0.3);'>
-				<div id="containSettingsText" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 2vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: absolute;'>
+				<div id="containSettingsText" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 2vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: relative;'>
 						Settings
 				</div>
 				
 			</div>
 		</div>
-		<div id="containSettingsDiv" style='margin:0px;width:100%; height: 0%;overflow: hidden; font-size: 0; transition: height 1s; '> 
-			
+		<div id="containSettingsDiv" style='margin:0px;width:100%; height: 0%;overflow: hidden; font-size: 0; transition: height 1s; '>
+			<div id="containInputSettingsHeading" style='margin:0px;width:100%; height: 10%;overflow: hidden;background: hsla(200 ,100%,100%,1);text-align: center; position: relative; font-family: Calibri; font-size: 2vh;'>
+				<div id="containInputSettingsHeadingText" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 3vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: absolute; color: hsla(200 ,100%,50%,1)'>
+						Input Signal Settings
+				</div>
+				
+			</div>
+			<div id="containInputSetting1" style='margin:0px;width:40%; height: 7%;overflow: hidden;background: hsla(200 ,0%,100%,1);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; display: inline-block;'>
+				<div id="containInputSetting1Label" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 2.5vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: relative; color: hsla(200 ,100%,0%,1);'>
+						Input signal time range : 0s to 5s
+				</div>
+
+			</div>
+			<div id="containInputSetting1Svg" style='margin:0px;width:60%; height: 7%;overflow: hidden;background: hsla(200 ,0%,100%,1);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; cursor: pointer; display: inline-block;'>
+				<svg id='inputsetting1Svg' height="100%" width="100%"  style='position: relative; z-index: 1'>
+				</svg>
+			</div>
+			<div id="containInputSetting2" style='margin:0px;width:40%; height: 7%;overflow: hidden;background: hsla(200 ,0%,100%,1);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; display: inline-block;'>
+				<div id="containInputSetting2Label" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 2.5vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: relative; color: hsla(200 ,100%,0%,1)'>
+						Number of sampling points : 1200
+				</div>
+			</div>
+			<div id="containInputSetting2Svg" style='margin:0px;width:60%; height: 7%;overflow: hidden;background: hsla(200 ,0%,100%,1);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; cursor: pointer; display: inline-block;'>
+				<svg id='inputsetting2Svg' height="100%" width="100%" style='position: relative; z-index: 1'>
+				</svg>
+			</div>
+			<div id="containInputSetting3" style='margin:0px;width:100%; height: 7%;overflow: hidden;background: hsla(210 ,100%,50%,0);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; cursor: pointer;'>
+				<div id="containInputSetting3Label" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 2.5vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: absolute; color: hsla(200 ,100%,0%,1)'>
+						Hide Analysis Window
+				</div>
+			</div>
+			<div id="containCGSettingsHeading" style='margin:0px;width:100%; height: 10%;overflow: hidden;background: hsla(200 ,0%,0%,0);text-align: center; position: relative; font-family: Calibri; font-size: 2vh;'>
+				<div id="containCGSettingsHeadingText" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 3vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: absolute; color: hsla(200 ,100%,50%,1)'>
+						Curled up graph Settings
+				</div>
+				
+			</div>
+			<div id="containCGSetting1" style='margin:0px;width:40%; height: 7%;overflow: hidden;background: hsla(200 ,0%,100%,1);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; display: inline-block;'>
+				<div id="containCGSetting1Label" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 2.5vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: relative; color: hsla(200 ,100%,0%,1);'>
+						Graph Winding Frequency : 0 to 10 windings/Analysis Window
+				</div>
+
+			</div>
+			<div id="containCGSetting1Svg" style='margin:0px;width:60%; height: 7%;overflow: hidden;background: hsla(200 ,0%,100%,1);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; cursor: pointer; display: inline-block;'>
+				<svg id='CGsetting1Svg' height="100%" width="100%"  style='position: relative; z-index: 1'>
+				</svg>
+			</div>
+
+			<div id="containCGSetting2" style='margin:0px;width:100%; height: 7%;overflow: hidden;background: hsla(210 ,100%,50%,0);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; cursor: pointer;'>
+				<div id="containCGSetting2Label" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 2.5vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: absolute; color: hsla(200 ,100%,0%,1)'>
+						Hide Centre of Mass
+				</div>
+			</div>
+			<div id="containCGSetting3" style='margin:0px;width:100%; height: 7%;overflow: hidden;background: hsla(190 ,100%,50%,0);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; cursor: pointer;'>
+				<div id="containCGSetting3Label" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 2.5vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: absolute; color: hsla(200 ,100%,0%,1)'>
+						Hide x co-ordinate of center of mass
+				</div>
+			</div>
+			<div id="containCGSetting4" style='margin:0px;width:100%; height: 7%;overflow: hidden;background: hsla(170 ,100%,50%,0);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; cursor: pointer;'>
+				<div id="containCGSetting4Label" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 2.5vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: absolute; color: hsla(200 ,100%,0%,1)'>
+						Hide y co-ordinate of center of mass
+				</div>
+			</div>
+			<div id="containoutputGSettingsHeading" style='margin:0px;width:100%; height: 10%;overflow: hidden;background: hsla(200 ,0%,0%,0);text-align: center; position: relative; font-family: Calibri; font-size: 2vh;'>
+				<div id="containoutputGSettingsHeadingText" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 3vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: absolute; color: hsla(200 ,100%,50%,1)'>
+						Output graph Settings
+				</div>
+			</div>
+			<div id="containoutputGSetting1" style='margin:0px;width:100%; height: 7%;overflow: hidden;background: hsla(250 ,100%,50%,0);text-align: center; position: relative; font-family: Calibri; font-size: 2vh; cursor: pointer;'>
+				<div id="containoutputGSetting1Label" style='margin:0px;background: hsla(200 ,100%,50%,0); text-align: center; font-family: Calibri; font-size: 2.5vh; transform: translate(-50%,-50%); left: 50%; top: 50%; position: absolute; color: hsla(200 ,100%,0%,1)'>
+						Plot Y co-ordinate of Center of Mass
+				</div>
+			</div>
 		</div>
 		
 		
@@ -72,27 +178,49 @@
 		
 		<script>
 
+		// Settings Design part
+
+		// Parameters :
+
+		// Input Signal :
+		// Signal Time range : 0 to around '1 to 10'
+		// Show Analysis Window : Checkbox
+		// Number of sampling points : 1000 to 10000
+
+		// Curled up graph:
+		// MaxWinding Frequency : Range 0 to 12. Resolution 1.
+		// Show centre of mass : Check box
+		// show x co-ordinate of center of mass
+		// show y co-ordinate of center of mass
+
+		// Output Signal
+		// plot co-ordinate : X or Y 
+
 		displaymode = 'landscape'
 
 		function checkResize(event) {
 			if(window.innerWidth < window.innerHeight) {
-				document.getElementById('containGraph').style.height = '22%'
+				document.getElementById('containGraph').style.height = '19%'
+				document.getElementById('containIntroButton').style.height = '3%'
 				document.getElementById('containEquationSettings').style.height = '4%'
 				document.getElementById('polarSection').style.height = '40%'
 				document.getElementById('polarSection').style.width = '100%'
 				document.getElementById('containTransform').style.height = '30%'
 				document.getElementById('containTransform').style.width = '100%'
 				document.getElementById('containSettings').style.height = '4%'
+				document.getElementById('diveIn').style.width = '20vw'
 				displaymode = 'portrait'
 			}
 			else {
-				document.getElementById('containGraph').style.height = '35%'
+				document.getElementById('containGraph').style.height = '30%'
+				document.getElementById('containIntroButton').style.height = '5%'
 				document.getElementById('containEquationSettings').style.height = '5%'
 				document.getElementById('polarSection').style.height = '55%'
 				document.getElementById('polarSection').style.width = '40%'
 				document.getElementById('containTransform').style.height = '55%'
 				document.getElementById('containTransform').style.width = '60%'
 				document.getElementById('containSettings').style.height = '5%'
+				document.getElementById('diveIn').style.width = '10vw'
 				displaymode = 'landscape'
 			}
 			updatePolarFrame()
@@ -105,17 +233,49 @@
 		}
 
 		if(window.innerWidth < window.innerHeight) {
-			document.getElementById('containGraph').style.height = '22%'
+			document.getElementById('containGraph').style.height = '19%'
+			document.getElementById('containIntroButton').style.height = '3%'
 			document.getElementById('containEquationSettings').style.height = '4%'
 			document.getElementById('polarSection').style.height = '40%'
 			document.getElementById('polarSection').style.width = '100%'
 			document.getElementById('containTransform').style.height = '30%'
 			document.getElementById('containTransform').style.width = '100%'
 			document.getElementById('containSettings').style.height = '4%'
+			document.getElementById('diveIn').style.width = '20vw'
 			displaymode = 'portrait'
 		}
 
 		window.addEventListener('resize', checkResize)
+
+		function hideSplashScreen(event) {
+			document.getElementById('containIntro').style.opacity = 0
+			document.getElementById('containIntro').style.pointerEvents = 'none'
+		}
+		function showSplashScreen(event) {
+			document.getElementById('containIntro').style.opacity = 1
+			document.getElementById('containIntro').style.pointerEvents = 'auto'
+		}
+
+		function buttonHover(event) {
+			document.getElementById('diveIn').style.background = 'hsla(180,100%,50%,0.8)'
+		}
+
+		function buttonOut(event) {
+			document.getElementById('diveIn').style.background = 'hsla(180,100%,50%,0.3)'
+		}
+
+		document.getElementById('diveIn').style.transition = 'background 0.5s'
+		document.getElementById('containIntro').style.transition = 'opacity 0.3s'
+
+		document.getElementById('diveIn').addEventListener('click', hideSplashScreen)
+		document.getElementById('diveIn').addEventListener('mouseover', buttonHover)
+		document.getElementById('diveIn').addEventListener('mouseout', buttonOut)
+
+		document.getElementById('containIntroButton').addEventListener('click', showSplashScreen)
+
+		setTimeout( function(){
+					hideSplashScreen()
+				}  , 10000)
 
 
 
@@ -124,6 +284,7 @@
 
 
 		graphxmax = 5
+		graphxmin = 0
 
 		curvepoints = 1300
 
@@ -133,7 +294,7 @@
 		// Default Waves
 
 		waveStatus[0] = [true,1,3,0,1,'cosine',[],0,0]
-		waveStatus[1] = [false,1,2,0,1,'cosine',[],0,0]
+		waveStatus[1] = [false,1,8,0,1,'cosine',[],0,0]
 		// waveStatus[2] = [false,1,1,0,0,'cosine',[],0,0]
 
 		function addSWave(waveState) {
@@ -1300,15 +1461,7 @@
 		document.getElementById('containPolar').style.cursor = 'pointer'
 		document.getElementById('containPolarDetails').style.cursor = 'pointer'
 
-		var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
-		circleElement.setAttribute('r','1%');
-		circleElement.setAttribute('cx','0%');
-		circleElement.setAttribute('cy','0%');
-		circleElement.style.opacity = 0
-		circleElement.style.fill = 'hsla(260,100%,50%,0.6)'
-		circleElement.style.strokeWidth = '0';
-		circleElement.setAttribute('id','centerOfMass');
-		document.getElementById('polarSvg').appendChild(circleElement);
+		
 
 		var lineElement = document.createElementNS("http://www.w3.org/2000/svg", 'line');
 		lineElement.setAttribute('x1', polarToSvgX(0) + '%');
@@ -1317,7 +1470,7 @@
 		lineElement.setAttribute('x2', polarToSvgX(0) + '%')
 		lineElement.setAttribute('y2', polarToSvgY(0) + '%');
 		lineElement.setAttribute('id', 'x-corPolar');
-		lineElement.style.stroke = 'hsla(250,100%,50%,0.5)'
+		lineElement.style.stroke = 'hsla(250,100%,50%,1)'
 		lineElement.style.strokeWidth = '2%';
 		lineElement.style.opacity = 0
 		polarSvg.appendChild(lineElement);
@@ -1329,10 +1482,20 @@
 		lineElement.setAttribute('x2', polarToSvgX(0) + '%')
 		lineElement.setAttribute('y2', polarToSvgY(0) + '%');
 		lineElement.setAttribute('id', 'y-corPolar');
-		lineElement.style.stroke = 'hsla(7,100%,50%,0.5)'
+		lineElement.style.stroke = 'hsla(7,100%,50%,1)'
 		lineElement.style.strokeWidth = '2%';
 		lineElement.style.opacity = 0
 		polarSvg.appendChild(lineElement);
+
+		var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+		circleElement.setAttribute('r','1%');
+		circleElement.setAttribute('cx','0%');
+		circleElement.setAttribute('cy','0%');
+		circleElement.style.opacity = 0
+		circleElement.style.fill = 'hsla(260,100%,50%,0.6)'
+		circleElement.style.strokeWidth = '0';
+		circleElement.setAttribute('id','centerOfMass');
+		document.getElementById('polarSvg').appendChild(circleElement);
 
 		plotXcor = 1
 		plotYcor = 1
@@ -2911,6 +3074,247 @@
 		// drawAGraph(waveStatus[2][6],document.getElementById('eq '+ 2 + ' div'),waveStatus[2][7],waveStatus[2][8],0,graphxmax,2)
 
 		// drawControls(document.getElementById('eq '+ 2 + ' div'), [waveStatus[2][1],waveStatus[2][2],waveStatus[2][3],waveStatus[2][4],waveStatus[2][5],waveStatus[2][0]],2)
+
+		drawAnalysisWindowValue = true
+
+
+		inputSetting3C = document.getElementById('containInputSetting3')
+
+		function changeinputSetting3(event) {
+			if (drawAnalysisWindowValue == true) {
+				drawAnalysisWindowValue = false
+				document.getElementById('analysisWindow 0').style.pointerEvents = 'none'
+				document.getElementById('analysisWindow 0').style.opacity = '0'
+				document.getElementById('analysisWindow 1').style.pointerEvents = 'none'
+				document.getElementById('analysisWindow 1').style.opacity = '0'
+				document.getElementById('analysisWindow area').style.pointerEvents = 'none'
+				document.getElementById('analysisWindow area').style.opacity = '0'
+				document.getElementById('containInputSetting3Label').innerHTML = 'Show Analysis Window'
+			}
+			else if (drawAnalysisWindowValue == false) {
+				drawAnalysisWindowValue = true
+				document.getElementById('analysisWindow 0').style.pointerEvents = 'auto'
+				document.getElementById('analysisWindow 0').style.opacity = '1'
+				document.getElementById('analysisWindow 1').style.pointerEvents = 'auto'
+				document.getElementById('analysisWindow 1').style.opacity = '1'
+				document.getElementById('analysisWindow area').style.pointerEvents = 'auto'
+				document.getElementById('analysisWindow area').style.opacity = '1'
+				document.getElementById('containInputSetting3Label').innerHTML = 'Hide Analysis Window'
+			}
+		}
+
+		inputSetting3C.addEventListener('click', changeinputSetting3)
+
+
+		// Draw Sliders
+
+		settingsID = {}
+
+		function sliderMove(event) {
+			sDetails = settingsID[event.target.id]
+
+			var rect = sDetails[4].getBoundingClientRect()
+			posX = event.clientX - rect.left
+			posY = event.clientY - rect.top
+
+			xPer = posX*100/rect.width
+
+			sliderClickvalue = getValFromPercentages(xPer, sDetails[1], sDetails[2],'x')
+
+			if(sliderClickvalue < sDetails[2] && sliderClickvalue > sDetails[1]) {
+				if (sDetails[8] == 'dual') {
+					if (sliderClickvalue <= sDetails[5]) {
+						document.getElementById(sDetails[7] + ' dot1').setAttribute('cx', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+						document.getElementById(sDetails[7] + ' midbar').setAttribute('width', getPercentages(sDetails[6], sDetails[1], sDetails[2], 'x') - getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+						document.getElementById(sDetails[7] + ' midbar').setAttribute('x', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+						settingsID[event.target.id][5] = sliderClickvalue
+
+					}
+					else if (sliderClickvalue >= sDetails[6]) {
+						document.getElementById(sDetails[7] + ' dot2').setAttribute('cx', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+						document.getElementById(sDetails[7] + ' midbar').setAttribute('width', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') - getPercentages(sDetails[5], sDetails[1], sDetails[2], 'x') + '%');
+						document.getElementById(sDetails[7] + ' midbar').setAttribute('x', getPercentages(sDetails[5], sDetails[1], sDetails[2], 'x') + '%');
+						settingsID[event.target.id][6] = sliderClickvalue
+					}
+					else if (sliderClickvalue < sDetails[6] && sliderClickvalue > sDetails[5] && (sDetails[6] - sDetails[5]) > sDetails[3]) {
+						midpoint = (sDetails[6] + sDetails[5])/2;
+						if (sliderClickvalue > midpoint) {
+							document.getElementById(sDetails[7] + ' dot2').setAttribute('cx', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+							document.getElementById(sDetails[7] + ' midbar').setAttribute('width', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') - getPercentages(sDetails[5], sDetails[1], sDetails[2], 'x') + '%');
+							document.getElementById(sDetails[7] + ' midbar').setAttribute('x', getPercentages(sDetails[5], sDetails[1], sDetails[2], 'x') + '%');
+							settingsID[event.target.id][6] = sliderClickvalue
+						}
+						else {
+							document.getElementById(sDetails[7] + ' dot1').setAttribute('cx', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+							document.getElementById(sDetails[7] + ' midbar').setAttribute('width', getPercentages(sDetails[6], sDetails[1], sDetails[2], 'x') - getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+							document.getElementById(sDetails[7] + ' midbar').setAttribute('x', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+							settingsID[event.target.id][5] = sliderClickvalue
+						}
+					}
+					sDetails[12].innerHTML = sDetails[9] + sDetails[5].toFixed(sDetails[13]) + sDetails[10] + sDetails[6].toFixed(sDetails[13]) + sDetails[11]
+				}
+				if (sDetails[8] == 'single') {
+
+					document.getElementById(sDetails[7] + ' dot2').setAttribute('cx', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+					document.getElementById(sDetails[7] + ' midbar').setAttribute('width', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') - getPercentages(sDetails[1], sDetails[1], sDetails[2], 'x') + '%');
+					document.getElementById(sDetails[7] + ' midbar').setAttribute('x', getPercentages(sDetails[1], sDetails[1], sDetails[2], 'x') + '%');
+					settingsID[event.target.id][6] = sliderClickvalue
+					sDetails[12].innerHTML = sDetails[9] + sDetails[6].toFixed(sDetails[13]) + sDetails[11]
+				}
+			}
+
+		}
+
+		function sliderUp(event) {
+			document.getElementById(event.target.id).addEventListener('mousedown', sliderDown)
+			document.getElementById(event.target.id).removeEventListener('mouseup', sliderUp)
+			document.getElementById(event.target.id).removeEventListener('mouseout', sliderOut)
+			document.getElementById(event.target.id).removeEventListener('mousemove', sliderMove)
+		}
+
+		function sliderOut(event) {
+			document.getElementById(event.target.id).addEventListener('mousedown', sliderDown)
+			document.getElementById(event.target.id).removeEventListener('mouseup', sliderUp)
+			document.getElementById(event.target.id).removeEventListener('mouseout', sliderOut)
+			document.getElementById(event.target.id).removeEventListener('mousemove', sliderMove)
+		}
+
+		function sliderDown(event) {
+			sDetails = settingsID[event.target.id]
+
+			var rect = sDetails[4].getBoundingClientRect()
+			posX = event.clientX - rect.left
+
+			xPer = posX*100/rect.width
+
+			sliderClickvalue = getValFromPercentages(xPer, sDetails[1], sDetails[2],'x')
+
+			if(sliderClickvalue < sDetails[2] && sliderClickvalue > sDetails[1]) {
+				if (sDetails[8] == 'dual') {
+					if (sliderClickvalue <= sDetails[5]) {
+						document.getElementById(sDetails[7] + ' dot1').setAttribute('cx', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+						document.getElementById(sDetails[7] + ' midbar').setAttribute('width', getPercentages(sDetails[6], sDetails[1], sDetails[2], 'x') - getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+						document.getElementById(sDetails[7] + ' midbar').setAttribute('x', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+						settingsID[event.target.id][5] = sliderClickvalue
+
+					}
+					else if (sliderClickvalue >= sDetails[6]) {
+						document.getElementById(sDetails[7] + ' dot2').setAttribute('cx', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+						document.getElementById(sDetails[7] + ' midbar').setAttribute('width', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') - getPercentages(sDetails[5], sDetails[1], sDetails[2], 'x') + '%');
+						document.getElementById(sDetails[7] + ' midbar').setAttribute('x', getPercentages(sDetails[5], sDetails[1], sDetails[2], 'x') + '%');
+						settingsID[event.target.id][6] = sliderClickvalue
+					}
+					else if (sliderClickvalue < sDetails[6] && sliderClickvalue > sDetails[5] && (sDetails[6] - sDetails[5]) > sDetails[3]) {
+						midpoint = (sDetails[6] + sDetails[5])/2;
+						if (sliderClickvalue > midpoint) {
+							document.getElementById(sDetails[7] + ' dot2').setAttribute('cx', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+							document.getElementById(sDetails[7] + ' midbar').setAttribute('width', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') - getPercentages(sDetails[5], sDetails[1], sDetails[2], 'x') + '%');
+							document.getElementById(sDetails[7] + ' midbar').setAttribute('x', getPercentages(sDetails[5], sDetails[1], sDetails[2], 'x') + '%');
+							settingsID[event.target.id][6] = sliderClickvalue
+						}
+						else {
+							document.getElementById(sDetails[7] + ' dot1').setAttribute('cx', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+							document.getElementById(sDetails[7] + ' midbar').setAttribute('width', getPercentages(sDetails[6], sDetails[1], sDetails[2], 'x') - getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+							document.getElementById(sDetails[7] + ' midbar').setAttribute('x', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+							settingsID[event.target.id][5] = sliderClickvalue
+						}
+					}
+					sDetails[12].innerHTML = sDetails[9] + sDetails[5].toFixed(sDetails[13]) + sDetails[10] + sDetails[6].toFixed(sDetails[13]) + sDetails[11]
+				}
+				if (sDetails[8] == 'single') {
+					document.getElementById(sDetails[7] + ' dot2').setAttribute('cx', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') + '%');
+					document.getElementById(sDetails[7] + ' midbar').setAttribute('width', getPercentages(sliderClickvalue, sDetails[1], sDetails[2], 'x') - getPercentages(sDetails[1], sDetails[1], sDetails[2], 'x') + '%');
+					document.getElementById(sDetails[7] + ' midbar').setAttribute('x', getPercentages(sDetails[1], sDetails[1], sDetails[2], 'x') + '%');
+					settingsID[event.target.id][6] = sliderClickvalue
+					sDetails[12].innerHTML = sDetails[9] + sDetails[6].toFixed(sDetails[13]) + sDetails[11]
+				}
+			}
+
+
+			document.getElementById(event.target.id).removeEventListener('mousedown', sliderDown)
+			document.getElementById(event.target.id).addEventListener('mouseup', sliderUp)
+			document.getElementById(event.target.id).addEventListener('mouseout', sliderOut)
+			document.getElementById(event.target.id).addEventListener('mousemove', sliderMove)
+		}
+
+
+		function drawSlider(mainDivofSlider, sliderID, sliderMax, sliderMin, sliderInitLow, sliderInitHigh, minWidth, stype, slabelBegin, slabelMid, slabelEnd, labelID, decAccuracy) {
+			var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+			rectElement.setAttribute('height','15%');
+			rectElement.setAttribute('width', '80%');
+			rectElement.setAttribute('id', sliderID + ' range');
+			rectElement.setAttribute('x', '10%');
+			rectElement.setAttribute('y', '43%');
+			rectElement.setAttribute('vector-effect','non-scaling-stroke');
+			rectElement.style.opacity = 1;
+			rectElement.style.fill = 'hsla(180,0%,90%,1)'
+			rectElement.style.strokeWidth = '0';
+			mainDivofSlider.appendChild(rectElement);
+			rectElement.style.pointerEvents = 'none'
+			settingsID[mainDivofSlider.id] = [1, sliderMin, sliderMax, minWidth, mainDivofSlider, sliderInitLow, sliderInitHigh, sliderID, stype,slabelBegin, slabelMid, slabelEnd, labelID, decAccuracy]
+			mainDivofSlider.addEventListener('mousedown', sliderDown)
+			rectElement.style.cursor = 'pointer'
+
+			if (stype == 'dual') {
+				var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+				rectElement.setAttribute('height','15%');
+				rectElement.setAttribute('width', getPercentages(sliderInitHigh, sliderMin, sliderMax, 'x') - getPercentages(sliderInitLow, sliderMin, sliderMax, 'x') + '%');
+				rectElement.setAttribute('id', sliderID + ' midbar');
+				rectElement.setAttribute('x', getPercentages(sliderInitLow, sliderMin, sliderMax, 'x') + '%');
+				rectElement.setAttribute('y', '43%');
+				rectElement.setAttribute('vector-effect','non-scaling-stroke');
+				rectElement.style.opacity = 1;
+				rectElement.style.fill = 'hsla(180,50%,90%,1)'
+				rectElement.style.strokeWidth = '0';
+				rectElement.style.pointerEvents = 'none'
+				mainDivofSlider.appendChild(rectElement);
+			}
+			else if(stype == 'single') {
+				var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+				rectElement.setAttribute('height','15%');
+				rectElement.setAttribute('width', getPercentages(sliderInitHigh, sliderMin, sliderMax, 'x') - getPercentages(sliderMin, sliderMin, sliderMax, 'x') + '%');
+				rectElement.setAttribute('id', sliderID + ' midbar');
+				rectElement.setAttribute('x', getPercentages(sliderMin, sliderMin, sliderMax, 'x') + '%');
+				rectElement.setAttribute('y', '43%');
+				rectElement.setAttribute('vector-effect','non-scaling-stroke');
+				rectElement.style.opacity = 1;
+				rectElement.style.fill = 'hsla(180,50%,90%,1)'
+				rectElement.style.strokeWidth = '0';
+				rectElement.style.pointerEvents = 'none'
+				mainDivofSlider.appendChild(rectElement);
+			}
+
+			
+			if (stype == 'dual') {
+				var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+				circleElement.setAttribute('cx', getPercentages(sliderInitLow, sliderMin, sliderMax, 'x') + '%');
+				circleElement.setAttribute('cy', '50%');	
+				circleElement.setAttribute('id', sliderID + ' dot1');
+				circleElement.setAttribute('r', '1.2%');
+				circleElement.setAttribute('vector-effect','non-scaling-stroke');
+				circleElement.setAttribute('fill','hsla(190,100%,50%,1)')
+				mainDivofSlider.appendChild(circleElement);
+				circleElement.style.pointerEvents = 'none'
+			}
+
+			var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+			circleElement.setAttribute('cx', getPercentages(sliderInitHigh, sliderMin, sliderMax, 'x') + '%');
+			circleElement.setAttribute('cy', '50%');	
+			circleElement.setAttribute('id', sliderID + ' dot2');
+			circleElement.setAttribute('r', '1.2%');
+			circleElement.setAttribute('vector-effect','non-scaling-stroke');
+			circleElement.setAttribute('fill','hsla(190,100%,50%,1)')
+			mainDivofSlider.appendChild(circleElement);
+			circleElement.style.pointerEvents = 'none'
+		}
+
+		drawSlider(document.getElementById('inputsetting1Svg'),'inputsetting1Slider',10,-10,0,5,1, 'dual', 'Input signal time range : ', 's to ', ' s', document.getElementById('containInputSetting1Label'), 2)
+		drawSlider(document.getElementById('inputsetting2Svg'),'inputsetting2Slider',10000,500,0,1200,1, 'single', 'Number of sampling points : ', '', '', document.getElementById('containInputSetting2Label'),0)
+
+		drawSlider(document.getElementById('CGsetting1Svg'),'CGsetting1Slider',12,-12,0,5,1, 'dual', 'Graph Winding Frequency : ', ' to ', ' windings/Analysis Window', document.getElementById('containCGSetting1Label'), 2)
+
+
+		
 
 
 
