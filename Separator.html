@@ -1,0 +1,323 @@
+<html>
+	<head>
+		<title>  Maxwell's Demon Breakout </title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<script src="physicsjs-full.min.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<canvas id='mycanvas' style="position: absolute; z-index: 1;"></canvas>
+
+		<div id='MainTitle' style="position: absolute; z-index: 1;">MAXWELLS DEMON</div>
+		<div id='displayTempUp' style="position: absolute; z-index: 1;"></div>
+		<div id='displayTempLow' style="position: absolute; z-index: 1;"></div>
+		
+		
+		<script> 
+		// src="physicsjs-full.min.js">
+		var imported = document.createElement('script');
+		imported.src = 'physicsjs-full.min.js';
+		document.head.appendChild(imported);
+
+		var canvaswidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+		var canvasheight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+
+		// Above Inner Window Size code from https://stackoverflow.com/a/28241682
+
+		canvaswidth = canvaswidth - 30; 
+		// To deal with the extra width from the window Innerwith function
+		canvasheight = canvasheight - 30;
+		var title = document.getElementById("MainTitle");
+		title.style.fontFamily = "Calibri";
+		title.style.left = 0;
+		title.style.top = 0;
+		mainFontSize = Math.min(canvasheight,canvaswidth)/13;
+		title.style.fontSize = mainFontSize;
+		title.style.height = 0;
+		//title.style.color = 'rgb(127, 127, 127)';
+		title.style.textAlign = 'center';
+		title.style.width = canvaswidth;
+		title.style.wordSpacing = canvaswidth/45;
+		title.style.letterSpacing = canvaswidth/45;
+		title.style.paddingTop = ((canvasheight /2) - (mainFontSize)/2);
+
+		var drawingcanvas = document.getElementById("mycanvas");
+		var drawingcanvasctx = drawingcanvas.getContext("2d");
+
+
+		drawingcanvas.width = canvaswidth;
+		drawingcanvas.height = canvasheight;
+		drawingcanvasctx.beginPath();
+		drawingcanvasctx.setLineDash([5, 3]);
+		drawingcanvasctx.lineWidth = 1;
+		drawingcanvasctx.strokeStyle = 'rgba(255, 175, 36, 0.8)';
+		drawingcanvasctx.moveTo(0,canvasheight/2);
+		drawingcanvasctx.lineTo(canvaswidth,canvasheight/2);
+		drawingcanvasctx.stroke();
+
+		var uppertempbox = document.getElementById("displayTempUp");
+		uppertempbox.style.fontFamily = "Calibri";
+		uppertempbox.style.left = 0;
+		uppertempbox.style.top = 0;
+		mainFontSize = Math.min(canvasheight,canvaswidth)/35;
+		uppertempbox.style.fontSize = mainFontSize;
+		uppertempbox.style.height = 0;
+		//uppertempbox.style.color = 'rgb(127, 127, 127)';
+		uppertempbox.style.textAlign = 'center';
+		uppertempbox.style.width = canvaswidth;
+		uppertempbox.style.paddingTop = ((canvasheight /4) - (mainFontSize)/2);
+		uppertempbox.innerHTML = "Temperature :";
+
+		var lowertempbox = document.getElementById("displayTempLow");
+		lowertempbox.style.fontFamily = "Calibri";
+		lowertempbox.style.left = 0;
+		lowertempbox.style.top = 0;
+		mainFontSize = Math.min(canvasheight,canvaswidth)/35;
+		lowertempbox.style.fontSize = mainFontSize;
+		lowertempbox.style.height = 0;
+		//lowertempbox.style.color = 'rgb(127, 127, 127)';
+		lowertempbox.style.textAlign = 'center';
+		lowertempbox.style.width = canvaswidth;
+		lowertempbox.style.paddingTop = (3*(canvasheight /4) - (mainFontSize)/2);
+		lowertempbox.innerHTML = "Temperature : ";
+
+
+
+
+
+
+		Physics(function(world){
+
+		var viewWidth = canvaswidth;
+		var viewHeight = canvasheight;
+
+		
+
+		var renderer = Physics.renderer('canvas', {
+			el: 'viewport',
+			width: viewWidth,
+			height: viewHeight,
+			meta: false, // don't display meta data
+			styles: {
+				// set colors for the circle bodies
+				'circle' : {
+					strokeStyle: '#351024',
+					lineWidth: 1,
+					fillStyle: '#027FFC'
+				},
+				'rectangle' : {
+					fillStyle: 'rgba(130, 8, 251, 0.29)',
+					strokeStyle: 'rgba(130, 8, 251, 0)'
+				}
+			}
+		});
+
+
+		
+
+
+		// add the renderer
+		world.add(renderer);
+		// render on each step
+		world.on('step', function(){
+			world.render();
+		});
+
+		// bounds of the window
+		var viewportBounds = Physics.aabb(0, 0, viewWidth, viewHeight);
+
+
+		//constrain objects to these bounds
+		world.add(Physics.behavior('edge-collision-detection', {
+			aabb: viewportBounds,
+			restitution: 0.99,
+			cof: 0.99
+		}));
+
+
+		for (body = 0; body < 30; body++) {
+			if (body < 15) {
+				ballcolor = 'rgb(3, 141, 246)';
+			}
+			else {
+				ballcolor = 'rgb(246, 3, 19)';
+			}
+			
+			world.add(
+				Physics.body('circle', {
+					x: Math.random()*viewWidth, // x-coordinate
+					y: Math.random()*viewHeight, // y-coordinate
+					vx: (Math.random() - 0.5)*0.2, // velocity in x-direction
+					vy: (Math.random() - 0.5)*0.2, // velocity in y-direction
+					mass: 1,
+					radius: 3,
+					styles: {
+						fillStyle: ballcolor
+					}
+				})
+			);
+		}
+
+		openinggap = 100;
+		openingpos = 500;
+		var rampLeftPos = openingpos - (canvaswidth/2) - (openinggap/2);
+		var rampLeftwidth = canvaswidth;
+
+		var rampRightPos = openingpos + (canvaswidth/2) + (openinggap/2);
+		var rampRightwidth = canvaswidth;
+
+
+		
+
+		var rampLeft = Physics.body('rectangle', {
+				x: rampLeftPos,
+				y: (viewHeight/2),
+				width: rampLeftwidth,
+				height: (viewHeight/100)
+
+			});
+
+		var rampRight = Physics.body('rectangle', {
+				x: rampRightPos,
+				y: (viewHeight/2),
+				width: rampRightwidth,
+				height: (viewHeight/100)
+
+			});
+
+
+		
+
+		world.add(rampLeft);
+		rampLeft.treatment = "static";
+		world.add(rampRight);
+		rampRight.treatment = "static";
+
+		Physics.integrator('improved-euler');
+
+		
+		world.render();
+
+		var temperatureUpper;
+		var temperatureLower;
+
+		tempdiffTarget = 10;
+
+		
+		
+		// ensure objects bounce when edge collision is detected
+		world.add(Physics.behavior('body-impulse-response') );
+
+		// world.add(Physics.behavior('newtonian', {
+		// 	strength: 0.02
+		// }));
+
+		// add some gravity
+		//world.add(Physics.behavior('constant-acceleration') );
+
+		world.add( Physics.behavior('body-collision-detection') );
+		world.add( Physics.behavior('sweep-prune') );
+
+		function onKeymoveRamp(event) {
+			var code = event.keyCode;
+			movingfactor = 20;
+			if (code == 37) {
+				openingpos = openingpos - movingfactor;
+				rampLeftPos = openingpos - (canvaswidth/2) - (openinggap/2);
+				rampRightPos = openingpos + (canvaswidth/2) + (openinggap/2);
+				if (openingpos < canvaswidth && openingpos > 0) {
+					rampLeft.state.pos.x = rampLeftPos;
+					rampRight.state.pos.x = rampRightPos;
+				}
+				else {
+					openingpos = openingpos + movingfactor;
+				}
+			}
+			if (code == 39) {
+				openingpos = openingpos + movingfactor;
+				rampLeftPos = openingpos - (canvaswidth/2) - (openinggap/2);
+				rampRightPos = openingpos + (canvaswidth/2) + (openinggap/2);
+				if (openingpos < canvaswidth && openingpos > 0) {
+					rampLeft.state.pos.x = rampLeftPos;
+					rampRight.state.pos.x = rampRightPos;
+				}
+				else {
+					openingpos = openingpos - movingfactor;
+				}
+			}
+			if (code == 72) {
+				for (particleNumber = 0; particleNumber < world.getBodies().length; particleNumber++) {
+					particle = world.getBodies()[particleNumber];
+					if (particle.treatment == 'dynamic') {
+						particle.state.vel.x = particle.state.vel.x + (Math.random() - 0.5)*0.2;
+						particle.state.vel.y = particle.state.vel.y + (Math.random() - 0.5)*0.2;
+						particle.view = 'rgb(0,0,0)';
+					}
+				}
+				
+			}
+
+
+			
+		}
+
+		//window.addEventListener('mousemove', onmouseRamp);
+		//document.body.style.cursor = 'none';
+
+		window.addEventListener('keydown', onKeymoveRamp);
+		timestepcount = 0;
+		// console.log(worl d.getBodies()[10].styles[fillStyle]);
+
+		// subscribe to ticker to advance the simulation
+		Physics.util.ticker.on(function( time, dt ){
+			timestepcount = timestepcount + 1;
+			numberofRParticlesUpper = 0;
+			numberofRParticlesLower = 0;
+			numberofBParticlesUpper = 0;
+			numberofBParticlesLower = 0;
+			totalEnergyUpper = 0
+			totalEnergyLower = 0
+			numberofParticlesUpper = 0
+			numberofParticlesLower = 0
+			for (particleNumber = 0; particleNumber < world.getBodies().length; particleNumber++) {
+				particle = world.getBodies()[particleNumber];
+				if (particle.treatment == 'dynamic') {
+					kinetic = 0.5*particle.mass*(particle.state.vel.norm()**2)
+					if (particle.state.pos.y < viewHeight/2) {
+						totalEnergyUpper = totalEnergyUpper + kinetic;
+						numberofParticlesUpper = numberofParticlesUpper + 1;
+					}
+					if (particle.state.pos.y >= viewHeight/2) {
+						totalEnergyLower = totalEnergyLower + kinetic;
+						numberofParticlesLower = numberofParticlesLower + 1;
+					}
+				}
+			}
+			temperatureUpper = totalEnergyUpper/numberofParticlesUpper;
+			temperatureLower = totalEnergyLower/numberofParticlesLower;
+			if (numberofParticlesLower == 0) {
+				temperatureLower = 0;
+			}
+			if (numberofParticlesUpper == 0) {
+				temperatureUpper = 0;
+			}
+			temperatureDifference = Math.abs(temperatureUpper - temperatureLower); 
+			scale = 10000;
+			dec = 10000;
+			uppertempbox.innerHTML = "Temperature | " + Math.round((temperatureUpper*scale)*dec)/dec + "</br>Number of Particles  | " + numberofParticlesUpper;
+			lowertempbox.innerHTML = "Temperature  | " + Math.round((temperatureLower*scale)*dec)/dec+ "</br>Number of Particles  | " + numberofParticlesLower + "</br></br> Temperature Difference   | " + Math.round((temperatureDifference*scale)*dec)/dec + "</br>";
+			world.step( time );
+		});
+
+		// start the ticker
+		Physics.util.ticker.start();
+
+		});
+
+
+		
+		</script>
+
+
+
+	</body>
+<html>
