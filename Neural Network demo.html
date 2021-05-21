@@ -1254,199 +1254,199 @@
 		// Slide 8
 
 		
-		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-		textElement.setAttribute('x', '50%');
-		textElement.setAttribute('y', '30%');
-		textElement.setAttribute('text-anchor', 'middle');
-		textElement.setAttribute('id', 'slide8inst1');
-		textElement.setAttribute('font-family', 'Calibri');
-		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
-		textElement.innerHTML = "The XOR function."
-		displaySvg.appendChild(textElement);
-		slide8Elements.push(textElement)
+// 		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+// 		textElement.setAttribute('x', '50%');
+// 		textElement.setAttribute('y', '30%');
+// 		textElement.setAttribute('text-anchor', 'middle');
+// 		textElement.setAttribute('id', 'slide8inst1');
+// 		textElement.setAttribute('font-family', 'Calibri');
+// 		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+// 		textElement.innerHTML = "The XOR function."
+// 		displaySvg.appendChild(textElement);
+// 		slide8Elements.push(textElement)
 
-		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-		textElement.setAttribute('x', '50%');
-		textElement.setAttribute('y', '35%');
-		textElement.setAttribute('text-anchor', 'middle');
-		textElement.setAttribute('id', 'slide8inst2');
-		textElement.setAttribute('font-family', 'Calibri');
-		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
-		textElement.innerHTML = "Identical inputs give a zero."
-		displaySvg.appendChild(textElement);
-		slide8Elements.push(textElement)
+// 		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+// 		textElement.setAttribute('x', '50%');
+// 		textElement.setAttribute('y', '35%');
+// 		textElement.setAttribute('text-anchor', 'middle');
+// 		textElement.setAttribute('id', 'slide8inst2');
+// 		textElement.setAttribute('font-family', 'Calibri');
+// 		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+// 		textElement.innerHTML = "Identical inputs give a zero."
+// 		displaySvg.appendChild(textElement);
+// 		slide8Elements.push(textElement)
 
-		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-		textElement.setAttribute('x', '50%');
-		textElement.setAttribute('y', '40%');
-		textElement.setAttribute('text-anchor', 'middle');
-		textElement.setAttribute('id', 'slide8inst3');
-		textElement.setAttribute('font-family', 'Calibri');
-		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
-		textElement.innerHTML = "Dissimilar inputs gives a one."
-		displaySvg.appendChild(textElement);
-		slide8Elements.push(textElement)
+// 		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+// 		textElement.setAttribute('x', '50%');
+// 		textElement.setAttribute('y', '40%');
+// 		textElement.setAttribute('text-anchor', 'middle');
+// 		textElement.setAttribute('id', 'slide8inst3');
+// 		textElement.setAttribute('font-family', 'Calibri');
+// 		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+// 		textElement.innerHTML = "Dissimilar inputs gives a one."
+// 		displaySvg.appendChild(textElement);
+// 		slide8Elements.push(textElement)
 
-		XORboxElements = []
-		xORinputState = [0,1]
+// 		XORboxElements = []
+// 		xORinputState = [0,1]
 
-		function classXOR(vec) {
-			if((vec[0] == 1 || vec[0] == 0) && (vec[1] == 1 || vec[1] == 0)) {
-				if(vec[0] == vec[1]) {
-					return 0
-				}
-				else if(vec[0] != vec[1]) {
-					return 1
-				}
-			}
-			else {
-				return 'inputs error'
-			}
-		}
+// 		function classXOR(vec) {
+// 			if((vec[0] == 1 || vec[0] == 0) && (vec[1] == 1 || vec[1] == 0)) {
+// 				if(vec[0] == vec[1]) {
+// 					return 0
+// 				}
+// 				else if(vec[0] != vec[1]) {
+// 					return 1
+// 				}
+// 			}
+// 			else {
+// 				return 'inputs error'
+// 			}
+// 		}
 
-		function statechangeXOR(event) {
-			statevalue = xORinputState[parseInt(event.target.id[8])]
-			console.log(statevalue,event.target.id[8])
-			if (statevalue == 0) {
-				xORinputState[event.target.id[8]] = 1
-				event.target.style.fill = 'rgba(0,0,0,1)'
-				document.getElementById('box value XOR ' + event.target.id[8]).innerHTML = 1
-			}
-			else {
-				xORinputState[event.target.id[8]] = 0
-				event.target.style.fill = 'hsla(277,100%,50%,0.4)'
-				document.getElementById('box value XOR ' + event.target.id[8]).innerHTML = 0
-			}
-			document.getElementById('classdisplayXOR').innerHTML = classXOR(xORinputState)
+// 		function statechangeXOR(event) {
+// 			statevalue = xORinputState[parseInt(event.target.id[8])]
+// 			console.log(statevalue,event.target.id[8])
+// 			if (statevalue == 0) {
+// 				xORinputState[event.target.id[8]] = 1
+// 				event.target.style.fill = 'rgba(0,0,0,1)'
+// 				document.getElementById('box value XOR ' + event.target.id[8]).innerHTML = 1
+// 			}
+// 			else {
+// 				xORinputState[event.target.id[8]] = 0
+// 				event.target.style.fill = 'hsla(277,100%,50%,0.4)'
+// 				document.getElementById('box value XOR ' + event.target.id[8]).innerHTML = 0
+// 			}
+// 			document.getElementById('classdisplayXOR').innerHTML = classXOR(xORinputState)
 
-		}
+// 		}
 
-		var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
-		circleElement.setAttribute('cx', '65%');
-		circleElement.setAttribute('cy', '65%');	
-		circleElement.setAttribute('id', 'outputXOR');
-		circleElement.setAttribute('r', '1.5%');
-		circleElement.setAttribute('fill','hsla(190,100%,50%,1)')
-		displaySvg.appendChild(circleElement);
-		slide8Elements.push(circleElement)
-		outputLayerNeuronElementsXOR.push(circleElement)
-		outputLayerNeuronElementXORValue[circleElement.id] = 0
-		// circleElement.addEventListener('mouseover', neuronHover)
-		// circleElement.addEventListener('mouseout', neuronHoverOut)
-		circleElement.style.cursor = 'pointer'
-		// nonBiasNeuronValueAndName[circleElement.id] = [0, i, 'input']
-
-		
-
-		var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-		rectElement.setAttribute('height',boxheight);
-		rectElement.setAttribute('width', boxwidth);
-		rectElement.setAttribute('id', 'XOR box ' + 0);
-		rectElement.setAttribute('x', '35%');
-		rectElement.setAttribute('y', '60%');
-		rectElement.style.opacity = 0;
-		rectElement.style.cursor = 'pointer';
-		if (xORinputState[0] == 0) {
-			rectElement.style.fill = 'hsla(277,100%,50%,0.4)'
-		}
-		else {
-			rectElement.style.fill = 'rgba(0,0,0,1)'
-		}
-		rectElement.style.strokeWidth = '0';
-		displaySvg.appendChild(rectElement);
-		XORboxElements.push(rectElement)
-		rectElement.addEventListener('mouseover', statechangeXOR)
-
-
-		var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
-		rectElement.setAttribute('height',boxheight);
-		rectElement.setAttribute('width', boxwidth);
-		rectElement.setAttribute('id', 'XOR box ' + 1);
-		rectElement.setAttribute('x', (35*window.innerWidth/100) + boxwidth + boxgap);
-		rectElement.setAttribute('y', '60%');
-		rectElement.style.opacity = 0;
-		rectElement.style.cursor = 'pointer';
-		if (xORinputState[1] == 0) {
-			rectElement.style.fill = 'hsla(277,100%,50%,0.4)'
-		}
-		else {
-			rectElement.style.fill = 'rgba(0,0,0,1)'
-		}
-		rectElement.style.strokeWidth = '0';
-		displaySvg.appendChild(rectElement);
-		XORboxElements.push(rectElement)
-		rectElement.addEventListener('mouseover', statechangeXOR)
-
-		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-		textElement.setAttribute('x', (35*window.innerWidth/100)  + (boxwidth/3));
-		textElement.setAttribute('y', '70%');
-		textElement.setAttribute('text-anchor', 'middle');
-		textElement.setAttribute('id', 'box value XOR ' + 0);
-		textElement.setAttribute('font-family', 'Calibri');
-		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
-		textElement.innerHTML = xORinputState[0]
-		displaySvg.appendChild(textElement);
-		slide8Elements.push(textElement)
-
-		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-		textElement.setAttribute('x', (35*window.innerWidth/100) + (boxwidth/3) + boxwidth + boxgap);
-		textElement.setAttribute('y', '70%' );
-		textElement.setAttribute('text-anchor', 'middle');
-		textElement.setAttribute('id', 'box value XOR ' + 1);
-		textElement.setAttribute('font-family', 'Calibri');
-		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
-		textElement.innerHTML = xORinputState[1]
-		displaySvg.appendChild(textElement);
-		slide8Elements.push(textElement)
-
-		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-		textElement.setAttribute('x', '65%');
-		textElement.setAttribute('y', '70%' );
-		textElement.setAttribute('text-anchor', 'middle');
-		textElement.setAttribute('id', 'classdisplayXOR');
-		textElement.setAttribute('font-family', 'Calibri');
-		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
-		textElement.innerHTML = classXOR(xORinputState)
-		displaySvg.appendChild(textElement);
-		slide8Elements.push(textElement)
+// 		var circleElement = document.createElementNS("http://www.w3.org/2000/svg", 'circle');
+// 		circleElement.setAttribute('cx', '65%');
+// 		circleElement.setAttribute('cy', '65%');	
+// 		circleElement.setAttribute('id', 'outputXOR');
+// 		circleElement.setAttribute('r', '1.5%');
+// 		circleElement.setAttribute('fill','hsla(190,100%,50%,1)')
+// 		displaySvg.appendChild(circleElement);
+// 		slide8Elements.push(circleElement)
+// 		outputLayerNeuronElementsXOR.push(circleElement)
+// 		outputLayerNeuronElementXORValue[circleElement.id] = 0
+// 		// circleElement.addEventListener('mouseover', neuronHover)
+// 		// circleElement.addEventListener('mouseout', neuronHoverOut)
+// 		circleElement.style.cursor = 'pointer'
+// 		// nonBiasNeuronValueAndName[circleElement.id] = [0, i, 'input']
 
 		
 
+// 		var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+// 		rectElement.setAttribute('height',boxheight);
+// 		rectElement.setAttribute('width', boxwidth);
+// 		rectElement.setAttribute('id', 'XOR box ' + 0);
+// 		rectElement.setAttribute('x', '35%');
+// 		rectElement.setAttribute('y', '60%');
+// 		rectElement.style.opacity = 0;
+// 		rectElement.style.cursor = 'pointer';
+// 		if (xORinputState[0] == 0) {
+// 			rectElement.style.fill = 'hsla(277,100%,50%,0.4)'
+// 		}
+// 		else {
+// 			rectElement.style.fill = 'rgba(0,0,0,1)'
+// 		}
+// 		rectElement.style.strokeWidth = '0';
+// 		displaySvg.appendChild(rectElement);
+// 		XORboxElements.push(rectElement)
+// 		rectElement.addEventListener('mouseover', statechangeXOR)
 
-		setOpacities(slide8Elements, 0)
-		setOpacities(XORboxElements, 0)
 
-		function displayXORboxes() {
-			setOpacities(XORboxElements, 1)
-		}
+// 		var rectElement = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+// 		rectElement.setAttribute('height',boxheight);
+// 		rectElement.setAttribute('width', boxwidth);
+// 		rectElement.setAttribute('id', 'XOR box ' + 1);
+// 		rectElement.setAttribute('x', (35*window.innerWidth/100) + boxwidth + boxgap);
+// 		rectElement.setAttribute('y', '60%');
+// 		rectElement.style.opacity = 0;
+// 		rectElement.style.cursor = 'pointer';
+// 		if (xORinputState[1] == 0) {
+// 			rectElement.style.fill = 'hsla(277,100%,50%,0.4)'
+// 		}
+// 		else {
+// 			rectElement.style.fill = 'rgba(0,0,0,1)'
+// 		}
+// 		rectElement.style.strokeWidth = '0';
+// 		displaySvg.appendChild(rectElement);
+// 		XORboxElements.push(rectElement)
+// 		rectElement.addEventListener('mouseover', statechangeXOR)
+
+// 		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+// 		textElement.setAttribute('x', (35*window.innerWidth/100)  + (boxwidth/3));
+// 		textElement.setAttribute('y', '70%');
+// 		textElement.setAttribute('text-anchor', 'middle');
+// 		textElement.setAttribute('id', 'box value XOR ' + 0);
+// 		textElement.setAttribute('font-family', 'Calibri');
+// 		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+// 		textElement.innerHTML = xORinputState[0]
+// 		displaySvg.appendChild(textElement);
+// 		slide8Elements.push(textElement)
+
+// 		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+// 		textElement.setAttribute('x', (35*window.innerWidth/100) + (boxwidth/3) + boxwidth + boxgap);
+// 		textElement.setAttribute('y', '70%' );
+// 		textElement.setAttribute('text-anchor', 'middle');
+// 		textElement.setAttribute('id', 'box value XOR ' + 1);
+// 		textElement.setAttribute('font-family', 'Calibri');
+// 		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+// 		textElement.innerHTML = xORinputState[1]
+// 		displaySvg.appendChild(textElement);
+// 		slide8Elements.push(textElement)
+
+// 		var textElement = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+// 		textElement.setAttribute('x', '65%');
+// 		textElement.setAttribute('y', '70%' );
+// 		textElement.setAttribute('text-anchor', 'middle');
+// 		textElement.setAttribute('id', 'classdisplayXOR');
+// 		textElement.setAttribute('font-family', 'Calibri');
+// 		textElement.setAttribute('style', 'font-size:13px;font-size: 1.8vw;');
+// 		textElement.innerHTML = classXOR(xORinputState)
+// 		displaySvg.appendChild(textElement);
+// 		slide8Elements.push(textElement)
+
+		
 
 
-		function slide8(state) {
-			if(state == 'appear'){
-				// setOpacities(slide8Elements, 1)
-				timeouts.push(setTimeout( function(){
-					document.getElementById('slide8inst1').style.opacity = 1
-				}  , 700 ));
-				timeouts.push(setTimeout( function(){
-					document.getElementById('slide8inst2').style.opacity = 1
-				}  , 1000 ));
-				timeouts.push(setTimeout( function(){
-					document.getElementById('slide8inst3').style.opacity = 1
-				}  , 1300 ));
-				timeouts.push(setTimeout( function(){
-					displayXORboxes()
-					document.getElementById('box value XOR ' + 0).style.opacity = 1
-					document.getElementById('box value XOR ' + 1).style.opacity = 1
-					document.getElementById('classdisplayXOR').style.opacity = 1
-				}  , 1700 ));
-			}
-			else if(state == 'disappear'){
-				setOpacities(slide8Elements, 0)
-				for(i=0; i<timeouts.length; i++) {
-					clearTimeout(timeouts[i])				}
-				timeouts = []
-			}
-		}
+// 		setOpacities(slide8Elements, 0)
+// 		setOpacities(XORboxElements, 0)
+
+// 		function displayXORboxes() {
+// 			setOpacities(XORboxElements, 1)
+// 		}
+
+
+// 		function slide8(state) {
+// 			if(state == 'appear'){
+// 				// setOpacities(slide8Elements, 1)
+// 				timeouts.push(setTimeout( function(){
+// 					document.getElementById('slide8inst1').style.opacity = 1
+// 				}  , 700 ));
+// 				timeouts.push(setTimeout( function(){
+// 					document.getElementById('slide8inst2').style.opacity = 1
+// 				}  , 1000 ));
+// 				timeouts.push(setTimeout( function(){
+// 					document.getElementById('slide8inst3').style.opacity = 1
+// 				}  , 1300 ));
+// 				timeouts.push(setTimeout( function(){
+// 					displayXORboxes()
+// 					document.getElementById('box value XOR ' + 0).style.opacity = 1
+// 					document.getElementById('box value XOR ' + 1).style.opacity = 1
+// 					document.getElementById('classdisplayXOR').style.opacity = 1
+// 				}  , 1700 ));
+// 			}
+// 			else if(state == 'disappear'){
+// 				setOpacities(slide8Elements, 0)
+// 				for(i=0; i<timeouts.length; i++) {
+// 					clearTimeout(timeouts[i])				}
+// 				timeouts = []
+// 			}
+// 		}
 
 
 
@@ -1570,19 +1570,19 @@
 				// setOpacities(weightsElements, 0)
 				currentpoint = 6
 			}
-			else if(currentpoint <=7 && transitpoint == 8) {
-				setOpacities(slide7Elements, 0)
-				slide7('disappear')
-				slide8('appear')
-				currentpoint = 8
-			}
-			else if(currentpoint >=8 && transitpoint == 7) {
-				slide8('disappear')
-				setOpacities(slide7Elements, 1)
-				slide7('appear')
-				// setOpacities(weightsElements, 0)
-				currentpoint = 7
-			}
+// 			else if(currentpoint <=7 && transitpoint == 8) {
+// 				setOpacities(slide7Elements, 0)
+// 				slide7('disappear')
+// 				slide8('appear')
+// 				currentpoint = 8
+// 			}
+// 			else if(currentpoint >=8 && transitpoint == 7) {
+// 				slide8('disappear')
+// 				setOpacities(slide7Elements, 1)
+// 				slide7('appear')
+// 				// setOpacities(weightsElements, 0)
+// 				currentpoint = 7
+// 			}
 		}
 
 		window.addEventListener('scroll', timeline)
